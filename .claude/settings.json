@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet new *)",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet add *)",
+      "Bash(dotnet build *)",
+      "Bash(docker compose *)",
+      "Bash(curl -s -o /tmp/health.json -w \"%{http_code}\" http://localhost:5080/api/health)",
+      "Bash(curl -s http://localhost:5080/api/lista-espera)",
+      "Bash(docker exec *)",
+      "Bash(ASPNETCORE_URLS=\"http://localhost:5080\" dotnet run --project src/MediSync.Api --no-launch-profile)",
+      "Bash(curl -s -w '\\\\nHTTP_STATUS:%{http_code}\\\\n' -X POST http://localhost:5080/api/interconsultas -H 'Content-Type: application/json' -d '{\"pacienteId\":\"c26c84fb86214d59a4aaeef3be786dd2\",\"especialidadId\":\"diabetologia\",\"motivo\":\"HbA1c elevada\",\"hbA1c\":9.2,\"glicemiaAyunas\":180,\"comorbilidades\":[\"Hipertension\"]}')",
+      "Bash(ASPNETCORE_URLS=\"http://localhost:5080\" ASPNETCORE_ENVIRONMENT=\"Development\" dotnet run --project src/MediSync.Api --no-launch-profile)",
+      "Bash(curl -s http://localhost:5080/api/casos/82566e31cd854b6fbc3de98f17c76874)",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s -w '\\\\nHTTP_STATUS:%{http_code}\\\\n' -X PATCH http://localhost:5080/api/casos/82566e31cd854b6fbc3de98f17c76874/revision -H 'Content-Type: application/json' -d '{\"aprobadoPor\":\"Dr. Gonzalez\",\"prioridadConfirmada\":\"P1\"}')",
+      "Bash(python -c ' *)",
+      "Bash(curl -s -w \" [%{http_code}]\\\\n\" -X POST http://localhost:5080/api/casos/82566e31cd854b6fbc3de98f17c76874/confirmar)",
+      "Bash(curl -s -w \" [%{http_code}]\\\\n\" -X POST http://localhost:5080/api/casos/82566e31cd854b6fbc3de98f17c76874/atender)",
+      "Bash(curl -s -w \" [%{http_code}]\\\\n\" -X POST http://localhost:5080/api/casos/82566e31cd854b6fbc3de98f17c76874/cerrar)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5080/api/health)",
+      "Bash(npx -y @angular/cli@20 version)",
+      "Bash(tail -60 \"C:/Users/TECH/AppData/Local/npm-cache/_logs/2026-08-05T06_13_52_314Z-debug-0.log\" 2>&1)",
+      "Read(//c/Users/TECH/AppData/Local/npm-cache/_logs/**)",
+      "Read(//c/Users/TECH/AppData/Local/npm-cache/_npx/**)",
+      "Read(//c/Users/TECH/AppData/Roaming/**)",
+      "Bash(find \"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b\" -maxdepth 2 2>&1)",
+      "Read(//c/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/**)",
+      "Bash(ls \"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin\" 2>&1)",
+      "Read(//c/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin/**)",
+      "Bash(\"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin/ng.cmd\" version *)",
+      "Bash(\"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin/ng.cmd\" new *)",
+      "Bash(\"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin/ng.cmd\" build *)",
+      "Bash(\"C:/Users/TECH/AppData/Local/npm-cache/_npx/646c61515c7a7c8b/node_modules/.bin/ng.cmd\" serve *)"
+    ]
+  }
+}

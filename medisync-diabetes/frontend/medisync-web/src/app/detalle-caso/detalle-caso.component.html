@@ -1,0 +1,123 @@
+<section class="page">
+  <p><a routerLink="/">&larr; Volver a lista de espera</a></p>
+
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (!caso()) {
+    <p class="error">{{ error() }}</p>
+  } @else {
+    @let c = caso()!;
+
+    <header class="page-header">
+      <h1>{{ c.pacienteNombre }} - {{ c.especialidadId }}</h1>
+      <span class="tier">{{ c.estado }}</span>
+    </header>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <div class="card">
+      <p><strong>Dias en espera:</strong> {{ c.diasEnEspera }}</p>
+      <p><strong>Caso:</strong> {{ c.listaEsperaItemId }}</p>
+      <p><strong>Interconsulta:</strong> {{ c.interconsultaId }}</p>
+    </div>
+
+    @if (c.priorizacion; as p) {
+      <div class="card">
+        <h2>Priorizacion IA</h2>
+        @if (p.riskLevel) {
+          <p><strong>Riesgo:</strong> {{ p.riskLevel }} (score {{ p.riskScore }})</p>
+          <p>{{ p.riskJustificacion }}</p>
+        } @else {
+          <p>Calculando riesgo clinico...</p>
+        }
+        @if (p.priorityTier) {
+          <p><strong>Prioridad sugerida:</strong> {{ p.priorityTier }} (score {{ p.priorityScore }})</p>
+          <p>{{ p.priorityJustificacion }}</p>
+        }
+        @if (p.tierConfirmado) {
+          <p><strong>Prioridad confirmada:</strong> {{ p.tierConfirmado }} por {{ p.confirmadaPor }}
+            ({{ p.origenConfirmacion }})</p>
+        }
+      </div>
+    }
+
+    @if (c.agenda; as a) {
+      <div class="card">
+        <h2>Agenda</h2>
+        <p><strong>Fecha:</strong> {{ a.fechaHora | date:'medium' }}</p>
+        <p><strong>Profesional:</strong> {{ a.profesionalId }} - <strong>Centro:</strong> {{ a.centroSaludId }}</p>
+      </div>
+    }
+
+    <div class="card">
+      <h2>Acciones</h2>
+      @if (c.estado === 'Priorizado') {
+        <div class="form-grid">
+          <label>Aprobado por
+            <input [(ngModel)]="aprobadoPor" name="aprobadoPor" placeholder="Dr. Gonzalez" />
+          </label>
+          <label>Prioridad confirmada
+            <select [(ngModel)]="prioridadConfirmada" name="prioridadConfirmada">
+              <option value="P1">P1</option>
+              <option value="P2">P2</option>
+              <option value="P3">P3</option>
+            </select>
+          </label>
+        </div>
+        <p><button (click)="revisar()" [disabled]="actionInProgress() || !aprobadoPor">
+          {{ actionInProgress() ? 'Asignando agenda (Scheduler Agent)...' : 'Confirmar revision medica y agendar' }}
+        </button></p>
+      } @else if (c.estado === 'Agendado') {
+        <button (click)="confirmar()" [disabled]="actionInProgress()">Confirmar cita</button>
+      } @else if (c.estado === 'Confirmado') {
+        <button (click)="atender()" [disabled]="actionInProgress()">Registrar atencion</button>
+      } @else if (c.estado === 'Atendido') {
+        <button (click)="cerrar()" [disabled]="actionInProgress()">Cerrar caso</button>
+      } @else if (c.estado === 'Cerrado') {
+        <p>Caso cerrado.</p>
+      } @else {
+        <p>Esperando que la priorizacion IA termine...</p>
+      }
+    </div>
+
+    <div class="card">
+      <h2>Linea de tiempo</h2>
+      <ul class="timeline">
+        @for (e of c.eventos; track e.id) {
+          <li><span class="ts">{{ e.timestamp | date:'medium' }}</span> - <strong>{{ e.tipoEvento }}</strong>: {{ e.descripcion }}</li>
+        }
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Ejecuciones de agentes IA</h2>
+      @for (log of c.ejecucionesAgentes; track log.id) {
+        <div class="agent-log">
+          <h3>{{ log.agenteNombre }}</h3>
+          <div class="meta">
+            {{ log.timestamp | date:'medium' }} - {{ log.iteraciones }} iteraciones -
+            {{ log.tokensEntrada }} tokens entrada / {{ log.tokensSalida }} tokens salida
+          </div>
+          @for (tc of log.toolCalls; track $index) {
+            <p><strong>tool:</strong> {{ tc.toolName }}</p>
+            <pre>{{ tc.inputJson }} =&gt; {{ tc.outputJson }}</pre>
+          }
+          <p><strong>Respuesta final:</strong></p>
+          <pre>{{ log.output }}</pre>
+        </div>
+      }
+    </div>
+
+    <div class="card">
+      <h2>Decisiones auditadas</h2>
+      <ul class="timeline">
+        @for (d of c.decisiones; track d.id) {
+          <li><span class="ts">{{ d.timestamp | date:'medium' }}</span> - <strong>{{ d.decision }}</strong>
+            ({{ d.origen }}, {{ d.autor }}): {{ d.justificacion }}</li>
+        }
+      </ul>
+    </div>
+  }
+</section>

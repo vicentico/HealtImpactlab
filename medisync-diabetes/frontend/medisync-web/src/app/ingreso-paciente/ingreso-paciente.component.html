@@ -1,0 +1,64 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Ingreso de paciente y derivacion</h1>
+  </header>
+
+  <p>
+    Registra un paciente y su interconsulta. Al enviar, se dispara automaticamente la clasificacion
+    en lista de espera y el calculo de riesgo/prioridad por los agentes IA (Risk Agent + Priority Agent).
+  </p>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form class="card" (ngSubmit)="registrarYDerivar()" #f="ngForm">
+    <h2>Paciente</h2>
+    <div class="form-grid">
+      <label>Run
+        <input name="run" [(ngModel)]="run" required placeholder="12345678-9" />
+      </label>
+      <label>Nombre completo
+        <input name="nombre" [(ngModel)]="nombre" required placeholder="Juan Perez Soto" />
+      </label>
+      <label>Fecha de nacimiento
+        <input name="fechaNacimiento" type="date" [(ngModel)]="fechaNacimiento" required />
+      </label>
+      <label>CESFAM de origen
+        <select name="cesfamOrigenId" [(ngModel)]="cesfamOrigenId">
+          <option value="cesfam-001">CESFAM Los Aromos</option>
+          <option value="cesfam-002">CESFAM Villa Esperanza</option>
+          <option value="cesfam-003">CESFAM San Rafael</option>
+        </select>
+      </label>
+    </div>
+
+    <h2>Interconsulta</h2>
+    <div class="form-grid">
+      <label>Especialidad
+        <select name="especialidadId" [(ngModel)]="especialidadId">
+          <option value="diabetologia">Diabetologia</option>
+          <option value="endocrinologia">Endocrinologia</option>
+        </select>
+      </label>
+      <label>Motivo
+        <input name="motivo" [(ngModel)]="motivo" required />
+      </label>
+      <label>HbA1c (%)
+        <input name="hbA1c" type="number" step="0.1" [(ngModel)]="hbA1c" required />
+      </label>
+      <label>Glicemia en ayunas (mg/dL)
+        <input name="glicemiaAyunas" type="number" [(ngModel)]="glicemiaAyunas" required />
+      </label>
+      <label class="form-grid full">Comorbilidades (separadas por coma)
+        <input name="comorbilidadesTexto" [(ngModel)]="comorbilidadesTexto" />
+      </label>
+    </div>
+
+    <p style="margin-top: 1rem;">
+      <button type="submit" [disabled]="submitting() || f.invalid">
+        {{ submitting() ? 'Procesando (Risk Agent + Priority Agent)...' : 'Registrar e iniciar priorizacion IA' }}
+      </button>
+    </p>
+  </form>
+</section>

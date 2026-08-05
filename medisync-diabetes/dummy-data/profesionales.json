@@ -1,0 +1,7 @@
+[
+  { "id": "prof-001", "nombre": "Dra. Marcela Rojas", "especialidadId": "diabetologia", "centroSaludId": "hospital-001" },
+  { "id": "prof-002", "nombre": "Dr. Ignacio Fuentes", "especialidadId": "diabetologia", "centroSaludId": "hospital-001" },
+  { "id": "prof-003", "nombre": "Dra. Carolina Soto", "especialidadId": "diabetologia", "centroSaludId": "hospital-002" },
+  { "id": "prof-004", "nombre": "Dr. Felipe Gonzalez", "especialidadId": "endocrinologia", "centroSaludId": "hospital-002" },
+  { "id": "prof-005", "nombre": "Dra. Javiera Munoz", "especialidadId": "endocrinologia", "centroSaludId": "hospital-001" }
+]

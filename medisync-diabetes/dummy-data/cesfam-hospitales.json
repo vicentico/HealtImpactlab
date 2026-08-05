@@ -1,0 +1,7 @@
+[
+  { "id": "cesfam-001", "nombre": "CESFAM Los Aromos", "tipo": "Cesfam" },
+  { "id": "cesfam-002", "nombre": "CESFAM Villa Esperanza", "tipo": "Cesfam" },
+  { "id": "cesfam-003", "nombre": "CESFAM San Rafael", "tipo": "Cesfam" },
+  { "id": "hospital-001", "nombre": "Hospital Regional Norte", "tipo": "Hospital" },
+  { "id": "hospital-002", "nombre": "Hospital Provincial Sur", "tipo": "Hospital" }
+]

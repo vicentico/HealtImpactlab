@@ -1,0 +1,39 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Lista de espera - Diabetologia</h1>
+    <button type="button" (click)="cargar()">Actualizar</button>
+  </header>
+
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (casos().length === 0) {
+    <p>No hay casos en lista de espera. Registra una interconsulta para comenzar.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Especialidad</th>
+          <th>Estado</th>
+          <th>Dias en espera</th>
+          <th>Prioridad</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (caso of casos(); track caso.listaEsperaItemId) {
+          <tr>
+            <td>{{ caso.pacienteNombre }}</td>
+            <td>{{ caso.especialidadId }}</td>
+            <td>{{ caso.estado }}</td>
+            <td>{{ caso.diasEnEspera }}</td>
+            <td><span [class]="tierClass(caso.priorityTier)">{{ caso.priorityTier ?? 'Pendiente' }}</span></td>
+            <td><a [routerLink]="['/casos', caso.listaEsperaItemId]">Ver detalle</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

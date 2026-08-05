@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\MediSync.Application\MediSync.Application.csproj" />
+    <ProjectReference Include="..\MediSync.Infrastructure\MediSync.Infrastructure.csproj" />
+    <ProjectReference Include="..\MediSync.AI\MediSync.AI.csproj" />
+    <ProjectReference Include="..\MediSync.Domain\MediSync.Domain.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>95857bf0-99de-4369-96b8-635979ccd592</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\dummy-data\*.json" LinkBase="dummy-data" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MediSync.AI/MediSync.AI.csproj" />
+    <Project Path="src/MediSync.Api/MediSync.Api.csproj" />
+    <Project Path="src/MediSync.Application/MediSync.Application.csproj" />
+    <Project Path="src/MediSync.Domain/MediSync.Domain.csproj" />
+    <Project Path="src/MediSync.Infrastructure/MediSync.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MediSync.Application.Tests/MediSync.Application.Tests.csproj" />
+    <Project Path="tests/MediSync.Domain.Tests/MediSync.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
