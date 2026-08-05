@@ -1,10 +1,10 @@
-# 📋 Documento de Arquitectura y Especificación del Proyecto
+# 📋 Documento de Arquitectura y Especificación del Proyecto - HealtImpactlab
 
 ## 1. Visión General del Proyecto
 
-* **Nombre Conceptual:** Herramienta de IA para la Repriorización Inteligente de Listas de Espera en Diabetes Mellitus Tipo 2 (DM2).
-* **Contexto:** Sistema Público de Salud de Chile (red asistencial alineada con normativa MINSAL).
-* **Objetivo Principal:** Rediseñar y optimizar la gestión de listas de espera de DM2 integrando datos del Ministerio de Salud (MINSAL) mediante un motor de Inteligencia Artificial guiado por criterios GES, parámetros clínicos y variables sociodemográficas.
+* **Nombre Conceptual:** Herramienta de IA para la Repriorización Inteligente de Listas de Espera en Diabetes Mellitus Tipo 2 (DM2) / Torre de Control APS.
+* **Contexto:** Sistema Público de Salud de Chile (red asistencial alineada con normativa MINSAL / CESFAM).
+* **Objetivo Principal:** Rediseñar y optimizar la gestión de listas de espera de DM2 e intrahospitalarias integrando datos del Ministerio de Salud (MINSAL) mediante un motor de Inteligencia Artificial guiado por criterios GES, parámetros clínicos y variables sociodemográficas (NT 118).
 * **Impacto Esperado:**
   1. **Reducción de tiempos de espera** en pacientes de mayor riesgo clínico.
   2. **Disminución de complicaciones graves** asociadas a la patología (daño renal, pie diabético, retinopatías, eventos cardiovasculares).
@@ -34,7 +34,7 @@
 * **Ajuste Manual (Override Clínico):** Capacidad de mover pacientes hacia arriba o abajo en la lista según su juicio médico profesional.
 * **Aprobación y Versionado:** Al dar el "OK", se aprueba la propuesta y se impacta la base de datos oficial, **generando una nueva versión auditable** de la lista de espera.
 
-### 2. Equipo Médico (Especialistas / Médicos Tratantes)
+### 2. Equipo Médico (Especialistas / Médicos Tratantes / Contralores)
 
 * **Visualización de Ajustes:** Revisa la lista repriorizada y aprobada por el Jefe de Servicio.
 * **Segunda Validación:** Aporta retroalimentación o solicita ajustes adicionales específicos de sus pacientes asignados.
@@ -63,7 +63,7 @@
 Es el núcleo lógico del sistema que procesa las variables para calcular el *Score* de prioridad de cada paciente:
 
 1. **Criterios GES:** Plazos legales de oportunidad, garantías de diagnóstico/tratamiento.
-2. **Criterios Clínicos:** Niveles de HbA1c, comorbilidades (hipertensión, enfermedad renal, etc.), tiempo en lista de espera, descompensaciones recientes.
+2. **Criterios Clínicos:** Niveles de HbA1c, comorbilidades (hipertensión, enfermedad renal, etc.), tiempo en lista de espera, descompensaciones recientes (NT 118).
 3. **Criterios Social/Contextual:** Determinantes sociales de la salud, ruralidad, vulnerabilidad, edad.
 4. **Base de Evidencia Científica:** Algoritmos guiados por guías de práctica clínica nacional e internacional.
 
@@ -85,7 +85,7 @@ Es el núcleo lógico del sistema que procesa las variables para calcular el *Sc
 
 ### E. Infraestructura de Software (Frontend & Backend)
 
-* **Frontend:** Interfaz web para Jefe de Servicio, Equipo Médico y Enfermería con dashboards analíticos intuitivos.
+* **Frontend:** Interfaz web para Torre de Control APS, Jefe de Servicio, Equipo Médico y Enfermería con dashboards analíticos intuitivos.
 * **Backend & Pipeline de IA:**
   * Motor de procesamiento e ingesta de datos.
   * Modelo de IA para reestructuración de listas.
@@ -106,7 +106,7 @@ Es el núcleo lógico del sistema que procesa las variables para calcular el *Sc
 [ Propuesta de Lista de Espera Reestructurada ]
                  │
                  ▼
-[ Revisión, Edición y Aprobación (Jefe de Servicio) ] ──► (Genera Nueva Versión BD)
+[ Revisión, Edición y Aprobación (Jefe de Servicio / Médico Contralor) ] ──► (Genera Nueva Versión BD)
                  │
                  ▼
 [ Segunda Validación & Sincronización con Agenda (Equipo Médico) ]
@@ -117,3 +117,17 @@ Es el núcleo lógico del sistema que procesa las variables para calcular el *Sc
                  ▼
 [ Notificación y Respuesta Automática (Paciente) ] ──► [ Actualización de Estatus ]
 ```
+
+---
+
+## 5. Subproyectos
+
+### 🚀 impact_lab
+Ubicación: `./impact_lab`
+
+Subproyecto principal dedicado al desarrollo de soluciones, prototipos y entregables para **Impact Lab / Torre de Control APS**.
+
+#### Estructura de carpetas
+- `impact_lab/src`: Código fuente del frontend (Vite + React 18 + TypeScript + Tailwind CSS v4) y módulos ejecutable.
+- `impact_lab/docs`: Documentación técnica y planes de implementación (`PLAN_IMPLEMENTACION_FRONTEND.md`).
+- `impact_lab/config`: Archivos de configuración del entorno.

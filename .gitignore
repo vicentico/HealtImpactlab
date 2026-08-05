@@ -1,0 +1,20 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Environment & Secrets
+.env
+.env.local
+*.pem
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# IDE & Tooling
+.vscode/
+.idea/
+.agent/
+.atl/
