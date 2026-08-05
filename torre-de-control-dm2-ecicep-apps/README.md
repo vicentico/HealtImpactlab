@@ -1,20 +1,30 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Torre de Control DM2 ECICEP APS
 
-# Run and deploy your AI Studio app
+Frontend React + Vite para visualizar una torre de control de priorizacion clinica DM2 en APS.
 
-This contains everything you need to run your app locally.
+## Requisitos
 
-View your app in AI Studio: https://ai.studio/apps/af3d725f-5827-49f3-ae90-900cb603befe
+- Node.js 20 o superior
+- npm
 
-## Run Locally
+## Ejecutar en local
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
+1. Instala dependencias:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Inicia el servidor de desarrollo:
    `npm run dev`
+
+## Scripts
+
+- `npm run dev`: inicia Vite en el puerto 3000.
+- `npm run build`: genera la compilacion de produccion.
+- `npm run lint`: ejecuta el chequeo de TypeScript sin emitir archivos.
+- `npm run clean`: elimina la carpeta `dist`.
+
+## Estructura util
+
+- `src/`: aplicacion React.
+- `src/data/mockPatients.ts`: datos mock usados por la interfaz.
+- `src/lib/roles.ts`: reglas de visibilidad y permisos por perfil.
+
+Actualmente el frontend no requiere variables de entorno para ejecutarse.

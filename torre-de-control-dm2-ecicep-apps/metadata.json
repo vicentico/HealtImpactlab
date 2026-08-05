@@ -1,6 +1,0 @@
-{
-  "name": "Torre de Control DM2 ECICEP APS",
-  "description": "Plataforma de priorización clínica, gestión de casos DM2 y trazabilidad auditable para Médicos Contralores en CESFAM bajo estrategia ECICEP y principios de Privacidad desde el Diseño.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
