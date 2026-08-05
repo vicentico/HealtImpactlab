@@ -1,1 +1,12 @@
 *.bat
+
+# Generated files for the imported frontend app.
+torre-de-control-dm2-ecicep-apps/.git/
+torre-de-control-dm2-ecicep-apps/.git.embedded-backup/
+torre-de-control-dm2-ecicep-apps/node_modules/
+torre-de-control-dm2-ecicep-apps/build/
+torre-de-control-dm2-ecicep-apps/dist/
+torre-de-control-dm2-ecicep-apps/coverage/
+torre-de-control-dm2-ecicep-apps/*.log
+torre-de-control-dm2-ecicep-apps/.env*
+!torre-de-control-dm2-ecicep-apps/.env.example
