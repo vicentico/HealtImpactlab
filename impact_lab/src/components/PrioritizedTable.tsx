@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Patient, CESFAMSector, ContraloriaStatus, RiskLevel } from '../types/patient';
+import { maskRut } from '../utils/privacy';
 import { 
   Search, 
   Filter, 
@@ -8,7 +9,9 @@ import {
   Minus, 
   ChevronRight, 
   ShieldAlert, 
-  FileText,
+  Lock,
+  Eye,
+  EyeOff,
   AlertCircle
 } from 'lucide-react';
 
@@ -25,6 +28,7 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
   const [selectedSector, setSelectedSector] = useState<string>('ALL');
   const [selectedRisk, setSelectedRisk] = useState<string>('ALL');
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
+  const [isPrivacyMaskEnabled, setIsPrivacyMaskEnabled] = useState<boolean>(true);
 
   // Filtering Logic
   const filteredPatients = patients.filter((patient) => {
@@ -114,8 +118,23 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
           />
         </div>
 
-        {/* Dropdowns */}
+        {/* Dropdowns & Privacy Mode Toggle */}
         <div className="flex flex-wrap items-center gap-2">
+          
+          {/* Privacy Toggle */}
+          <button
+            onClick={() => setIsPrivacyMaskEnabled(!isPrivacyMaskEnabled)}
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              isPrivacyMaskEnabled
+                ? 'bg-cyan-950/60 border-cyan-500/40 text-cyan-300'
+                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+            }`}
+            title="Privacy by Design: Enmascara el RUT en vistas masivas"
+          >
+            {isPrivacyMaskEnabled ? <EyeOff className="h-3.5 w-3.5 text-cyan-400" /> : <Eye className="h-3.5 w-3.5" />}
+            <span>{isPrivacyMaskEnabled ? 'Privacidad: RUT Enmascarado' : 'Mostrar RUT'}</span>
+          </button>
+
           <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-slate-400">
             <Filter className="h-3.5 w-3.5 text-slate-500" />
             <span>Sector:</span>
@@ -206,11 +225,13 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                     </div>
                   </td>
 
-                  {/* Patient Info */}
+                  {/* Patient Info with Privacy Masking */}
                   <td className="py-3.5 px-4">
                     <div>
                       <p className="font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">{patient.fullName}</p>
-                      <p className="text-[10px] font-mono-tabular text-slate-400">{patient.rut} • {patient.age} años ({patient.gender})</p>
+                      <p className="text-[10px] font-mono-tabular text-slate-400">
+                        {isPrivacyMaskEnabled ? maskRut(patient.rut) : patient.rut} • {patient.age} años ({patient.gender})
+                      </p>
                     </div>
                   </td>
 
@@ -275,7 +296,7 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                       }}
                       className="inline-flex items-center gap-1 rounded-lg bg-slate-800 hover:bg-cyan-600 hover:text-white px-2.5 py-1 text-[11px] font-semibold text-cyan-400 transition-colors"
                     >
-                      <span>Ficha</span>
+                      <span>Abrir Ficha</span>
                       <ChevronRight className="h-3.5 w-3.5" />
                     </button>
                   </td>
@@ -285,6 +306,15 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Privacy Microcopy Banner */}
+      <div className="flex items-center justify-between rounded-lg bg-slate-900/60 border border-slate-800/80 px-3 py-2 text-[10px] text-slate-400">
+        <div className="flex items-center gap-2">
+          <Lock className="h-3.5 w-3.5 text-cyan-400" />
+          <span>Información de salud tratada con confidencialidad para uso exclusivo de equipos autorizados. Acceso registrado e inmutable.</span>
+        </div>
+        <span className="hidden sm:inline text-slate-500 font-mono-tabular">Ley 20.584 Compliant</span>
       </div>
 
     </div>

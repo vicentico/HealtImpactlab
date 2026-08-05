@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { KPICards } from './components/KPICards';
+import { PressureMap } from './components/PressureMap';
 import { PrioritizedTable } from './components/PrioritizedTable';
 import { PatientDetailPanel } from './components/PatientDetailPanel';
 import { OperationalExplicationPanel } from './components/OperationalExplicationPanel';
 import { INITIAL_MOCK_PATIENTS } from './data/mockPatients';
 import { Patient, ContraloriaStatus, AuditLogEntry } from './types/patient';
-import { Layers, ClipboardCheck, FileSpreadsheet, Plus, Download } from 'lucide-react';
+import { Layers, ClipboardCheck, FileSpreadsheet, Download, Shield } from 'lucide-react';
 
 export function App() {
   const [patients, setPatients] = useState<Patient[]>(INITIAL_MOCK_PATIENTS);
@@ -83,7 +84,12 @@ export function App() {
               {/* Top Banner Actions */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 glass-panel rounded-xl p-4 border border-slate-800">
                 <div>
-                  <h2 className="text-base font-bold text-white">Torre de Control de Listas de Espera APS</h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-bold text-white">Torre de Control de Listas de Espera APS</h2>
+                    <span className="flex items-center gap-1 rounded bg-cyan-950 border border-cyan-500/30 px-2 py-0.5 text-[10px] font-semibold text-cyan-300">
+                      <Shield className="h-3 w-3 text-cyan-400" /> Privacy by Design
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-400">
                     Priorización algorítmica por riesgo de descompensación (Norma Técnica 118 MINSAL)
                   </p>
@@ -107,6 +113,9 @@ export function App() {
 
               {/* KPI Summary Grid */}
               <KPICards patients={patients} />
+
+              {/* Pressure Map APS */}
+              <PressureMap />
 
               {/* Main Prioritized Table */}
               <PrioritizedTable
