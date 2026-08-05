@@ -11,11 +11,15 @@ Thumbs.db
 dist/
 *.tsbuildinfo
 
-# Dependencies
+# Dependencies & Virtualenvs
 node_modules/
 venv/
+.venv/
 __pycache__/
 *.pyc
+*.log
+pytest_results.txt
+.pytest_cache/
 
 # IDE & Tooling
 .vscode/
