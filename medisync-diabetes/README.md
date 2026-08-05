@@ -5,6 +5,47 @@ diabeticos en el sistema publico chileno, mediante priorizacion inteligente (Ris
 coordinacion automatica de agenda (Scheduler Agent). Ver documentacion completa en [docs/](docs/), empezando
 por [docs/00-resumen-ejecutivo.md](docs/00-resumen-ejecutivo.md).
 
+## Flujo del sistema
+
+Un caso recorre 10 etapas desde que un paciente es derivado hasta que su atencion queda cerrada. Las 3
+primeras transiciones (clasificacion + evaluacion de riesgo + priorizacion) ocurren automaticamente y en
+cadena dentro de la misma request de `POST /api/interconsultas`; el resto requiere una accion explicita
+(un medico revisando el caso, o un llamado a los endpoints de agenda).
+
+```mermaid
+flowchart TD
+    A["Paciente registrado\nPOST /api/pacientes"] --> B["Interconsulta / Derivacion\nPOST /api/interconsultas"]
+    B --> C["EnEspera\n(ListaEsperaItem creado)"]
+    C -->|automatico| D["Clasificado"]
+    D -->|"Risk Agent\nHbA1c, glicemia, comorbilidades"| E["RiskScore / RiskLevel"]
+    E -->|"Priority Agent\nriesgo + espera + carga especialidad"| F["Priorizado\nPriorityScore / PriorityTier"]
+    F --> G{"Revision medica\nPATCH /api/casos/{id}/revision"}
+    G -->|"medico confirma o ajusta el tier"| H["EnRevision"]
+    H -->|"Scheduler Agent\nreserva el cupo mas adecuado"| I["Agendado"]
+    I -->|"POST /api/casos/{id}/confirmar"| J["Confirmado"]
+    J -->|"POST /api/casos/{id}/atender"| K["Atendido"]
+    K -->|"POST /api/casos/{id}/cerrar"| L["Cerrado"]
+```
+
+| # | Estado (`EstadoCaso`) | Que pasa | Quien/que lo dispara |
+|---|---|---|---|
+| 1 | — | Se registra el paciente | `POST /api/pacientes` |
+| 2 | `EnEspera` | Se registra la interconsulta (derivacion a Diabetologia/Endocrinologia) y se crea el `ListaEsperaItem` | `POST /api/interconsultas` |
+| 3 | `Clasificado` | El caso queda formalmente en la lista de espera de la especialidad | Automatico (mismo request) |
+| 4 | `Clasificado` | **Risk Agent** calcula `RiskScore`/`RiskLevel` comparando HbA1c y glicemia contra rangos de referencia | Automatico — agente IA (Claude) |
+| 5 | `Priorizado` | **Priority Agent** calcula `PriorityScore`/`PriorityTier` (P1/P2/P3) combinando riesgo, dias en espera y carga de la especialidad | Automatico — agente IA (Claude) |
+| 6 | `EnRevision` | Un medico revisa la sugerencia de la IA y la confirma o la ajusta; queda registrado si el origen final fue `IA` o `Humano` | `PATCH /api/casos/{id}/revision` |
+| 7 | `Agendado` | **Scheduler Agent** reserva el cupo de agenda mas adecuado al tier confirmado | Automatico (disparado por el paso anterior) — agente IA (Claude) |
+| 8 | `Confirmado` | Se confirma la hora agendada | `POST /api/casos/{id}/confirmar` |
+| 9 | `Atendido` | Se registra que el paciente fue atendido | `POST /api/casos/{id}/atender` |
+| 10 | `Cerrado` | Se cierra el caso | `POST /api/casos/{id}/cerrar` |
+
+En cualquier punto, `GET /api/casos/{id}` devuelve la trazabilidad completa del caso: riesgo, prioridad,
+justificaciones generadas por cada agente, tool calls, tokens consumidos y el historial de eventos. El
+detalle linea por linea (con una traza real capturada contra la API de Anthropic) esta en
+[docs/05-flujo-secuencia.md](docs/05-flujo-secuencia.md); la ficha de cada agente (objetivo, tools, prompt,
+fallback) esta en [docs/04-agentes-ia.md](docs/04-agentes-ia.md).
+
 ## Stack
 
 - Backend: .NET 10, Clean Architecture, CQRS/MediatR, FluentValidation
