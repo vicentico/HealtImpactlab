@@ -131,3 +131,16 @@ Subproyecto principal dedicado al desarrollo de soluciones, prototipos y entrega
 - `impact_lab/src`: Código fuente del frontend (Vite + React 18 + TypeScript + Tailwind CSS v4) y módulos ejecutable.
 - `impact_lab/docs`: Documentación técnica y planes de implementación (`PLAN_IMPLEMENTACION_FRONTEND.md`).
 - `impact_lab/config`: Archivos de configuración del entorno.
+
+---
+
+## 6. Índice de Documentación Técnica y Metodológica
+
+El repositorio cuenta con los siguientes marcos conceptuales y especificaciones técnicas:
+
+* [**`IMPACTO_REPRIORIZACION_LISTAS_ESPERA_DM2.md`**](file:///Users/franciscobustos/Library/CloudStorage/OneDrive-UniversidadCatólicadeChile(2)/Escritorio/Desafio Claude/HealtImpactlab/IMPACTO_REPRIORIZACION_LISTAS_ESPERA_DM2.md): **Impacto Asistencial, Epidemiológico y Económico** de la repriorización (contexto SSMSO y Hospital Sótero del Río, reducciones proyectadas en amputaciones, diálisis, IAM, ACV y ceguera con su sustento científico).
+* [**`ECICEP_MODELO_TECNICO_OPERATIVO.md`**](file:///Users/franciscobustos/Library/CloudStorage/OneDrive-UniversidadCatólicadeChile(2)/Escritorio/Desafio Claude/HealtImpactlab/ECICEP_MODELO_TECNICO_OPERATIVO.md): Modelo Técnico-Operativo para la Gestión de Multimorbilidad y DM2 en Chile.
+* [**`EPIDEMIOLOGIA_GOBERNANZA_LISTAS_ESPERA_CHILE.md`**](file:///Users/franciscobustos/Library/CloudStorage/OneDrive-UniversidadCatólicadeChile(2)/Escritorio/Desafio Claude/HealtImpactlab/EPIDEMIOLOGIA_GOBERNANZA_LISTAS_ESPERA_CHILE.md): Marco de Epidemiología, Gobernanza y Gestión Asistencial de Listas de Espera en Chile.
+* [**`GUIA_MAESTRA_MANEJO_DM2_CHILE.md`**](file:///Users/franciscobustos/Library/CloudStorage/OneDrive-UniversidadCatólicadeChile(2)/Escritorio/Desafio Claude/HealtImpactlab/GUIA_MAESTRA_MANEJO_DM2_CHILE.md): Guía Maestra Interdisciplinaria y Algoritmo Estratificado para el Manejo Integral de DM2.
+* [**`ESPECIFICACION_BASES_DATOS_Y_FUENTES.md`**](file:///Users/franciscobustos/Library/CloudStorage/OneDrive-UniversidadCatólicadeChile(2)/Escritorio/Desafio Claude/HealtImpactlab/ESPECIFICACION_BASES_DATOS_Y_FUENTES.md): Especificación de Bases de Datos Sintéticas y Fuentes Oficiales MINSAL.
+
