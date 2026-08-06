@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
+import { Header, AppTheme } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { KPICards } from './components/KPICards';
 import { PressureMap } from './components/PressureMap';
@@ -24,6 +24,23 @@ export function App() {
   const [activeRole, setActiveRole] = useState<UserRole>('MEDICO_CONTRALOR');
   const [capacityData, setCapacityData] = useState<CapacitySummary | null>(null);
   const [loadingCapacity, setLoadingCapacity] = useState<boolean>(false);
+  const [theme, setTheme] = useState<AppTheme>(() => {
+    return (localStorage.getItem('health_os_theme') as AppTheme) || 'light';
+  });
+
+  // Apply Theme class to document root (light by default)
+  useEffect(() => {
+    localStorage.setItem('health_os_theme', theme);
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+
+    if (theme === 'system') {
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.classList.add(isSystemDark ? 'dark' : 'light');
+    } else {
+      root.classList.add(theme);
+    }
+  }, [theme]);
 
   useEffect(() => {
     const loadCapacity = async () => {
@@ -127,7 +144,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] flex flex-col font-sans transition-colors duration-300">
       
       {/* Top Header */}
       <Header
@@ -137,6 +154,8 @@ export function App() {
         criticalCount={criticalCount}
         activeRole={activeRole}
         onRoleChange={setActiveRole}
+        theme={theme}
+        onThemeChange={setTheme}
       />
 
       <div className="flex-1 flex overflow-hidden">

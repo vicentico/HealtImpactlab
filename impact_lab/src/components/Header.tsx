@@ -1,6 +1,8 @@
 import React from 'react';
-import { Activity, ShieldCheck, Bell, User, RefreshCw, Shield } from 'lucide-react';
+import { Activity, ShieldCheck, Bell, User, RefreshCw, Shield, Sun, Moon, Laptop } from 'lucide-react';
 import { UserRole } from '../types/capacity';
+
+export type AppTheme = 'light' | 'dark' | 'system';
 
 interface HeaderProps {
   cesfamName: string;
@@ -9,6 +11,8 @@ interface HeaderProps {
   criticalCount: number;
   activeRole: UserRole;
   onRoleChange: (role: UserRole) => void;
+  theme: AppTheme;
+  onThemeChange: (theme: AppTheme) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,10 +21,12 @@ export const Header: React.FC<HeaderProps> = ({
   pendingCount,
   criticalCount,
   activeRole,
-  onRoleChange
+  onRoleChange,
+  theme,
+  onThemeChange
 }) => {
   return (
-    <header className="glass-panel sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 px-6 py-3.5 backdrop-blur-md">
+    <header className="glass-panel sticky top-0 z-30 border-b px-6 py-3.5 backdrop-blur-md">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         
         {/* Title & Brand */}
@@ -86,7 +92,44 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          <div className="h-6 w-px bg-slate-800"></div>
+          {/* Theme Switcher Toggle (Claro / Oscuro / Sistema) */}
+          <div className="flex items-center rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 text-xs">
+            <button
+              onClick={() => onThemeChange('light')}
+              title="Modo Claro (Por defecto)"
+              className={`p-1.5 rounded-md transition-all ${
+                theme === 'light'
+                  ? 'bg-white dark:bg-slate-800 text-amber-500 shadow-sm font-bold'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+              }`}
+            >
+              <Sun className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => onThemeChange('dark')}
+              title="Modo Oscuro"
+              className={`p-1.5 rounded-md transition-all ${
+                theme === 'dark'
+                  ? 'bg-slate-800 text-cyan-400 shadow-sm font-bold'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+              }`}
+            >
+              <Moon className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={() => onThemeChange('system')}
+              title="Modo Sistema"
+              className={`p-1.5 rounded-md transition-all ${
+                theme === 'system'
+                  ? 'bg-white dark:bg-slate-800 text-purple-500 shadow-sm font-bold'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+              }`}
+            >
+              <Laptop className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800"></div>
 
           <div className="flex items-center gap-2 pl-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-900/60 border border-purple-500/40 text-purple-300 font-semibold text-xs">
