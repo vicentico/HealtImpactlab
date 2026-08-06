@@ -11,13 +11,25 @@ public record CasoDetalleDto(
     int DiasEnEspera,
     string PacienteId,
     string PacienteNombre,
+    int? PacienteEdad,
     string EspecialidadId,
     string InterconsultaId,
+    DatosClinicosDto? DatosClinicos,
+    VulnerabilidadDto Vulnerabilidad,
     PriorizacionDto? Priorizacion,
     AgendaDto? Agenda,
     IReadOnlyList<CasoEvento> Eventos,
     IReadOnlyList<AgentExecutionLog> EjecucionesAgentes,
     IReadOnlyList<DecisionLog> Decisiones);
+
+/// <summary>Ultimo AntecedenteClinico del paciente — los mismos datos que usa el Risk Agent (ver
+/// GetPatientClinicalDataTool), expuestos aqui para que el frontend los muestre sin re-derivarlos.</summary>
+public record DatosClinicosDto(
+    double HbA1c, double GlicemiaAyunas, IReadOnlyList<string> Comorbilidades, DateTime FechaRegistro,
+    double? Vfg, double? MicroalbuminuriaRac, bool NeuropatiaPrevia, int UrgenciasUltimos90Dias,
+    IReadOnlyList<string> AlertasClinicas);
+
+public record VulnerabilidadDto(bool DependenciaSevera, bool Ruralidad, IReadOnlyList<string> DeterminantesSociales);
 
 public record PriorizacionDto(
     int? RiskScore, string? RiskLevel, string? RiskJustificacion,
@@ -73,14 +85,26 @@ public class ObtenerCasoQueryHandler(
 
         var agendaDto = agenda is null ? null : new AgendaDto(agenda.Id, agenda.FechaHora, agenda.ProfesionalId, agenda.CentroSaludId);
 
+        var ultimoAntecedente = paciente?.UltimoAntecedente();
+        var datosClinicosDto = ultimoAntecedente is null ? null : new DatosClinicosDto(
+            ultimoAntecedente.HbA1c, ultimoAntecedente.GlicemiaAyunas, ultimoAntecedente.Comorbilidades,
+            ultimoAntecedente.FechaRegistro, ultimoAntecedente.Vfg, ultimoAntecedente.MicroalbuminuriaRac,
+            ultimoAntecedente.NeuropatiaPrevia, ultimoAntecedente.UrgenciasUltimos90Dias, ultimoAntecedente.AlertasClinicas);
+
+        var vulnerabilidadDto = new VulnerabilidadDto(
+            paciente?.DependenciaSevera ?? false, paciente?.Ruralidad ?? false, paciente?.DeterminantesSociales ?? []);
+
         return new CasoDetalleDto(
             item.Id,
             item.Estado.ToString(),
             item.DiasEnEspera(),
             item.PacienteId,
             paciente?.Nombre ?? "(desconocido)",
+            paciente?.EdadEnAnios(),
             item.EspecialidadId,
             item.InterconsultaId,
+            datosClinicosDto,
+            vulnerabilidadDto,
             priorizacionDto,
             agendaDto,
             eventos.OrderBy(e => e.Timestamp).ToList(),

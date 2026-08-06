@@ -78,14 +78,35 @@ export interface KpisDto {
   tasaNsp: number;
 }
 
+export interface DatosClinicosDto {
+  hbA1c: number;
+  glicemiaAyunas: number;
+  comorbilidades: string[];
+  fechaRegistro: string;
+  vfg: number | null;
+  microalbuminuriaRac: number | null;
+  neuropatiaPrevia: boolean;
+  urgenciasUltimos90Dias: number;
+  alertasClinicas: string[];
+}
+
+export interface VulnerabilidadDto {
+  dependenciaSevera: boolean;
+  ruralidad: boolean;
+  determinantesSociales: string[];
+}
+
 export interface CasoDetalleDto {
   listaEsperaItemId: string;
   estado: string;
   diasEnEspera: number;
   pacienteId: string;
   pacienteNombre: string;
+  pacienteEdad: number | null;
   especialidadId: string;
   interconsultaId: string;
+  datosClinicos: DatosClinicosDto | null;
+  vulnerabilidad: VulnerabilidadDto;
   priorizacion: PriorizacionDto | null;
   agenda: AgendaDto | null;
   eventos: CasoEventoDto[];

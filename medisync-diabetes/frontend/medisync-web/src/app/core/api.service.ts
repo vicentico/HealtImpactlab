@@ -21,13 +21,18 @@ export class ApiService {
     return firstValueFrom(this.http.get<CasoDetalleDto>(`${API_BASE_URL}/casos/${id}`));
   }
 
-  registrarPaciente(body: { run: string; nombre: string; fechaNacimiento: string; cesfamOrigenId: string }): Promise<{ pacienteId: string }> {
+  registrarPaciente(body: {
+    run: string; nombre: string; fechaNacimiento: string; cesfamOrigenId: string;
+    dependenciaSevera?: boolean; ruralidad?: boolean; determinantesSociales?: string[];
+  }): Promise<{ pacienteId: string }> {
     return firstValueFrom(this.http.post<{ pacienteId: string }>(`${API_BASE_URL}/pacientes`, body));
   }
 
   registrarInterconsulta(body: {
     pacienteId: string; especialidadId: string; motivo: string;
     hbA1c: number; glicemiaAyunas: number; comorbilidades: string[];
+    vfg?: number | null; microalbuminuriaRac?: number | null; neuropatiaPrevia?: boolean;
+    urgenciasUltimos90Dias?: number; alertasClinicas?: string[];
   }): Promise<{ listaEsperaItemId: string }> {
     return firstValueFrom(this.http.post<{ listaEsperaItemId: string }>(`${API_BASE_URL}/interconsultas`, body));
   }

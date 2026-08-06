@@ -1,10 +1,23 @@
-<nav class="app-nav">
+<mat-toolbar class="app-toolbar">
+  <mat-icon aria-hidden="true">monitor_heart</mat-icon>
   <span class="brand">MediSync-Diabetes</span>
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista de espera</a>
-  <a routerLink="/ingreso" routerLinkActive="active">Ingreso de paciente</a>
-  <a routerLink="/kpis" routerLinkActive="active">KPIs</a>
-</nav>
+  <span class="spacer"></span>
+  <nav class="app-nav">
+    <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <mat-icon>fact_check</mat-icon>
+      <span class="nav-label">Lista de espera</span>
+    </a>
+    <a mat-button routerLink="/ingreso" routerLinkActive="active-link">
+      <mat-icon>person_add</mat-icon>
+      <span class="nav-label">Ingreso</span>
+    </a>
+    <a mat-button routerLink="/kpis" routerLinkActive="active-link">
+      <mat-icon>insights</mat-icon>
+      <span class="nav-label">KPIs</span>
+    </a>
+  </nav>
+</mat-toolbar>
 
-<div class="app-shell">
+<main class="page-container">
   <router-outlet />
-</div>
+</main>

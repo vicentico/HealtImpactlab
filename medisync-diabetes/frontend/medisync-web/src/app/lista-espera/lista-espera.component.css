@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+th.mat-mdc-header-cell {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-large);
+}
+
+td.mat-mdc-cell, th.mat-mdc-header-cell {
+  padding: var(--space-1) var(--space-3);
+}
+
+.mat-column-diasEnEspera {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+tr.mat-mdc-row:hover {
+  background: var(--mat-sys-surface-container-low);
+}
+
+tr.row-urgente {
+  background: var(--status-critical-container);
+}
+tr.row-urgente:hover {
+  background: var(--status-critical-container);
+  filter: brightness(0.98);
+}

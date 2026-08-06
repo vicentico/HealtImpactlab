@@ -1,231 +1,200 @@
 * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: #f4f6f8;
-  color: #1a2733;
+html, body { height: 100%; }
+
+/* =========================================================================
+   Design tokens — fuente unica. Todo lo demas (componentes incluidos)
+   referencia estas variables via var(), nunca un hex suelto.
+   ========================================================================= */
+:root {
+  /* Espaciado — escala de 8px (con medio paso de 4px para casos ajustados) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radios */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  /* Colores de estado — semanticos y reservados (P1/riesgo critico, alertas, NSP alto, etc.).
+     No se derivan del primario de Material a proposito: "critico" debe leerse igual sin
+     importar el tema. Tono oscuro para texto + contenedor claro, igual que los tonal
+     containers de M3, para mantener el mismo lenguaje visual. */
+  --status-critical: #a4243b;
+  --status-critical-container: #fbe0df;
+  --status-warning: #8a5a00;
+  --status-warning-container: #fdf1d6;
+  --status-good: #1c6b3a;
+  --status-good-container: #e6f4ea;
+  --status-neutral: #5a6572;
+  --status-neutral-container: #e6e9ed;
+
+  /* Sombra unica y muy sutil — nunca mas fuerte que esto en toda la app */
+  --elevation-1: 0 1px 2px rgba(15, 23, 33, 0.06), 0 1px 1px rgba(15, 23, 33, 0.04);
 }
 
-.app-shell {
-  max-width: 1000px;
+/* =========================================================================
+   Layout general
+   ========================================================================= */
+.page-container {
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 0 1.5rem 2rem;
-}
-
-.app-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: #0f2439;
-  color: white;
-}
-
-.app-nav a {
-  color: #cfe3f5;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.app-nav a.active,
-.app-nav a:hover {
-  color: white;
-  text-decoration: underline;
-}
-
-.app-nav .brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: white;
-}
-
-.page {
-  margin-top: 1.5rem;
+  padding: var(--space-6) var(--space-5) var(--space-8);
 }
 
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
 }
 
-h1 { font-size: 1.4rem; margin: 0; }
-h2 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+.page-header h1 { margin: 0; }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+.page-subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+  margin: var(--space-1) 0 0;
 }
 
-th, td {
-  text-align: left;
-  padding: 0.6rem 0.8rem;
-  border-bottom: 1px solid #e3e8ec;
-  font-size: 0.9rem;
+.section-title {
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-on-surface);
+  margin: var(--space-7) 0 var(--space-3);
 }
 
-th { background: #eef2f6; font-weight: 600; }
-
-button, input[type=submit] {
-  background: #1a5fb4;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-size: 0.9rem;
+.hint {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
 }
 
-button:hover { background: #144a8f; }
-button.secondary { background: #6b7785; }
-button.secondary:hover { background: #556270; }
-
-.error {
-  color: #a4243b;
-  background: #fbe9ec;
-  border: 1px solid #f0c4cc;
-  padding: 0.75rem;
-  border-radius: 4px;
-}
-
-.success {
-  color: #1c6b3a;
-  background: #e6f4ea;
-  border: 1px solid #b7ddc4;
-  padding: 0.75rem;
-  border-radius: 4px;
-}
-
-.tier {
-  display: inline-block;
-  padding: 0.15rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.tier-p1 { background: #fbe0df; color: #a4243b; }
-.tier-p2 { background: #fdf1d6; color: #8a5a00; }
-.tier-p3 { background: #e6f4ea; color: #1c6b3a; }
-.tier-pendiente { background: #e6e9ed; color: #5a6572; }
-
-.badge-urgente {
-  display: inline-block;
-  margin-left: 0.5rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 12px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  background: #a4243b;
-  color: white;
-}
-
-/* KPIs: reusa los mismos 3 colores de estado que .tier-p1/p2/p3 (rojo/ambar/verde),
-   ya validados para esta paleta, en vez de introducir una escala nueva. */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.kpi-tile {
-  background: white;
-  border-radius: 6px;
-  padding: 0.9rem 1.1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  border-left: 4px solid #c7cfd6;
-}
-
-.kpi-value {
-  font-size: 1.7rem;
-  font-weight: 600;
-  line-height: 1.1;
-}
-
-.kpi-label {
-  font-size: 0.8rem;
-  color: #5a6572;
-  margin-top: 0.3rem;
-}
-
-.kpi-tile.status-critical { border-left-color: #a4243b; }
-.kpi-tile.status-critical .kpi-value { color: #a4243b; }
-.kpi-tile.status-warning { border-left-color: #8a5a00; }
-.kpi-tile.status-warning .kpi-value { color: #8a5a00; }
-.kpi-tile.status-good { border-left-color: #1c6b3a; }
-.kpi-tile.status-good .kpi-value { color: #1c6b3a; }
-.kpi-tile.status-neutral { border-left-color: #1a5fb4; }
-
-.bar-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
-.bar-row { display: grid; grid-template-columns: 36px 1fr 40px; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
-.bar-track { background: #e6e9ed; border-radius: 4px; height: 18px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 0 4px 4px 0; }
-.bar-fill.fill-p1 { background: #a4243b; }
-.bar-fill.fill-p2 { background: #8a5a00; }
-.bar-fill.fill-p3 { background: #1c6b3a; }
-.bar-row .bar-value { text-align: right; font-variant-numeric: tabular-nums; }
-
-.kpi-footnote { color: #5a6572; font-size: 0.85rem; margin-top: 1rem; }
-
-.card {
-  background: white;
-  border-radius: 6px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
+.spacer { flex: 1 1 auto; }
+.full-width { width: 100%; }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem 1.25rem;
-  max-width: 640px;
+  gap: var(--space-2) var(--space-5);
+}
+.form-grid.full,
+.form-grid > .full-span {
+  grid-column: 1 / -1;
+}
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
 }
 
-.form-grid.full { grid-template-columns: 1fr; }
-
-label {
+.checkbox-row {
   display: flex;
-  flex-direction: column;
-  font-size: 0.85rem;
-  gap: 0.25rem;
+  align-items: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin: var(--space-2) 0;
 }
 
-input, select, textarea {
-  padding: 0.45rem 0.6rem;
-  border: 1px solid #c7cfd6;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
+/* =========================================================================
+   Timeline de eventos — Material no trae un componente equivalente.
+   ========================================================================= */
 .timeline { list-style: none; padding: 0; margin: 0; }
 .timeline li {
-  border-left: 2px solid #1a5fb4;
-  padding: 0.4rem 0 0.4rem 1rem;
-  margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  position: relative;
+  padding: 0 0 var(--space-4) var(--space-4);
+  border-left: 1px solid var(--mat-sys-outline-variant);
+  font: var(--mat-sys-body-medium);
 }
-.timeline li .ts { color: #6b7785; font-size: 0.78rem; }
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -4.5px;
+  top: 0.3rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mat-sys-primary);
+}
+.timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline li .ts {
+  display: block;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-small);
+  margin-bottom: 2px;
+}
 
-.agent-log {
-  border: 1px solid #e3e8ec;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
+/* Salida de una ejecucion de agente (tool calls + respuesta), dentro de un mat-expansion-panel. */
+.agent-log .meta {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+  margin-bottom: var(--space-3);
 }
-.agent-log h3 { margin: 0 0 0.4rem; font-size: 0.95rem; }
-.agent-log .meta { color: #6b7785; font-size: 0.8rem; margin-bottom: 0.4rem; }
 .agent-log pre {
-  background: #f4f6f8;
-  padding: 0.5rem;
-  border-radius: 4px;
+  background: var(--mat-sys-surface-container);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
   font-size: 0.78rem;
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
+  margin: var(--space-1) 0 var(--space-4);
 }
+.agent-log .tool-name { font: var(--mat-sys-label-large); }
+
+/* =========================================================================
+   Indicadores de estado (tier de prioridad, riesgo, urgencia). Texto solo,
+   sin icono — el color + la palabra ya comunican el estado sin ruido extra.
+   ========================================================================= */
+.status-pill {
+  display: inline-block;
+  padding: 2px var(--space-3);
+  border-radius: 999px;
+  font: var(--mat-sys-label-medium);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill--critical { background: var(--status-critical-container); color: var(--status-critical); }
+.status-pill--warning   { background: var(--status-warning-container); color: var(--status-warning); }
+.status-pill--good      { background: var(--status-good-container); color: var(--status-good); }
+.status-pill--neutral   { background: var(--status-neutral-container); color: var(--status-neutral); }
+
+/* =========================================================================
+   Estados de pantalla (cargando / error / vacio) — compartidos entre vistas.
+   ========================================================================= */
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+.state-panel mat-icon {
+  font-size: 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  opacity: 0.5;
+}
+.state-panel--error { color: var(--status-critical); }
+.state-panel--error mat-icon { opacity: 0.8; }
+
+/* =========================================================================
+   Overrides globales de Material — via las custom properties que Material
+   ya expone para theming, nunca peleando con su especificidad ni !important.
+   ========================================================================= */
+mat-card {
+  --mdc-elevated-card-container-elevation: var(--elevation-1);
+  --mdc-elevated-card-container-shape: var(--radius-md);
+  --mdc-outlined-card-container-shape: var(--radius-md);
+}
+
+.mat-mdc-table {
+  --mat-table-row-item-container-height: 52px;
+}
+

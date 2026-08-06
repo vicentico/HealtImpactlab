@@ -1,0 +1,74 @@
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+
+.kpi-card {
+  border-left: 3px solid var(--mat-sys-outline-variant);
+}
+
+.kpi-value {
+  font: var(--mat-sys-headline-medium);
+  font-weight: 600;
+}
+
+.kpi-label {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: var(--space-1);
+}
+
+.kpi-card--critical { border-left-color: var(--status-critical); }
+.kpi-card--critical .kpi-value { color: var(--status-critical); }
+.kpi-card--warning { border-left-color: var(--status-warning); }
+.kpi-card--warning .kpi-value { color: var(--status-warning); }
+.kpi-card--good { border-left-color: var(--status-good); }
+.kpi-card--good .kpi-value { color: var(--status-good); }
+.kpi-card--neutral { border-left-color: var(--mat-sys-primary); }
+
+.bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 32px;
+  align-items: center;
+  gap: var(--space-4);
+  font: var(--mat-sys-body-medium);
+}
+
+.bar-tier { font-weight: 600; }
+
+.bar-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.bar-p1 mat-progress-bar { --mdc-linear-progress-active-indicator-color: var(--status-critical); }
+.bar-p2 mat-progress-bar { --mdc-linear-progress-active-indicator-color: var(--status-warning); }
+.bar-p3 mat-progress-bar { --mdc-linear-progress-active-indicator-color: var(--status-good); }
+
+.estado-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.estado-table td {
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  font: var(--mat-sys-body-medium);
+}
+.estado-table tr:last-child td { border-bottom: none; }
+.estado-count {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-footnote {
+  margin-top: var(--space-5);
+}

@@ -1,0 +1,103 @@
+.back-link {
+  margin-left: calc(-1 * var(--space-3));
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.case-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-5) 0 var(--space-5);
+  flex-wrap: wrap;
+}
+
+.case-header h1 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.page-subtitle-inline {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.estado-pill {
+  margin-top: var(--space-1);
+}
+
+mat-card {
+  margin-bottom: var(--space-5);
+}
+
+.card-emphasis {
+  border: 1px solid var(--mat-sys-primary);
+}
+
+.kv-list p {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-2) 0;
+  font: var(--mat-sys-body-medium);
+}
+
+.kv-label {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.chip-row {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chip-critical {
+  --mat-chip-elevated-container-color: var(--status-critical-container);
+  --mat-chip-label-text-color: var(--status-critical);
+}
+
+.section-divider {
+  margin: var(--space-4) 0;
+}
+
+.subsection-title {
+  font: var(--mat-sys-title-small);
+  margin: var(--space-5) 0 var(--space-3);
+}
+
+.priorizacion-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin: var(--space-2) 0 4px;
+}
+
+.justificacion {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 var(--space-4);
+}
+
+.agenda-line {
+  margin-top: var(--space-4);
+}
+
+.urgent-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  border-left: 3px solid var(--status-critical);
+  background: var(--status-critical-container);
+  color: var(--status-critical);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-5);
+  font: var(--mat-sys-body-medium);
+}
+.urgent-banner mat-icon { flex: none; }

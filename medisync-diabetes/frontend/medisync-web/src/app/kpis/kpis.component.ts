@@ -1,4 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../core/api.service';
 import { KpisDto } from '../core/models';
 
@@ -8,7 +13,7 @@ const TIER_ORDER = ['P1', 'P2', 'P3'] as const;
 
 @Component({
   selector: 'app-kpis',
-  imports: [],
+  imports: [MatCardModule, MatIconModule, MatProgressBarModule, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './kpis.component.html',
   styleUrl: './kpis.component.css'
 })
@@ -52,11 +57,7 @@ export class KpisComponent {
   }
 
   tileClass(estado: Estado): string {
-    return `kpi-tile status-${estado}`;
-  }
-
-  fillClass(tier: string): string {
-    return tier === 'P1' ? 'bar-fill fill-p1' : tier === 'P2' ? 'bar-fill fill-p2' : 'bar-fill fill-p3';
+    return `kpi-card kpi-card--${estado}`;
   }
 
   // El dossier ECICEP cita 15,6% de NSP como el problema actual a resolver: por eso ese piso ya

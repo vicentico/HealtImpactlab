@@ -1,44 +1,75 @@
-<section class="page">
-  <header class="page-header">
-    <h1>Lista de espera - Diabetologia</h1>
-    <button type="button" (click)="cargar()">Actualizar</button>
-  </header>
+<div class="page-header">
+  <h1>Lista de espera &mdash; Diabetologia</h1>
+  <button mat-stroked-button (click)="cargar()" [disabled]="loading()">
+    <mat-icon>refresh</mat-icon>
+    Actualizar
+  </button>
+</div>
 
-  @if (loading()) {
-    <p>Cargando...</p>
-  } @else if (error()) {
-    <p class="error">{{ error() }}</p>
-  } @else if (casos().length === 0) {
+@if (loading()) {
+  <div class="state-panel">
+    <mat-spinner diameter="36" />
+    <p>Cargando lista de espera...</p>
+  </div>
+} @else if (error()) {
+  <div class="state-panel state-panel--error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+  </div>
+} @else if (casos().length === 0) {
+  <div class="state-panel">
+    <mat-icon>inbox</mat-icon>
     <p>No hay casos en lista de espera. Registra una interconsulta para comenzar.</p>
-  } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Paciente</th>
-          <th>Especialidad</th>
-          <th>Estado</th>
-          <th>Dias en espera</th>
-          <th>Prioridad</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (caso of casos(); track caso.listaEsperaItemId) {
-          <tr>
-            <td>
-              {{ caso.pacienteNombre }}
-              @if (caso.requiereDerivacionUrgente) {
-                <span class="badge-urgente" title="Alerta clinica: requiere derivacion inmediata a un profesional">Derivacion urgente</span>
-              }
-            </td>
-            <td>{{ caso.especialidadId }}</td>
-            <td>{{ caso.estado }}</td>
-            <td>{{ caso.diasEnEspera }}</td>
-            <td><span [class]="tierClass(caso.priorityTier)">{{ caso.priorityTier ?? 'Pendiente' }}</span></td>
-            <td><a [routerLink]="['/casos', caso.listaEsperaItemId]">Ver detalle</a></td>
-          </tr>
+    <a mat-flat-button routerLink="/ingreso">Ingresar paciente</a>
+  </div>
+} @else {
+  <table mat-table [dataSource]="casos()" class="mat-elevation-z1 full-width">
+    <ng-container matColumnDef="paciente">
+      <th mat-header-cell *matHeaderCellDef>Paciente</th>
+      <td mat-cell *matCellDef="let caso">
+        {{ caso.pacienteNombre }}
+        @if (caso.requiereDerivacionUrgente) {
+          <span class="status-pill status-pill--critical" matTooltip="Alerta clinica: requiere derivacion inmediata a un profesional">
+            Urgente
+          </span>
         }
-      </tbody>
-    </table>
-  }
-</section>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="especialidad">
+      <th mat-header-cell *matHeaderCellDef>Especialidad</th>
+      <td mat-cell *matCellDef="let caso">{{ caso.especialidadId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let caso">{{ caso.estado }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="diasEnEspera">
+      <th mat-header-cell *matHeaderCellDef>Dias en espera</th>
+      <td mat-cell *matCellDef="let caso">{{ caso.diasEnEspera }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="prioridad">
+      <th mat-header-cell *matHeaderCellDef>Prioridad</th>
+      <td mat-cell *matCellDef="let caso">
+        <span [class]="tierPillClass(caso.priorityTier)">{{ caso.priorityTier ?? 'Pendiente' }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let caso">
+        <a mat-button color="primary" [routerLink]="['/casos', caso.listaEsperaItemId]">
+          Ver detalle
+          <mat-icon iconPositionEnd>chevron_right</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        [class.row-urgente]="row.requiereDerivacionUrgente"></tr>
+  </table>
+}

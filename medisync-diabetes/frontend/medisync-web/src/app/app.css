@@ -1,0 +1,33 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.brand {
+  font: var(--mat-sys-title-medium);
+  margin-left: var(--space-1);
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.app-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.app-nav a.active-link {
+  color: var(--mat-sys-primary);
+}
+
+@media (max-width: 600px) {
+  .nav-label { display: none; }
+}

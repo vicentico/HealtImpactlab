@@ -1,123 +1,223 @@
-<section class="page">
-  <p><a routerLink="/">&larr; Volver a lista de espera</a></p>
+<a mat-button routerLink="/" class="back-link">
+  <mat-icon>arrow_back</mat-icon>
+  Lista de espera
+</a>
 
-  @if (loading()) {
-    <p>Cargando...</p>
-  } @else if (!caso()) {
-    <p class="error">{{ error() }}</p>
-  } @else {
-    @let c = caso()!;
+@if (loading()) {
+  <div class="state-panel">
+    <mat-spinner diameter="32" />
+    <p>Cargando caso...</p>
+  </div>
+} @else if (!caso()) {
+  <div class="state-panel state-panel--error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+  </div>
+} @else {
+  @let c = caso()!;
 
-    <header class="page-header">
-      <h1>{{ c.pacienteNombre }} - {{ c.especialidadId }}</h1>
-      <span class="tier">{{ c.estado }}</span>
-    </header>
-
-    @if (error()) {
-      <p class="error">{{ error() }}</p>
-    }
-
-    <div class="card">
-      <p><strong>Dias en espera:</strong> {{ c.diasEnEspera }}</p>
-      <p><strong>Caso:</strong> {{ c.listaEsperaItemId }}</p>
-      <p><strong>Interconsulta:</strong> {{ c.interconsultaId }}</p>
+  <header class="case-header">
+    <div>
+      <h1>
+        {{ c.pacienteNombre }}
+        @if (c.pacienteEdad; as edad) { <span class="page-subtitle-inline">{{ edad }} anos</span> }
+      </h1>
+      <p class="page-subtitle">
+        {{ c.especialidadId }} &middot; {{ c.diasEnEspera }} dias en espera &middot; caso {{ c.listaEsperaItemId }}
+      </p>
     </div>
+    <span class="status-pill status-pill--neutral estado-pill">{{ c.estado }}</span>
+  </header>
 
-    @if (c.priorizacion; as p) {
-      <div class="card">
-        <h2>Priorizacion IA</h2>
+  @if (derivacionUrgente()) {
+    <p class="urgent-banner">
+      <mat-icon>emergency</mat-icon>
+      <span><strong>Derivacion urgente.</strong> Este caso no sigue el flujo automatico de priorizacion —
+        requiere atencion inmediata de un profesional. Motivo en el historial, mas abajo.</span>
+    </p>
+  }
+
+  @if (c.priorizacion; as p) {
+    <mat-card class="card-emphasis">
+      <mat-card-header>
+        <mat-card-title>Priorizacion IA</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
         @if (p.riskLevel) {
-          <p><strong>Riesgo:</strong> {{ p.riskLevel }} (score {{ p.riskScore }})</p>
-          <p>{{ p.riskJustificacion }}</p>
+          <p class="priorizacion-row">
+            <span class="kv-label">Riesgo</span>
+            <span [class]="pillClass(p.riskLevel)">{{ p.riskLevel }} &middot; {{ p.riskScore }}</span>
+          </p>
+          <p class="justificacion">{{ p.riskJustificacion }}</p>
         } @else {
-          <p>Calculando riesgo clinico...</p>
+          <p class="hint">Calculando riesgo clinico...</p>
         }
         @if (p.priorityTier) {
-          <p><strong>Prioridad sugerida:</strong> {{ p.priorityTier }} (score {{ p.priorityScore }})</p>
-          <p>{{ p.priorityJustificacion }}</p>
+          <p class="priorizacion-row">
+            <span class="kv-label">Prioridad sugerida</span>
+            <span [class]="pillClass(p.priorityTier)">{{ p.priorityTier }} &middot; {{ p.priorityScore }}</span>
+          </p>
+          <p class="justificacion">{{ p.priorityJustificacion }}</p>
         }
         @if (p.tierConfirmado) {
-          <p><strong>Prioridad confirmada:</strong> {{ p.tierConfirmado }} por {{ p.confirmadaPor }}
-            ({{ p.origenConfirmacion }})</p>
+          <p class="priorizacion-row">
+            <span class="kv-label">Prioridad confirmada</span>
+            <span [class]="pillClass(p.tierConfirmado)">{{ p.tierConfirmado }}</span>
+            <span class="hint">por {{ p.confirmadaPor }} ({{ p.origenConfirmacion }})</span>
+          </p>
         }
-      </div>
-    }
+      </mat-card-content>
+    </mat-card>
+  }
 
-    @if (c.agenda; as a) {
-      <div class="card">
-        <h2>Agenda</h2>
-        <p><strong>Fecha:</strong> {{ a.fechaHora | date:'medium' }}</p>
-        <p><strong>Profesional:</strong> {{ a.profesionalId }} - <strong>Centro:</strong> {{ a.centroSaludId }}</p>
-      </div>
-    }
-
-    <div class="card">
-      <h2>Acciones</h2>
-      @if (c.estado === 'Priorizado') {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Acciones</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (derivacionUrgente()) {
+        <p class="hint">Sin acciones automaticas disponibles: un profesional debe tomar la posta fuera del sistema.</p>
+      } @else if (c.estado === 'Priorizado') {
         <div class="form-grid">
-          <label>Aprobado por
-            <input [(ngModel)]="aprobadoPor" name="aprobadoPor" placeholder="Dr. Gonzalez" />
-          </label>
-          <label>Prioridad confirmada
-            <select [(ngModel)]="prioridadConfirmada" name="prioridadConfirmada">
-              <option value="P1">P1</option>
-              <option value="P2">P2</option>
-              <option value="P3">P3</option>
-            </select>
-          </label>
+          <mat-form-field>
+            <mat-label>Aprobado por</mat-label>
+            <input matInput [(ngModel)]="aprobadoPor" name="aprobadoPor" placeholder="Dr. Gonzalez" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Prioridad confirmada</mat-label>
+            <mat-select [(ngModel)]="prioridadConfirmada" name="prioridadConfirmada">
+              <mat-option value="P1">P1</mat-option>
+              <mat-option value="P2">P2</mat-option>
+              <mat-option value="P3">P3</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <p><button (click)="revisar()" [disabled]="actionInProgress() || !aprobadoPor">
-          {{ actionInProgress() ? 'Asignando agenda (Scheduler Agent)...' : 'Confirmar revision medica y agendar' }}
-        </button></p>
+        <button mat-flat-button (click)="revisar()" [disabled]="actionInProgress() || !aprobadoPor">
+          {{ actionInProgress() ? 'Asignando agenda...' : 'Confirmar revision medica y agendar' }}
+        </button>
       } @else if (c.estado === 'Agendado') {
-        <button (click)="confirmar()" [disabled]="actionInProgress()">Confirmar cita</button>
+        <button mat-flat-button (click)="confirmar()" [disabled]="actionInProgress()">Confirmar cita</button>
       } @else if (c.estado === 'Confirmado') {
-        <button (click)="atender()" [disabled]="actionInProgress()">Registrar atencion</button>
+        <button mat-flat-button (click)="atender()" [disabled]="actionInProgress()">Registrar atencion</button>
       } @else if (c.estado === 'Atendido') {
-        <button (click)="cerrar()" [disabled]="actionInProgress()">Cerrar caso</button>
+        <button mat-flat-button (click)="cerrar()" [disabled]="actionInProgress()">Cerrar caso</button>
       } @else if (c.estado === 'Cerrado') {
-        <p>Caso cerrado.</p>
+        <p class="hint">Caso cerrado.</p>
       } @else {
-        <p>Esperando que la priorizacion IA termine...</p>
+        <p class="hint">Esperando que la priorizacion IA termine...</p>
       }
-    </div>
+      @if (c.agenda; as a) {
+        <p class="agenda-line hint">
+          Agenda: {{ a.fechaHora | date:'EEEE d MMMM, HH:mm' }} &middot; {{ a.profesionalId }} &middot; {{ a.centroSaludId }}
+        </p>
+      }
+    </mat-card-content>
+  </mat-card>
 
-    <div class="card">
-      <h2>Linea de tiempo</h2>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Perfil clinico</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (c.datosClinicos; as dc) {
+        <div class="kv-list">
+          <p><span class="kv-label">HbA1c</span> {{ dc.hbA1c }}%</p>
+          <p><span class="kv-label">Glicemia en ayunas</span> {{ dc.glicemiaAyunas }} mg/dL</p>
+          <p><span class="kv-label">VFG</span> {{ dc.vfg ?? '—' }}</p>
+          <p><span class="kv-label">Microalbuminuria/RAC</span> {{ dc.microalbuminuriaRac ?? '—' }}</p>
+          <p><span class="kv-label">Neuropatia previa</span> {{ dc.neuropatiaPrevia ? 'Si' : 'No' }}</p>
+          <p><span class="kv-label">Urgencias (90 dias)</span> {{ dc.urgenciasUltimos90Dias }}</p>
+        </div>
+        @if (dc.comorbilidades.length > 0) {
+          <div class="chip-row">
+            <span class="kv-label">Comorbilidades</span>
+            <mat-chip-set>
+              @for (item of dc.comorbilidades; track item) { <mat-chip>{{ item }}</mat-chip> }
+            </mat-chip-set>
+          </div>
+        }
+        @if (dc.alertasClinicas.length > 0) {
+          <div class="chip-row">
+            <span class="kv-label">Alertas clinicas</span>
+            <mat-chip-set>
+              @for (a of dc.alertasClinicas; track a) { <mat-chip class="chip-critical">{{ a }}</mat-chip> }
+            </mat-chip-set>
+          </div>
+        }
+      }
+
+      <mat-divider class="section-divider" />
+
+      <div class="kv-list">
+        <p><span class="kv-label">Dependencia severa</span> {{ c.vulnerabilidad.dependenciaSevera ? 'Si' : 'No' }}</p>
+        <p><span class="kv-label">Ruralidad</span> {{ c.vulnerabilidad.ruralidad ? 'Si' : 'No' }}</p>
+      </div>
+      @if (c.vulnerabilidad.determinantesSociales.length > 0) {
+        <div class="chip-row">
+          <span class="kv-label">Determinantes sociales</span>
+          <mat-chip-set>
+            @for (d of c.vulnerabilidad.determinantesSociales; track d) { <mat-chip>{{ d }}</mat-chip> }
+          </mat-chip-set>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Historial</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
       <ul class="timeline">
         @for (e of c.eventos; track e.id) {
-          <li><span class="ts">{{ e.timestamp | date:'medium' }}</span> - <strong>{{ e.tipoEvento }}</strong>: {{ e.descripcion }}</li>
+          <li>
+            <span class="ts">{{ e.timestamp | date:'d MMM, HH:mm' }}</span>
+            <strong>{{ e.tipoEvento }}</strong> &mdash; {{ e.descripcion }}
+          </li>
         }
       </ul>
-    </div>
 
-    <div class="card">
-      <h2>Ejecuciones de agentes IA</h2>
-      @for (log of c.ejecucionesAgentes; track log.id) {
-        <div class="agent-log">
-          <h3>{{ log.agenteNombre }}</h3>
-          <div class="meta">
-            {{ log.timestamp | date:'medium' }} - {{ log.iteraciones }} iteraciones -
-            {{ log.tokensEntrada }} tokens entrada / {{ log.tokensSalida }} tokens salida
-          </div>
-          @for (tc of log.toolCalls; track $index) {
-            <p><strong>tool:</strong> {{ tc.toolName }}</p>
-            <pre>{{ tc.inputJson }} =&gt; {{ tc.outputJson }}</pre>
+      @if (c.decisiones.length > 0) {
+        <h3 class="subsection-title">Decisiones auditadas</h3>
+        <ul class="timeline">
+          @for (d of c.decisiones; track d.id) {
+            <li>
+              <span class="ts">{{ d.timestamp | date:'d MMM, HH:mm' }}</span>
+              <strong>{{ d.decision }}</strong>
+              <span class="status-pill status-pill--neutral">{{ d.origen }}</span>
+              &mdash; {{ d.justificacion }}
+            </li>
           }
-          <p><strong>Respuesta final:</strong></p>
-          <pre>{{ log.output }}</pre>
-        </div>
+        </ul>
       }
-    </div>
+    </mat-card-content>
+  </mat-card>
 
-    <div class="card">
-      <h2>Decisiones auditadas</h2>
-      <ul class="timeline">
-        @for (d of c.decisiones; track d.id) {
-          <li><span class="ts">{{ d.timestamp | date:'medium' }}</span> - <strong>{{ d.decision }}</strong>
-            ({{ d.origen }}, {{ d.autor }}): {{ d.justificacion }}</li>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Ejecuciones de agentes IA</mat-card-title>
+      <mat-card-subtitle>{{ c.ejecucionesAgentes.length }} ejecuciones — tool calls, tokens y respuesta final</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion multi>
+        @for (log of c.ejecucionesAgentes; track log.id) {
+          <mat-expansion-panel class="agent-log">
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ log.agenteNombre }}</mat-panel-title>
+              <mat-panel-description>
+                {{ log.iteraciones }} iteraciones &middot; {{ log.tokensEntrada }}/{{ log.tokensSalida }} tokens
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="meta">{{ log.timestamp | date:'medium' }}</div>
+            @for (tc of log.toolCalls; track $index) {
+              <p class="tool-name">tool: {{ tc.toolName }}</p>
+              <pre>{{ tc.inputJson }} =&gt; {{ tc.outputJson }}</pre>
+            }
+            <p class="tool-name">Respuesta final</p>
+            <pre>{{ log.output }}</pre>
+          </mat-expansion-panel>
         }
-      </ul>
-    </div>
-  }
-</section>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+}

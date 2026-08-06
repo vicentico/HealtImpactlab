@@ -1,64 +1,133 @@
-<section class="page">
-  <header class="page-header">
-    <h1>Ingreso de paciente y derivacion</h1>
-  </header>
+<div class="page-header">
+  <h1>Ingreso de paciente y derivacion</h1>
+</div>
 
-  <p>
-    Registra un paciente y su interconsulta. Al enviar, se dispara automaticamente la clasificacion
-    en lista de espera y el calculo de riesgo/prioridad por los agentes IA (Risk Agent + Priority Agent).
-  </p>
+<p class="hint">
+  Registra un paciente y su interconsulta. Al enviar, se dispara automaticamente la clasificacion en lista
+  de espera y el calculo de riesgo/prioridad ECICEP por los agentes IA (Risk Agent + Priority Agent).
+</p>
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
+<form (ngSubmit)="registrarYDerivar()" #f="ngForm">
+  <mat-stepper [orientation]="stepperOrientation()" [linear]="false">
 
-  <form class="card" (ngSubmit)="registrarYDerivar()" #f="ngForm">
-    <h2>Paciente</h2>
-    <div class="form-grid">
-      <label>Run
-        <input name="run" [(ngModel)]="run" required placeholder="12345678-9" />
-      </label>
-      <label>Nombre completo
-        <input name="nombre" [(ngModel)]="nombre" required placeholder="Juan Perez Soto" />
-      </label>
-      <label>Fecha de nacimiento
-        <input name="fechaNacimiento" type="date" [(ngModel)]="fechaNacimiento" required />
-      </label>
-      <label>CESFAM de origen
-        <select name="cesfamOrigenId" [(ngModel)]="cesfamOrigenId">
-          <option value="cesfam-001">CESFAM Los Aromos</option>
-          <option value="cesfam-002">CESFAM Villa Esperanza</option>
-          <option value="cesfam-003">CESFAM San Rafael</option>
-        </select>
-      </label>
-    </div>
+    <mat-step label="Paciente">
+      <div class="form-grid step-content">
+        <mat-form-field>
+          <mat-label>Run</mat-label>
+          <input matInput name="run" [(ngModel)]="run" required placeholder="12345678-9" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Nombre completo</mat-label>
+          <input matInput name="nombre" [(ngModel)]="nombre" required placeholder="Juan Perez Soto" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input matInput type="date" name="fechaNacimiento" [(ngModel)]="fechaNacimiento" required />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>CESFAM de origen</mat-label>
+          <mat-select name="cesfamOrigenId" [(ngModel)]="cesfamOrigenId">
+            <mat-option value="cesfam-001">CESFAM Los Aromos</mat-option>
+            <mat-option value="cesfam-002">CESFAM Villa Esperanza</mat-option>
+            <mat-option value="cesfam-003">CESFAM San Rafael</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="step-actions">
+        <button mat-flat-button matStepperNext type="button">Siguiente</button>
+      </div>
+    </mat-step>
 
-    <h2>Interconsulta</h2>
-    <div class="form-grid">
-      <label>Especialidad
-        <select name="especialidadId" [(ngModel)]="especialidadId">
-          <option value="diabetologia">Diabetologia</option>
-          <option value="endocrinologia">Endocrinologia</option>
-        </select>
-      </label>
-      <label>Motivo
-        <input name="motivo" [(ngModel)]="motivo" required />
-      </label>
-      <label>HbA1c (%)
-        <input name="hbA1c" type="number" step="0.1" [(ngModel)]="hbA1c" required />
-      </label>
-      <label>Glicemia en ayunas (mg/dL)
-        <input name="glicemiaAyunas" type="number" [(ngModel)]="glicemiaAyunas" required />
-      </label>
-      <label class="form-grid full">Comorbilidades (separadas por coma)
-        <input name="comorbilidadesTexto" [(ngModel)]="comorbilidadesTexto" />
-      </label>
-    </div>
+    <mat-step label="Vulnerabilidad">
+      <p class="hint">Factor Vulnerabilidad del Score ECICEP (peso 0.15).</p>
+      <div class="checkbox-row">
+        <mat-checkbox name="dependenciaSevera" [(ngModel)]="dependenciaSevera">Dependencia severa</mat-checkbox>
+        <mat-checkbox name="ruralidad" [(ngModel)]="ruralidad">Ruralidad</mat-checkbox>
+      </div>
+      <app-chip-list-input
+        label="Determinantes sociales"
+        placeholder="ej. Vive sola (Enter)"
+        [(value)]="determinantesSociales" />
+      <div class="step-actions">
+        <button mat-stroked-button matStepperPrevious type="button">Atras</button>
+        <button mat-flat-button matStepperNext type="button">Siguiente</button>
+      </div>
+    </mat-step>
 
-    <p style="margin-top: 1rem;">
-      <button type="submit" [disabled]="submitting() || f.invalid">
-        {{ submitting() ? 'Procesando (Risk Agent + Priority Agent)...' : 'Registrar e iniciar priorizacion IA' }}
-      </button>
-    </p>
-  </form>
-</section>
+    <mat-step label="Datos clinicos">
+      <div class="form-grid step-content">
+        <mat-form-field>
+          <mat-label>Especialidad</mat-label>
+          <mat-select name="especialidadId" [(ngModel)]="especialidadId">
+            <mat-option value="diabetologia">Diabetologia</mat-option>
+            <mat-option value="endocrinologia">Endocrinologia</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Motivo</mat-label>
+          <input matInput name="motivo" [(ngModel)]="motivo" required />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>HbA1c (%)</mat-label>
+          <input matInput type="number" step="0.1" name="hbA1c" [(ngModel)]="hbA1c" required />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Glicemia en ayunas (mg/dL)</mat-label>
+          <input matInput type="number" name="glicemiaAyunas" [(ngModel)]="glicemiaAyunas" required />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>VFG (ml/min)</mat-label>
+          <input matInput type="number" step="0.1" name="vfg" [(ngModel)]="vfg" placeholder="ej. 52" />
+          <mat-hint>Severidad ECICEP — opcional</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Microalbuminuria / RAC</mat-label>
+          <input matInput type="number" step="0.1" name="microalbuminuriaRac" [(ngModel)]="microalbuminuriaRac" placeholder="ej. 180" />
+          <mat-hint>Severidad ECICEP — opcional</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Urgencias (SAPU/SAR/UEH) en 90 dias</mat-label>
+          <input matInput type="number" min="0" name="urgenciasUltimos90Dias" [(ngModel)]="urgenciasUltimos90Dias" />
+          <mat-hint>Urgencia_Reciente ECICEP</mat-hint>
+        </mat-form-field>
+        <div class="full-span checkbox-row">
+          <mat-checkbox name="neuropatiaPrevia" [(ngModel)]="neuropatiaPrevia">Neuropatia previa</mat-checkbox>
+        </div>
+      </div>
+      <app-chip-list-input
+        label="Comorbilidades"
+        placeholder="ej. Hipertension (Enter)"
+        [(value)]="comorbilidades" />
+      <div class="step-actions">
+        <button mat-stroked-button matStepperPrevious type="button">Atras</button>
+        <button mat-flat-button matStepperNext type="button">Siguiente</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="Alertas y confirmacion">
+      <p class="hint">
+        Si se completa esta lista, el Risk Agent deriva el caso de inmediato (fuera del flujo normal de
+        priorizacion) sin calcular el score ponderado — dejar vacio si no aplica.
+      </p>
+      <app-chip-list-input
+        label="Alertas clinicas"
+        placeholder="ej. Pie diabetico infectado activo, Wagner 3 (Enter)"
+        [(value)]="alertasClinicas" />
+
+      @if (alertasClinicas.length > 0) {
+        <p class="warning-banner">
+          <mat-icon>emergency</mat-icon>
+          Este caso se registrara con derivacion urgente automatica.
+        </p>
+      }
+
+      <div class="step-actions">
+        <button mat-stroked-button matStepperPrevious type="button">Atras</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting() || f.invalid">
+          {{ submitting() ? 'Procesando...' : 'Registrar e iniciar priorizacion IA' }}
+        </button>
+      </div>
+    </mat-step>
+
+  </mat-stepper>
+</form>
