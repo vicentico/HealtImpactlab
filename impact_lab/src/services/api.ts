@@ -10,7 +10,7 @@ import {
 } from '../types/patient';
 import { INITIAL_MOCK_PATIENTS } from '../data/mockPatients';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
 /**
  * In-memory fallback patient database store.
@@ -449,6 +449,68 @@ export async function updateContraloriaStatus(
   }
 }
 
+export async function fetchCapacitySummary(): Promise<any> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/capacidad`);
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.warn('[API] Endpoint /capacidad no disponible, usando mock local:', err);
+    return {
+      totalBoxes: 5,
+      activeBoxes: 4,
+      totalWeeklyHours: 176,
+      occupiedWeeklyHours: 148,
+      boxUtilizationRate: 84.1,
+      referralQuotas: [
+        { id: 'QUOTA-01', cesfamName: 'CESFAM Carol Urzúa', hospitalTarget: 'Hospital San Borja Arriarán', specialty: 'DIABETOLOGIA', monthlyQuotaLimit: 15, monthlyQuotaUsed: 11, validMonth: '2026-08' },
+        { id: 'QUOTA-02', cesfamName: 'CESFAM Carol Urzúa', hospitalTarget: 'Hospital San Borja Arriarán', specialty: 'NEFROLOGIA', monthlyQuotaLimit: 8, monthlyQuotaUsed: 6, validMonth: '2026-08' },
+        { id: 'QUOTA-03', cesfamName: 'CESFAM Carol Urzúa', hospitalTarget: 'Hospital Barros Lucco (HBLT)', specialty: 'PIE_DIABETICO', monthlyQuotaLimit: 6, monthlyQuotaUsed: 5, validMonth: '2026-08' },
+      ],
+      boxes: [
+        { id: 'BOX-101', cesfamName: 'CESFAM Carol Urzúa', boxNumber: 1, boxType: 'MEDICO', isActive: true, weeklyHoursCapacity: 44, currentWeeklyOccupancy: 36 },
+        { id: 'BOX-102', cesfamName: 'CESFAM Carol Urzúa', boxNumber: 2, boxType: 'MEDICO', isActive: true, weeklyHoursCapacity: 44, currentWeeklyOccupancy: 40 },
+        { id: 'BOX-103', cesfamName: 'CESFAM Carol Urzúa', boxNumber: 3, boxType: 'ENFERMERA', isActive: true, weeklyHoursCapacity: 44, currentWeeklyOccupancy: 30 },
+        { id: 'BOX-104', cesfamName: 'CESFAM Carol Urzúa', boxNumber: 4, boxType: 'MULTIDISCIPLINARIO', isActive: true, weeklyHoursCapacity: 44, currentWeeklyOccupancy: 42 },
+        { id: 'BOX-105', cesfamName: 'CESFAM Carol Urzúa', boxNumber: 5, boxType: 'MEDICO', isActive: false, weeklyHoursCapacity: 44, currentWeeklyOccupancy: 0 },
+      ]
+    };
+  }
+}
+
+export async function crearDerivacion(payload: {
+  patientId: string;
+  targetFacility: string;
+  targetSpecialty: string;
+  clinicalReason: string;
+  referringPhysician: string;
+}): Promise<Patient> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/derivaciones`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        patient_id: payload.patientId,
+        target_facility: payload.targetFacility,
+        target_specialty: payload.targetSpecialty,
+        clinical_reason: payload.clinicalReason,
+        referring_physician: payload.referringPhysician
+      })
+    });
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    const data = await res.json();
+    return mapBackendPatientToFrontend(data.patient);
+  } catch (err) {
+    console.warn('[API] Endpoint /derivaciones no disponible, actualizando estado local:', err);
+    return updateContraloriaStatus(payload.patientId, {
+      new_status: 'DERIVADO',
+      clinical_note: `Derivación enviada a ${payload.targetFacility} (${payload.targetSpecialty}): ${payload.clinicalReason}`,
+      physician_name: payload.referringPhysician,
+      physician_role: 'Médico Contralor APS'
+    });
+  }
+}
+
 /**
  * Service export object for backward compatibility.
  */
@@ -456,6 +518,8 @@ export const apiService = {
   fetchPacientes,
   calcularNT118,
   updateContraloriaStatus,
+  fetchCapacitySummary,
+  crearDerivacion,
   getPatients: fetchPacientes,
   calculateNt118Score: calcularNT118
 };

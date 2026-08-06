@@ -1,18 +1,23 @@
 import React from 'react';
-import { Activity, ShieldCheck, Bell, User, RefreshCw } from 'lucide-react';
+import { Activity, ShieldCheck, Bell, User, RefreshCw, Shield } from 'lucide-react';
+import { UserRole } from '../types/capacity';
 
 interface HeaderProps {
   cesfamName: string;
   onCesfamChange: (name: string) => void;
   pendingCount: number;
   criticalCount: number;
+  activeRole: UserRole;
+  onRoleChange: (role: UserRole) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   cesfamName,
   onCesfamChange,
   pendingCount,
-  criticalCount
+  criticalCount,
+  activeRole,
+  onRoleChange
 }) => {
   return (
     <header className="glass-panel sticky top-0 z-30 border-b border-slate-800 bg-slate-950/80 px-6 py-3.5 backdrop-blur-md">
@@ -34,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Center: CESFAM Selector & Live Status */}
+        {/* Center: CESFAM & Role Selectors */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs">
             <span className="text-slate-400 font-medium">Establecimiento:</span>
@@ -49,12 +54,19 @@ export const Header: React.FC<HeaderProps> = ({
             </select>
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 rounded-full bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 text-xs text-emerald-400">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>Algoritmo Sincronizado</span>
+          <div className="flex items-center gap-2 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs">
+            <Shield className="h-3.5 w-3.5 text-purple-400" />
+            <span className="text-slate-400 font-medium">Rol:</span>
+            <select
+              value={activeRole}
+              onChange={(e) => onRoleChange(e.target.value as UserRole)}
+              className="bg-transparent font-semibold text-purple-300 focus:outline-none cursor-pointer"
+            >
+              <option value="MEDICO_CONTRALOR" className="bg-slate-900 text-slate-100">Médico Contralor APS</option>
+              <option value="ENFERMERA_GESTORA" className="bg-slate-900 text-slate-100">Enfermera Gestora Caso</option>
+              <option value="ADMIN_SOMO" className="bg-slate-900 text-slate-100">Admin SOMO / SIGTE</option>
+              <option value="AUDITOR_MINSAL" className="bg-slate-900 text-slate-100">Auditor MINSAL / Red</option>
+            </select>
           </div>
         </div>
 
@@ -77,12 +89,16 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="h-6 w-px bg-slate-800"></div>
 
           <div className="flex items-center gap-2 pl-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 border border-slate-700 text-cyan-400 font-semibold text-xs">
-              AS
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-900/60 border border-purple-500/40 text-purple-300 font-semibold text-xs">
+              {activeRole === 'MEDICO_CONTRALOR' ? 'AS' : activeRole === 'ENFERMERA_GESTORA' ? 'MV' : 'ADM'}
             </div>
             <div className="hidden sm:block text-left">
-              <p className="text-xs font-semibold text-slate-200">Dr. Alejandro Silva</p>
-              <p className="text-[10px] text-slate-400">Médico Contralor APS</p>
+              <p className="text-xs font-semibold text-slate-200">
+                {activeRole === 'MEDICO_CONTRALOR' ? 'Dr. Alejandro Silva' : activeRole === 'ENFERMERA_GESTORA' ? 'Enf. Maria Valenzuela' : 'Usuario SOMO'}
+              </p>
+              <p className="text-[10px] text-purple-400 font-medium">
+                {activeRole.replace('_', ' ')}
+              </p>
             </div>
           </div>
         </div>

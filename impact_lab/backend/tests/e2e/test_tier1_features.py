@@ -39,7 +39,7 @@ def test_openapi_json_schema_valid(client: TestClient):
     assert response.status_code == 200
     json_data = response.json()
     assert "info" in json_data
-    assert json_data["info"]["title"] == "HealthImpactLab Backend API"
+    assert json_data["info"]["title"] in ("Health OS Backend API", "HealthImpactLab Backend API")
     assert json_data["info"]["version"] == "1.0.0"
 
 

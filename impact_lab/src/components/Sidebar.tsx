@@ -6,7 +6,8 @@ import {
   FileSpreadsheet, 
   HelpCircle, 
   Sliders,
-  Users
+  Users,
+  Building2
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems = [
     { id: 'dashboard', label: 'Torre de Control', icon: LayoutDashboard },
+    { id: 'capacity', label: 'Capacidad & Red', icon: Building2 },
     { id: 'matrix', label: 'Matriz Riesgo NT 118', icon: Layers },
     { id: 'audit', label: 'Bitácora Contraloría', icon: ClipboardCheck },
     { id: 'import', label: 'Importador SIGTE', icon: FileSpreadsheet },

@@ -6,9 +6,11 @@ import { PressureMap } from './components/PressureMap';
 import { PrioritizedTable } from './components/PrioritizedTable';
 import { PatientDetailPanel } from './components/PatientDetailPanel';
 import { OperationalExplicationPanel } from './components/OperationalExplicationPanel';
+import { CapacityDashboard } from './components/CapacityDashboard';
 import { Patient, ContraloriaStatus } from './types/patient';
-import { fetchPacientes, updateContraloriaStatus, calcularNT118 } from './services/api';
-import { Layers, ClipboardCheck, FileSpreadsheet, Download, Shield, Loader2 } from 'lucide-react';
+import { UserRole, CapacitySummary } from './types/capacity';
+import { fetchPacientes, updateContraloriaStatus, calcularNT118, fetchCapacitySummary } from './services/api';
+import { Layers, ClipboardCheck, FileSpreadsheet, Download, Shield, Loader2, Building2 } from 'lucide-react';
 
 export function App() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -18,6 +20,24 @@ export function App() {
   const [cesfamName, setCesfamName] = useState<string>('CESFAM Carol Urzúa');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isExplicationOpen, setIsExplicationOpen] = useState<boolean>(false);
+  const [activeRole, setActiveRole] = useState<UserRole>('MEDICO_CONTRALOR');
+  const [capacityData, setCapacityData] = useState<CapacitySummary | null>(null);
+  const [loadingCapacity, setLoadingCapacity] = useState<boolean>(false);
+
+  useEffect(() => {
+    const loadCapacity = async () => {
+      setLoadingCapacity(true);
+      try {
+        const data = await fetchCapacitySummary();
+        setCapacityData(data);
+      } catch (err) {
+        console.error('Error fetching capacity summary:', err);
+      } finally {
+        setLoadingCapacity(false);
+      }
+    };
+    loadCapacity();
+  }, [cesfamName]);
 
   // Fetch Patients Asynchronously on mount and when CESFAM selection changes
   useEffect(() => {
@@ -114,6 +134,8 @@ export function App() {
         onCesfamChange={setCesfamName}
         pendingCount={pendingCount}
         criticalCount={criticalCount}
+        activeRole={activeRole}
+        onRoleChange={setActiveRole}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -128,6 +150,13 @@ export function App() {
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           
+          {activeTab === 'capacity' && (
+            <CapacityDashboard
+              capacityData={capacityData}
+              loading={loadingCapacity}
+            />
+          )}
+
           {activeTab === 'dashboard' && (
             <>
               {/* Top Banner Actions */}
