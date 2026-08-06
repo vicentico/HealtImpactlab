@@ -7,6 +7,7 @@ import { PrioritizedTable } from './components/PrioritizedTable';
 import { PatientDetailPanel } from './components/PatientDetailPanel';
 import { OperationalExplicationPanel } from './components/OperationalExplicationPanel';
 import { CapacityDashboard } from './components/CapacityDashboard';
+import { GlobalAuditView } from './components/GlobalAuditView';
 import { Patient, ContraloriaStatus } from './types/patient';
 import { UserRole, CapacitySummary } from './types/capacity';
 import { fetchPacientes, updateContraloriaStatus, calcularNT118, fetchCapacitySummary } from './services/api';
@@ -227,13 +228,7 @@ export function App() {
           )}
 
           {activeTab === 'audit' && (
-            <div className="glass-panel rounded-xl p-8 text-center space-y-3">
-              <ClipboardCheck className="h-10 w-10 text-emerald-400 mx-auto" />
-              <h3 className="text-lg font-bold text-white">Bitácora Global de Contraloría</h3>
-              <p className="text-xs text-slate-400 max-w-md mx-auto">
-                Registro inmutable de trazabilidad auditable con firma digital de profesionales médicos contralores.
-              </p>
-            </div>
+            <GlobalAuditView patients={patients} />
           )}
 
           {activeTab === 'import' && (
