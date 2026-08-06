@@ -18,14 +18,14 @@ export const CapacityDashboard: React.FC<CapacityDashboardProps> = ({ capacityDa
   }
 
   const {
-    totalBoxes,
-    activeBoxes,
-    totalWeeklyHours,
-    occupiedWeeklyHours,
-    boxUtilizationRate,
-    referralQuotas,
-    boxes
-  } = capacityData;
+    totalBoxes = 0,
+    activeBoxes = 0,
+    totalWeeklyHours = 0,
+    occupiedWeeklyHours = 0,
+    boxUtilizationRate = 0,
+    referralQuotas = [],
+    boxes = []
+  } = capacityData || {};
 
   return (
     <div className="space-y-6">
@@ -164,7 +164,7 @@ export const CapacityDashboard: React.FC<CapacityDashboardProps> = ({ capacityDa
         <div className="glass-panel rounded-xl p-5 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Hospital className="h-4 w-4 text-purple-400" />
+              <Building2 className="h-4 w-4 text-purple-400" />
               Topes de Derivación a Red Hospitalaria (Quotas)
             </h3>
             <span className="text-xs text-slate-400">Mes: Agosto 2026</span>

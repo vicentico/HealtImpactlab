@@ -40,31 +40,33 @@ export const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm flex justify-end">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-sm flex justify-end">
       
-      <div className="w-full max-w-2xl glass-panel border-l border-slate-800 bg-slate-950 h-full overflow-y-auto p-6 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
+      <div className="w-full max-w-2xl glass-panel border-l border-slate-200 dark:border-slate-800 h-full overflow-y-auto p-6 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
         
         <div className="space-y-6">
           
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-slate-800 pb-4">
+          <div className="flex items-start justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500 font-mono-tabular text-xs font-bold text-white">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-600 font-mono-tabular text-xs font-bold text-white">
                   #{patient.priorityPosition}
                 </span>
-                <h2 className="text-xl font-bold text-white">{patient.fullName}</h2>
+                <h2 className="text-xl font-bold apple-title">{patient.fullName}</h2>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                RUT: <span className="font-mono-tabular text-slate-200">{patient.rut}</span> • {patient.age} años ({patient.gender}) • <span className="text-cyan-400 font-semibold">{patient.sector}</span>
+              <p className="text-xs apple-subtitle mt-1">
+                RUT: <span className="font-mono-tabular font-bold apple-title">{patient.rut}</span> • {patient.age} años ({patient.gender}) • <span className="text-cyan-600 dark:text-cyan-400 font-bold">{patient.sector}</span>
               </p>
             </div>
-            <button 
+
+            <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-900 hover:text-white transition-colors"
+              className="rounded-full apple-control p-2 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100"
             >
               <X className="h-5 w-5" />
             </button>
+          </div>
           </div>
 
           {/* NT 118 Score Breakdown */}
@@ -250,6 +252,5 @@ export const PatientDetailPanel: React.FC<PatientDetailPanelProps> = ({
 
       </div>
 
-    </div>
   );
 };

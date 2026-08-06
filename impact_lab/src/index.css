@@ -1,87 +1,141 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   APPLE STORE DESIGN SYSTEM (SF HIG — LIGHT & DARK)
+   ============================================================================ */
+
 :root {
-  --bg-app: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f1f5f9;
-  --border-color: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --apple-canvas: #f5f5f7;
+  --apple-card: #ffffff;
+  --apple-card-hover: #fafafa;
+  --apple-border: rgba(0, 0, 0, 0.08);
+  --apple-border-subtle: rgba(0, 0, 0, 0.05);
+  --apple-header-bg: rgba(255, 255, 255, 0.82);
+  --apple-sidebar-bg: rgba(245, 245, 247, 0.85);
+  
+  --apple-text-primary: #1d1d1f;
+  --apple-text-secondary: #515154;
+  --apple-text-muted: #86868b;
+  
+  --apple-control-bg: #e8e8ed;
+  --apple-control-border: #d2d2d7;
+  --apple-control-text: #1d1d1f;
+
+  --apple-shadow-card: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --apple-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 html.dark {
-  --bg-app: #070b14;
-  --bg-card: #0f172a;
-  --bg-card-hover: #1e293b;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-  --shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.7);
+  --apple-canvas: #000000;
+  --apple-card: #1c1c1e;
+  --apple-card-hover: #2c2c2e;
+  --apple-border: rgba(255, 255, 255, 0.12);
+  --apple-border-subtle: rgba(255, 255, 255, 0.06);
+  --apple-header-bg: rgba(28, 28, 30, 0.82);
+  --apple-sidebar-bg: rgba(18, 18, 20, 0.85);
+
+  --apple-text-primary: #f5f5f7;
+  --apple-text-secondary: #a1a1a6;
+  --apple-text-muted: #86868b;
+
+  --apple-control-bg: #2c2c2e;
+  --apple-control-border: #3a3a3c;
+  --apple-control-text: #f5f5f7;
+
+  --apple-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --apple-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.7);
 }
 
 @layer base {
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--bg-app);
-    color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+    background-color: var(--apple-canvas);
+    color: var(--apple-text-primary);
+    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     -webkit-font-smoothing: antialiased;
   }
 }
 
 .font-mono-tabular {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-family: "SF Mono", "JetBrains Mono", monospace;
   font-variant-numeric: tabular-nums;
 }
 
-/* Glassmorphism Panel Adaptable (Modo Claro & Oscuro) */
+/* Apple Frosted Glass Panel */
 .glass-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-card);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--apple-card);
+  border: 1px solid var(--apple-border);
+  box-shadow: var(--apple-shadow-card);
+  border-radius: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html.light .glass-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 html.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(28, 28, 30, 0.82);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .glass-panel-hover:hover {
-  background: var(--bg-card-hover);
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-1px);
+  background-color: var(--apple-card-hover);
+  box-shadow: var(--apple-shadow-hover);
+  transform: scale(1.01);
 }
 
-/* Estilos Personalizados para Tablas e Inputs en Modo Claro */
-html.light select,
-html.light input {
-  background-color: #ffffff;
-  color: #0f172a;
-  border-color: #cbd5e1;
+/* Header & Sidebar Specific Apple Glass */
+.apple-header {
+  background-color: var(--apple-header-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--apple-border);
 }
 
-html.light option {
-  background-color: #ffffff;
-  color: #0f172a;
+.apple-sidebar {
+  background-color: var(--apple-sidebar-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-right: 1px solid var(--apple-border);
 }
 
-/* Custom Scrollbar */
+/* Apple Controls: Inputs & Selects */
+.apple-control {
+  background-color: var(--apple-control-bg);
+  border: 1px solid var(--apple-control-border);
+  color: var(--apple-control-text);
+  border-radius: 0.625rem;
+  transition: all 0.2s ease;
+}
+
+.apple-control option {
+  background-color: var(--apple-card);
+  color: var(--apple-text-primary);
+}
+
+/* Apple Utility Classes for Text */
+.apple-title {
+  color: var(--apple-text-primary);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.apple-subtitle {
+  color: var(--apple-text-secondary);
+}
+
+.apple-muted {
+  color: var(--apple-text-muted);
+}
+
+/* Custom Apple Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -89,10 +143,10 @@ html.light option {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+  background: rgba(134, 134, 139, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.7);
+  background: rgba(134, 134, 139, 0.65);
 }

@@ -101,20 +101,20 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-xl border border-slate-800 p-5 space-y-4">
+    <div className="glass-panel p-5 space-y-4">
       
       {/* Table Filters & Toolbar */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-slate-800/80 pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
         
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 apple-muted" />
           <input
             type="text"
             placeholder="Buscar por RUT o Nombre del Paciente..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-lg bg-slate-900 border border-slate-800 pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
+            className="w-full apple-control pl-9 pr-4 py-2 text-xs placeholder-slate-400 focus:outline-none"
           />
         </div>
 
@@ -124,60 +124,60 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
           {/* Privacy Toggle */}
           <button
             onClick={() => setIsPrivacyMaskEnabled(!isPrivacyMaskEnabled)}
-            className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+            className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors ${
               isPrivacyMaskEnabled
-                ? 'bg-cyan-950/60 border-cyan-500/40 text-cyan-300'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400'
+                : 'apple-control apple-subtitle hover:apple-title'
             }`}
             title="Privacy by Design: Enmascara el RUT en vistas masivas"
           >
-            {isPrivacyMaskEnabled ? <EyeOff className="h-3.5 w-3.5 text-cyan-400" /> : <Eye className="h-3.5 w-3.5" />}
+            {isPrivacyMaskEnabled ? <EyeOff className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" /> : <Eye className="h-3.5 w-3.5" />}
             <span>{isPrivacyMaskEnabled ? 'Privacidad: RUT Enmascarado' : 'Mostrar RUT'}</span>
           </button>
 
-          <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-slate-400">
-            <Filter className="h-3.5 w-3.5 text-slate-500" />
-            <span>Sector:</span>
+          <div className="flex items-center gap-1.5 apple-control px-3 py-1.5 text-xs font-medium">
+            <Filter className="h-3.5 w-3.5 apple-muted" />
+            <span className="apple-muted">Sector:</span>
             <select
               value={selectedSector}
               onChange={(e) => setSelectedSector(e.target.value)}
-              className="bg-transparent font-medium text-slate-200 focus:outline-none cursor-pointer"
+              className="bg-transparent font-semibold apple-title focus:outline-none cursor-pointer"
             >
-              <option value="ALL" className="bg-slate-900">Todos los Sectores</option>
-              <option value="SECTOR_ROJO" className="bg-slate-900">Sector Rojo</option>
-              <option value="SECTOR_VERDE" className="bg-slate-900">Sector Verde</option>
-              <option value="SECTOR_AZUL" className="bg-slate-900">Sector Azul</option>
-              <option value="SECTOR_AMARILLO" className="bg-slate-900">Sector Amarillo</option>
+              <option value="ALL">Todos los Sectores</option>
+              <option value="SECTOR_ROJO">Sector Rojo</option>
+              <option value="SECTOR_VERDE">Sector Verde</option>
+              <option value="SECTOR_AZUL">Sector Azul</option>
+              <option value="SECTOR_AMARILLO">Sector Amarillo</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-slate-400">
-            <span>Riesgo NT 118:</span>
+          <div className="flex items-center gap-1.5 apple-control px-3 py-1.5 text-xs font-medium">
+            <span className="apple-muted">Riesgo:</span>
             <select
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
-              className="bg-transparent font-medium text-slate-200 focus:outline-none cursor-pointer"
+              className="bg-transparent font-semibold apple-title focus:outline-none cursor-pointer"
             >
-              <option value="ALL" className="bg-slate-900">Todos los Niveles</option>
-              <option value="CRITICO" className="bg-slate-900">Crítico</option>
-              <option value="ALTO" className="bg-slate-900">Alto</option>
-              <option value="MEDIO" className="bg-slate-900">Medio</option>
-              <option value="BAJO" className="bg-slate-900">Bajo</option>
+              <option value="ALL">Todos los Niveles</option>
+              <option value="CRITICO">Crítico</option>
+              <option value="ALTO">Alto</option>
+              <option value="MEDIO">Medio</option>
+              <option value="BAJO">Bajo</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-slate-400">
-            <span>Contraloría:</span>
+          <div className="flex items-center gap-1.5 apple-control px-3 py-1.5 text-xs font-medium">
+            <span className="apple-muted">Estado:</span>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-transparent font-medium text-slate-200 focus:outline-none cursor-pointer"
+              className="bg-transparent font-semibold apple-title focus:outline-none cursor-pointer"
             >
-              <option value="ALL" className="bg-slate-900">Todos los Estados</option>
-              <option value="PENDIENTE" className="bg-slate-900">Pendiente</option>
-              <option value="APROBADO" className="bg-slate-900">Aprobado</option>
-              <option value="REQUIERE_REVISION" className="bg-slate-900">Exámenes Req.</option>
-              <option value="OBSERVADO" className="bg-slate-900">Observado</option>
+              <option value="ALL">Todos los Estados</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="APROBADO">Aprobado</option>
+              <option value="REQUIERE_REVISION">Exámenes Req.</option>
+              <option value="OBSERVADO">Observado</option>
             </select>
           </div>
         </div>
@@ -186,24 +186,24 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
 
       {/* Table Data */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs text-slate-300">
-          <thead className="bg-slate-900/80 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+        <table className="w-full text-left text-xs apple-title">
+          <thead className="bg-slate-100 dark:bg-slate-900/80 text-[10px] font-bold uppercase tracking-wider apple-subtitle border-b border-slate-200 dark:border-slate-800">
             <tr>
-              <th className="py-3 px-4">Prioridad IA</th>
-              <th className="py-3 px-4">Paciente / RUT</th>
-              <th className="py-3 px-4">Sector</th>
-              <th className="py-3 px-4">HbA1c / PA</th>
-              <th className="py-3 px-4">VFG Renal</th>
-              <th className="py-3 px-4">Puntaje NT 118</th>
-              <th className="py-3 px-4">Días Lista</th>
-              <th className="py-3 px-4">Estado Contraloría</th>
-              <th className="py-3 px-4 text-right">Acción</th>
+              <th className="py-3.5 px-4">Prioridad IA</th>
+              <th className="py-3.5 px-4">Paciente / RUT</th>
+              <th className="py-3.5 px-4">Sector</th>
+              <th className="py-3.5 px-4">HbA1c / PA</th>
+              <th className="py-3.5 px-4">VFG Renal</th>
+              <th className="py-3.5 px-4">Puntaje NT 118</th>
+              <th className="py-3.5 px-4">Días Lista</th>
+              <th className="py-3.5 px-4">Estado Contraloría</th>
+              <th className="py-3.5 px-4 text-right">Acción</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 font-medium">
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 font-medium">
             {filteredPatients.length === 0 ? (
               <tr>
-                <td colSpan={9} className="text-center py-8 text-slate-500">
+                <td colSpan={9} className="text-center py-8 apple-muted">
                   No se encontraron pacientes que coincidan con los filtros seleccionados.
                 </td>
               </tr>
@@ -212,13 +212,13 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                 <tr 
                   key={patient.id}
                   onClick={() => onSelectPatient(patient)}
-                  className="hover:bg-slate-900/70 transition-colors cursor-pointer group"
+                  className="hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors cursor-pointer group"
                 >
                   
                   {/* Position & Trend */}
                   <td className="py-3.5 px-4 font-mono-tabular">
                     <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded bg-slate-800 font-bold text-slate-100 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                      <span className="flex h-6 w-6 items-center justify-center rounded bg-slate-200 dark:bg-slate-800 font-bold apple-title group-hover:bg-cyan-600 group-hover:text-white transition-colors">
                         #{patient.priorityPosition}
                       </span>
                       {renderTrend(patient.priorityPosition, patient.previousPriorityPosition)}
@@ -228,8 +228,8 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                   {/* Patient Info with Privacy Masking */}
                   <td className="py-3.5 px-4">
                     <div>
-                      <p className="font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">{patient.fullName}</p>
-                      <p className="text-[10px] font-mono-tabular text-slate-400">
+                      <p className="font-bold apple-title group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">{patient.fullName}</p>
+                      <p className="text-[10px] font-mono-tabular apple-subtitle">
                         {isPrivacyMaskEnabled ? maskRut(patient.rut) : patient.rut} • {patient.age} años ({patient.gender})
                       </p>
                     </div>
@@ -244,21 +244,21 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                   <td className="py-3.5 px-4 font-mono-tabular">
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className={`font-bold ${patient.hba1c >= 10.0 ? 'text-red-400' : patient.hba1c >= 9.0 ? 'text-amber-400' : 'text-slate-200'}`}>
+                        <span className={`font-bold ${patient.hba1c >= 10.0 ? 'text-red-600 dark:text-red-400' : patient.hba1c >= 9.0 ? 'text-amber-600 dark:text-amber-400' : 'apple-title'}`}>
                           HbA1c {patient.hba1c}%
                         </span>
                         {patient.hasFootUlcer && (
-                          <span className="rounded bg-red-950 text-red-300 text-[9px] px-1 font-sans border border-red-500/40" title="Pie Diabético Activo">Pie!</span>
+                          <span className="rounded bg-red-500/10 text-red-600 dark:text-red-300 text-[9px] px-1 font-sans border border-red-500/30" title="Pie Diabético Activo">Pie!</span>
                         )}
                       </div>
-                      <p className="text-[10px] text-slate-400">PA: {patient.systolicBP}/{patient.diastolicBP} mmHg</p>
+                      <p className="text-[10px] apple-subtitle">PA: {patient.systolicBP}/{patient.diastolicBP} mmHg</p>
                     </div>
                   </td>
 
                   {/* VFG Renal */}
                   <td className="py-3.5 px-4 font-mono-tabular">
-                    <span className={`font-semibold ${patient.vfg < 45 ? 'text-red-400 font-bold' : patient.vfg < 60 ? 'text-amber-300' : 'text-slate-300'}`}>
-                      {patient.vfg} <span className="text-[9px] font-normal text-slate-500">mL/min</span>
+                    <span className={`font-semibold ${patient.vfg < 45 ? 'text-red-600 dark:text-red-400 font-bold' : patient.vfg < 60 ? 'text-amber-600 dark:text-amber-300' : 'apple-subtitle'}`}>
+                      {patient.vfg} <span className="text-[9px] font-normal apple-muted">mL/min</span>
                     </span>
                   </td>
 

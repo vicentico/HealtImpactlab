@@ -44,30 +44,30 @@ export const PressureMap: React.FC<PressureMapProps> = ({ programs, patients }) 
   }, [programs, patients]);
 
   const getPressureStatus = (demand: number, capacity: number) => {
-    const ratio = demand / (capacity * 2); // ratio de presión a 2 semanas
+    const ratio = demand / (capacity * 2);
     if (ratio > 2.0) {
-      return { label: 'CRÍTICA', color: 'text-red-400 bg-red-950/60 border-red-500/40', badge: 'bg-red-500' };
+      return { label: 'CRÍTICA', color: 'text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/30', badge: 'bg-red-500' };
     } else if (ratio > 1.2) {
-      return { label: 'ALTA', color: 'text-amber-400 bg-amber-950/60 border-amber-500/40', badge: 'bg-amber-500' };
+      return { label: 'ALTA', color: 'text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30', badge: 'bg-amber-500' };
     } else if (ratio > 0.8) {
-      return { label: 'MEDIA', color: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/40', badge: 'bg-cyan-500' };
+      return { label: 'MEDIA', color: 'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/30', badge: 'bg-cyan-500' };
     }
-    return { label: 'NORMAL', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-500/40', badge: 'bg-emerald-500' };
+    return { label: 'NORMAL', color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30', badge: 'bg-emerald-500' };
   };
 
   return (
-    <div className="glass-panel rounded-xl border border-slate-800 p-5 space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+    <div className="glass-panel p-5 space-y-4">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
             <Gauge className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Mapa de Presión Asistencial APS</h3>
-            <p className="text-[11px] text-slate-400">Balance de Demanda en Lista de Espera vs Capacidad de Agenda Semanal</p>
+            <h3 className="text-sm font-bold apple-title">Mapa de Presión Asistencial APS</h3>
+            <p className="text-[11px] apple-subtitle">Balance de Demanda en Lista de Espera vs Capacidad de Agenda Semanal</p>
           </div>
         </div>
-        <span className="rounded-full bg-slate-900 border border-slate-800 px-3 py-1 text-[10px] font-mono-tabular text-slate-400">
+        <span className="rounded-full apple-control px-3 py-1 text-[10px] font-mono-tabular apple-subtitle">
           Corte: Semana Actual
         </span>
       </div>
@@ -80,34 +80,34 @@ export const PressureMap: React.FC<PressureMapProps> = ({ programs, patients }) 
           return (
             <div 
               key={prog.id}
-              className="rounded-xl bg-slate-900/90 border border-slate-800/80 p-3.5 flex flex-col justify-between space-y-3 hover:border-slate-700 transition-all"
+              className="rounded-xl glass-panel p-3.5 flex flex-col justify-between space-y-3 glass-panel-hover"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-xs font-semibold text-slate-200 line-clamp-1">{prog.name}</span>
-                <span className={`text-[9px] font-bold px-2 py-0.5 rounded border ${status.color}`}>
+                <span className="text-xs font-bold apple-title line-clamp-1">{prog.name}</span>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${status.color}`}>
                   {status.label}
                 </span>
               </div>
 
               <div className="space-y-1.5 font-mono-tabular text-xs">
-                <div className="flex items-center justify-between text-slate-400">
+                <div className="flex items-center justify-between apple-subtitle">
                   <span>Demanda Actual:</span>
-                  <span className="font-bold text-white">{prog.demandCount} pac.</span>
+                  <span className="font-bold apple-title">{prog.demandCount} pac.</span>
                 </div>
-                <div className="flex items-center justify-between text-slate-400">
+                <div className="flex items-center justify-between apple-subtitle">
                   <span>Oferta Semanal:</span>
-                  <span className="font-semibold text-cyan-300">{prog.weeklyCapacity} {prog.unit}</span>
+                  <span className="font-bold text-cyan-600 dark:text-cyan-400">{prog.weeklyCapacity} {prog.unit}</span>
                 </div>
-                <div className="flex items-center justify-between text-slate-400 border-t border-slate-800/60 pt-1">
-                  <span>Brecha Estimada:</span>
-                  <span className={`font-bold ${gap > 10 ? 'text-red-400' : 'text-amber-300'}`}>
+                <div className="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-1">
+                  <span className="apple-subtitle">Brecha Estimada:</span>
+                  <span className={`font-bold ${gap > 10 ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-300'}`}>
                     +{gap} pacientes
                   </span>
                 </div>
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-slate-200 dark:bg-slate-900 rounded-full h-1.5 overflow-hidden">
                 <div 
                   className={`h-full ${status.badge}`}
                   style={{ width: `${Math.min(100, (prog.demandCount / (prog.weeklyCapacity * 2)) * 100)}%` }}
