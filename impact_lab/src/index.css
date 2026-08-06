@@ -1,57 +1,60 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   APPLE STORE DESIGN SYSTEM (SF HIG — LIGHT & DARK)
+   HEALTH OS — OFFICIAL APPLE HUMAN INTERFACE DESIGN SYSTEM (HIG)
    ============================================================================ */
 
-:root {
-  --apple-canvas: #f5f5f7;
-  --apple-card: #ffffff;
-  --apple-card-hover: #fafafa;
-  --apple-border: rgba(0, 0, 0, 0.08);
-  --apple-border-subtle: rgba(0, 0, 0, 0.05);
-  --apple-header-bg: rgba(255, 255, 255, 0.82);
-  --apple-sidebar-bg: rgba(245, 245, 247, 0.85);
+/* LIGHT THEME (DEFAULT) */
+html, html.light {
+  --bg-app: #f5f5f7;
+  --bg-header: #ffffff;
+  --apple-sidebar-bg: #f5f5f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafafa;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-strong: #e5e5e7;
   
-  --apple-text-primary: #1d1d1f;
-  --apple-text-secondary: #515154;
-  --apple-text-muted: #86868b;
-  
-  --apple-control-bg: #e8e8ed;
-  --apple-control-border: #d2d2d7;
-  --apple-control-text: #1d1d1f;
+  --text-title: #1d1d1f;
+  --text-body: #333336;
+  --text-secondary: #515154;
+  --text-muted: #6e6e73;
 
-  --apple-shadow-card: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --apple-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --control-bg: #e8e8ed;
+  --control-border: #d2d2d7;
+  --control-text: #1d1d1f;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
+/* DARK THEME */
 html.dark {
-  --apple-canvas: #000000;
-  --apple-card: #1c1c1e;
-  --apple-card-hover: #2c2c2e;
-  --apple-border: rgba(255, 255, 255, 0.12);
-  --apple-border-subtle: rgba(255, 255, 255, 0.06);
-  --apple-header-bg: rgba(28, 28, 30, 0.82);
-  --apple-sidebar-bg: rgba(18, 18, 20, 0.85);
+  --bg-app: #000000;
+  --bg-header: #1c1c1e;
+  --apple-sidebar-bg: #121214;
+  --bg-card: #1c1c1e;
+  --bg-card-hover: #2c2c2e;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-strong: #2c2c2e;
 
-  --apple-text-primary: #f5f5f7;
-  --apple-text-secondary: #a1a1a6;
-  --apple-text-muted: #86868b;
+  --text-title: #f5f5f7;
+  --text-body: #e5e5e7;
+  --text-secondary: #a1a1a6;
+  --text-muted: #86868b;
 
-  --apple-control-bg: #2c2c2e;
-  --apple-control-border: #3a3a3c;
-  --apple-control-text: #f5f5f7;
+  --control-bg: #2c2c2e;
+  --control-border: #3a3a3c;
+  --control-text: #f5f5f7;
 
-  --apple-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
-  --apple-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 @layer base {
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
-    background-color: var(--apple-canvas);
-    color: var(--apple-text-primary);
-    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    background-color: var(--bg-app);
+    color: var(--text-title);
     -webkit-font-smoothing: antialiased;
   }
 }
@@ -61,81 +64,56 @@ html.dark {
   font-variant-numeric: tabular-nums;
 }
 
-/* Apple Frosted Glass Panel */
+/* Apple Store Card Surface */
 .glass-panel {
-  background-color: var(--apple-card);
-  border: 1px solid var(--apple-border);
-  box-shadow: var(--apple-shadow-card);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
   border-radius: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html.light .glass-panel {
-  background-color: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-}
-
-html.dark .glass-panel {
-  background-color: rgba(28, 28, 30, 0.82);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-}
-
-.glass-panel-hover:hover {
-  background-color: var(--apple-card-hover);
-  box-shadow: var(--apple-shadow-hover);
-  transform: scale(1.01);
-}
-
-/* Header & Sidebar Specific Apple Glass */
+/* Header & Sidebar */
 .apple-header {
-  background-color: var(--apple-header-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--apple-border);
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .apple-sidebar {
   background-color: var(--apple-sidebar-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-right: 1px solid var(--apple-border);
+  border-right: 1px solid var(--border-color);
 }
 
-/* Apple Controls: Inputs & Selects */
+/* Controls & Selects */
 .apple-control {
-  background-color: var(--apple-control-bg);
-  border: 1px solid var(--apple-control-border);
-  color: var(--apple-control-text);
+  background-color: var(--control-bg);
+  border: 1px solid var(--control-border);
+  color: var(--control-text);
   border-radius: 0.625rem;
-  transition: all 0.2s ease;
 }
 
 .apple-control option {
-  background-color: var(--apple-card);
-  color: var(--apple-text-primary);
+  background-color: var(--bg-card);
+  color: var(--text-title);
 }
 
-/* Apple Utility Classes for Text */
+/* Semantic Text Overrides */
 .apple-title {
-  color: var(--apple-text-primary);
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  color: var(--text-title) !important;
 }
 
 .apple-subtitle {
-  color: var(--apple-text-secondary);
+  color: var(--text-secondary) !important;
 }
 
 .apple-muted {
-  color: var(--apple-text-muted);
+  color: var(--text-muted) !important;
 }
 
-/* Custom Apple Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -143,10 +121,6 @@ html.dark .glass-panel {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(134, 134, 139, 0.35);
+  background: rgba(134, 134, 139, 0.4);
   border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(134, 134, 139, 0.65);
 }
