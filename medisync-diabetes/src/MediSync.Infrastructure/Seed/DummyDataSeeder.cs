@@ -42,7 +42,9 @@ public class DummyDataSeeder(MongoContext context)
         await context.Profesionales.InsertManyAsync(profesionales.Select(p => p.ToDocument()), cancellationToken: ct);
 
         var pacientes = ReadJson<PacienteSeed>(dummyDataPath, "pacientes.json")
-            .Select(p => new Paciente(p.Run, p.Nombre, DateTime.Parse(p.FechaNacimiento), p.CesfamOrigenId))
+            .Select(p => new Paciente(
+                p.Run, p.Nombre, DateTime.Parse(p.FechaNacimiento), p.CesfamOrigenId,
+                p.DependenciaSevera, p.Ruralidad, p.DeterminantesSociales))
             .ToList();
         await context.Pacientes.InsertManyAsync(pacientes.Select(p => p.ToDocument()), cancellationToken: ct);
 
@@ -69,5 +71,7 @@ public class DummyDataSeeder(MongoContext context)
     private record EspecialidadSeed(string Id, string Nombre);
     private record CentroSaludSeed(string Id, string Nombre, string Tipo);
     private record ProfesionalSeed(string Id, string Nombre, string EspecialidadId, string CentroSaludId);
-    private record PacienteSeed(string Run, string Nombre, string FechaNacimiento, string CesfamOrigenId);
+    private record PacienteSeed(
+        string Run, string Nombre, string FechaNacimiento, string CesfamOrigenId,
+        bool DependenciaSevera = false, bool Ruralidad = false, List<string>? DeterminantesSociales = null);
 }

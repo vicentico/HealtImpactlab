@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddHttpClient<AnthropicClient>();
 
         services.AddScoped<IAgentTool, GetPatientClinicalDataTool>();
+        services.AddScoped<IAgentTool, CheckEmergencyEscalationTool>();
         services.AddScoped<IAgentTool, GetReferenceRangesTool>();
         services.AddScoped<IAgentTool, GetWaitingListStatsTool>();
         services.AddScoped<IAgentTool, GetRiskAssessmentTool>();

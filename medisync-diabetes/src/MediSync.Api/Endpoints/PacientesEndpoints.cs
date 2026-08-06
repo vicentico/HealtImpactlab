@@ -12,10 +12,13 @@ public static class PacientesEndpoints
         group.MapPost("/", async (RegistrarPacienteRequest request, ISender sender, CancellationToken ct) =>
         {
             var id = await sender.Send(new RegistrarPacienteCommand(
-                request.Run, request.Nombre, request.FechaNacimiento, request.CesfamOrigenId), ct);
+                request.Run, request.Nombre, request.FechaNacimiento, request.CesfamOrigenId,
+                request.DependenciaSevera, request.Ruralidad, request.DeterminantesSociales), ct);
             return Results.Created($"/api/pacientes/{id}", new { pacienteId = id });
         });
     }
 
-    public record RegistrarPacienteRequest(string Run, string Nombre, DateTime FechaNacimiento, string CesfamOrigenId);
+    public record RegistrarPacienteRequest(
+        string Run, string Nombre, DateTime FechaNacimiento, string CesfamOrigenId,
+        bool DependenciaSevera = false, bool Ruralidad = false, List<string>? DeterminantesSociales = null);
 }

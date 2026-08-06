@@ -14,6 +14,10 @@ public static class CasosEndpoints
             Results.Ok(await sender.Send(new ListarListaEsperaQuery(), ct)))
             .WithTags("ListaEspera");
 
+        app.MapGet("/api/kpis", async (ISender sender, CancellationToken ct) =>
+            Results.Ok(await sender.Send(new ObtenerKpisQuery(), ct)))
+            .WithTags("Kpis");
+
         var group = app.MapGroup("/api/casos").WithTags("Casos");
 
         group.MapGet("/{id}", async (string id, ISender sender, CancellationToken ct) =>

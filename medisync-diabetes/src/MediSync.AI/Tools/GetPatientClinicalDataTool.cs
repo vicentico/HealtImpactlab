@@ -6,7 +6,9 @@ namespace MediSync.AI.Tools;
 public class GetPatientClinicalDataTool(IPacienteRepository pacientes) : IAgentTool
 {
     public string Name => "get_patient_clinical_data";
-    public string Description => "Obtiene edad, antecedentes clinicos (HbA1c, glicemia en ayunas, comorbilidades) del paciente dado su pacienteId.";
+    public string Description => "Obtiene edad, antecedentes clinicos (HbA1c, glicemia en ayunas, VFG, microalbuminuria/RAC, " +
+        "neuropatia previa, comorbilidades, urgencias en los ultimos 90 dias) y factores de vulnerabilidad " +
+        "(dependencia severa, ruralidad, determinantes sociales) del paciente dado su pacienteId.";
 
     public JsonObject InputSchema => new()
     {
@@ -35,7 +37,14 @@ public class GetPatientClinicalDataTool(IPacienteRepository pacientes) : IAgentT
             ["edad"] = paciente.EdadEnAnios(),
             ["hbA1c"] = ultimo?.HbA1c,
             ["glicemiaAyunas"] = ultimo?.GlicemiaAyunas,
-            ["comorbilidades"] = ultimo is null ? new JsonArray() : new JsonArray(ultimo.Comorbilidades.Select(c => (JsonNode)c).ToArray())
+            ["vfg"] = ultimo?.Vfg,
+            ["microalbuminuriaRac"] = ultimo?.MicroalbuminuriaRac,
+            ["neuropatiaPrevia"] = ultimo?.NeuropatiaPrevia ?? false,
+            ["urgenciasUltimos90Dias"] = ultimo?.UrgenciasUltimos90Dias ?? 0,
+            ["comorbilidades"] = ultimo is null ? new JsonArray() : new JsonArray(ultimo.Comorbilidades.Select(c => (JsonNode)c).ToArray()),
+            ["dependenciaSevera"] = paciente.DependenciaSevera,
+            ["ruralidad"] = paciente.Ruralidad,
+            ["determinantesSociales"] = new JsonArray(paciente.DeterminantesSociales.Select(d => (JsonNode)d).ToArray())
         };
         return result.ToJsonString();
     }

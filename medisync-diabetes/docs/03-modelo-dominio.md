@@ -12,6 +12,9 @@ classDiagram
         +DateTime FechaNacimiento
         +string CesfamOrigenId
         +List~AntecedenteClinico~ Antecedentes
+        +bool DependenciaSevera
+        +bool Ruralidad
+        +List~string~ DeterminantesSociales
         +EdadEnAnios() int
         +RegistrarAntecedente(a)
         +UltimoAntecedente() AntecedenteClinico
@@ -23,6 +26,11 @@ classDiagram
         +double GlicemiaAyunas
         +IReadOnlyList~string~ Comorbilidades
         +DateTime FechaRegistro
+        +double? Vfg
+        +double? MicroalbuminuriaRac
+        +bool NeuropatiaPrevia
+        +int UrgenciasUltimos90Dias
+        +IReadOnlyList~string~ AlertasClinicas
     }
 
     class Interconsulta {
@@ -147,6 +155,12 @@ stateDiagram-v2
 Cualquier intento de transicion fuera de esta secuencia devuelve `Result.Failure` en vez de lanzar una
 excepcion (p.ej. no se puede confirmar un caso que aun esta `EnEspera`).
 
+**Excepcion a la secuencia**: si el Risk Agent detecta una derivacion urgente (ver
+[04-agentes-ia.md](04-agentes-ia.md)), el caso **no** transiciona a `Priorizado` — se queda en `Clasificado`,
+marcado con un `CasoEvento` `"DerivacionUrgente"`, hasta que un profesional lo tome manualmente. No es un
+estado nuevo del enum: es una condicion visible via eventos (y expuesta como `requiereDerivacionUrgente` en
+`GET /api/lista-espera`), a proposito para no expandir la maquina de estados por un caso de excepcion clinica.
+
 ## Notas de diseño
 
 - **Enums en vez de tablas de catalogo para estados**: `EstadoCaso`, `RiskLevel`, `PriorityTier`,
@@ -161,6 +175,12 @@ excepcion (p.ej. no se puede confirmar un caso que aun esta `EnEspera`).
   para el detalle de por que esto importa en la demo.
 - **`AntecedenteClinico` y `ToolCallRecord` son `record`s inmutables** — value objects sin identidad propia,
   embebidos en `Paciente.Antecedentes` y `AgentExecutionLog.ToolCalls` respectivamente.
+- **Campos ECICEP**: `Vfg`/`MicroalbuminuriaRac`/`NeuropatiaPrevia` (en `AntecedenteClinico`) alimentan el
+  factor Severidad; `UrgenciasUltimos90Dias` alimenta Urgencia_Reciente; `DependenciaSevera`/`Ruralidad`/
+  `DeterminantesSociales` (en `Paciente`) alimentan Vulnerabilidad; `AlertasClinicas` (en `AntecedenteClinico`)
+  dispara la derivacion urgente automatica en vez de aportar al score. Ver
+  [08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md) para el detalle de la formula y
+  [04-agentes-ia.md](04-agentes-ia.md) para como el Risk Agent los combina.
 - Fuera de este modelo (documentado como pendiente en [07-roadmap-futuro.md](07-roadmap-futuro.md)):
   `Contrarreferencia` como entidad completa, `Conversation`/`Memory` persistente entre sesiones de agente
   (cada ejecucion de agente en esta PoC es efimera, acotada al caso), `Tool Call` como coleccion propia

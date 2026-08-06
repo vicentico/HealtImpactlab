@@ -4,6 +4,14 @@ Los 4 diagramas de esta seccion reflejan el codigo tal como quedo implementado (
 tools y colecciones reales), no un diseño aspiracional. Fueron validados corriendo el flujo completo contra
 una API de Anthropic real (ver la traza de ejemplo al final de cada seccion relevante).
 
+> **Nota (ECICEP):** el diagrama 1 muestra `App->>Risk: EvaluarAsync(...)` como una sola llamada — sigue
+> siendo correcto a ese nivel, pero desde la incorporacion del Score de Criticidad Real ECICEP el Risk Agent
+> hace internamente un paso adicional (`check_emergency_escalation`, antes de razonar el score ponderado) que
+> puede terminar el flujo en `DerivacionUrgente` en vez de continuar a Priorizado. El detalle tool-por-tool de
+> ese paso, y el ejemplo de traza real de la formula ponderada, estan en
+> [04-agentes-ia.md](04-agentes-ia.md) y [08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md); no se
+> re-dibujaron los 4 diagramas de esta pagina para no duplicar esa documentacion.
+
 ## Indice
 
 - [1. Flujo end-to-end completo](#1-flujo-end-to-end-completo)

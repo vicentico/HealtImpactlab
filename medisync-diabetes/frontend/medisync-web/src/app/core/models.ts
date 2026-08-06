@@ -7,6 +7,7 @@ export interface ListaEsperaItemDto {
   diasEnEspera: number;
   priorityTier: string | null;
   priorityScore: number | null;
+  requiereDerivacionUrgente: boolean;
 }
 
 export interface PriorizacionDto {
@@ -62,6 +63,19 @@ export interface DecisionLogDto {
   origen: string;
   autor: string;
   timestamp: string;
+}
+
+export interface KpisDto {
+  totalCasosActivos: number;
+  totalCasosCerrados: number;
+  casosDerivacionUrgente: number;
+  diasEnEsperaPromedio: number;
+  diasEnEsperaMaximo: number;
+  distribucionPorEstado: Record<string, number>;
+  distribucionPorPriorityTier: Record<string, number>;
+  notificacionesEnviadas: number;
+  notificacionesSinRespuesta: number;
+  tasaNsp: number;
 }
 
 export interface CasoDetalleDto {

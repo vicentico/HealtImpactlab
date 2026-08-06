@@ -25,7 +25,12 @@
       <tbody>
         @for (caso of casos(); track caso.listaEsperaItemId) {
           <tr>
-            <td>{{ caso.pacienteNombre }}</td>
+            <td>
+              {{ caso.pacienteNombre }}
+              @if (caso.requiereDerivacionUrgente) {
+                <span class="badge-urgente" title="Alerta clinica: requiere derivacion inmediata a un profesional">Derivacion urgente</span>
+              }
+            </td>
             <td>{{ caso.especialidadId }}</td>
             <td>{{ caso.estado }}</td>
             <td>{{ caso.diasEnEspera }}</td>

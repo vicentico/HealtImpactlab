@@ -4,18 +4,23 @@
 
 La fuente es [`Proyecto_Priorizacion_Inteligente_ECICEP_ImpactLab.pdf`](Proyecto_Priorizacion_Inteligente_ECICEP_ImpactLab.pdf)
 (mismo `docs/`): el dossier oficial de postulación a Impact Lab 2026 (Health Solutions), que describe con mucho
-mas detalle de negocio, epidemiologico y financiero la misma vision que ya resumia `../claude.md`, pero con un
-elemento nuevo y concreto que la PoC actual **no** implementa todavia: una formula de priorizacion ponderada
-oficial (el "Score de Criticidad Real ECICEP") en vez del razonamiento libre que hoy usan el Risk Agent y el
-Priority Agent.
+mas detalle de negocio, epidemiologico y financiero la misma vision que ya resumia `../claude.md`, con un
+elemento nuevo y concreto que en su momento la PoC no implementaba: una formula de priorizacion ponderada
+oficial (el "Score de Criticidad Real ECICEP") en vez del razonamiento libre que usaba el Risk Agent.
 
 Este documento hace dos cosas:
 
 1. **Resume** lo esencial del dossier (seccion 1).
-2. **Funciona como prompt**: instrucciones accionables, referenciando clases y archivos reales del repo, para
+2. **Funciono como prompt**: instrucciones accionables, referenciando clases y archivos reales del repo, para
    llevar el roadmap "Cerca de la base actual" de [07-roadmap-futuro.md](07-roadmap-futuro.md) al codigo sin
-   reescribir el dominio ni el orquestador (seccion 3). El roadmap ya fue actualizado con estos items; este
-   documento es el detalle de implementacion detras de cada uno.
+   reescribir el dominio ni el orquestador (seccion 3).
+
+> **Estado: implementado.** Las 6 tareas de la seccion 3 (3.1-3.6) ya estan en el codigo y verificadas
+> end-to-end contra Mongo y la API real de Anthropic, incluyendo el frontend (`/kpis`). Este documento queda
+> como registro de analisis y diseño — el estado actual de cada item esta marcado con ✅ en
+> [07-roadmap-futuro.md](07-roadmap-futuro.md). La seccion 4 ("Que queda deliberadamente fuera de esta
+> iteracion") sigue vigente: MCP real, simulacion Monte Carlo e integraciones reales (SIGTE/RNLE, WhatsApp
+> Business API) no se tocaron.
 
 ---
 

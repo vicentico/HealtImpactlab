@@ -1,0 +1,68 @@
+<section class="page">
+  <header class="page-header">
+    <h1>KPIs</h1>
+    <button type="button" (click)="cargar()">Actualizar</button>
+  </header>
+
+  @if (loading()) {
+    <p>Cargando...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (kpis(); as k) {
+    <div class="kpi-grid">
+      <div [class]="tileClass('neutral')">
+        <div class="kpi-value">{{ k.totalCasosActivos }}</div>
+        <div class="kpi-label">Casos activos</div>
+      </div>
+      <div [class]="tileClass('neutral')">
+        <div class="kpi-value">{{ k.totalCasosCerrados }}</div>
+        <div class="kpi-label">Casos cerrados</div>
+      </div>
+      <div [class]="tileClass(k.casosDerivacionUrgente > 0 ? 'critical' : 'good')">
+        <div class="kpi-value">{{ k.casosDerivacionUrgente }}</div>
+        <div class="kpi-label">Derivaciones urgentes</div>
+      </div>
+      <div [class]="tileClass('neutral')">
+        <div class="kpi-value">{{ round1(k.diasEnEsperaPromedio) }}</div>
+        <div class="kpi-label">Dias de espera (promedio)</div>
+      </div>
+      <div [class]="tileClass('neutral')">
+        <div class="kpi-value">{{ k.diasEnEsperaMaximo }}</div>
+        <div class="kpi-label">Dias de espera (maximo)</div>
+      </div>
+      <div [class]="tileClass(nspStatus(k.tasaNsp))">
+        <div class="kpi-value">{{ round1(k.tasaNsp * 100) }}%</div>
+        <div class="kpi-label">Tasa de NSP (inasistencia simulada)</div>
+      </div>
+    </div>
+
+    <h2>Distribucion por prioridad</h2>
+    <div class="bar-list">
+      @for (bar of tierBars(); track bar.tier) {
+        <div class="bar-row">
+          <span>{{ bar.tier }}</span>
+          <div class="bar-track">
+            <div [class]="fillClass(bar.tier)" [style.width.%]="bar.pct"></div>
+          </div>
+          <span class="bar-value">{{ bar.count }}</span>
+        </div>
+      }
+    </div>
+
+    <h2>Distribucion por estado</h2>
+    <table>
+      <thead>
+        <tr><th>Estado</th><th>Casos</th></tr>
+      </thead>
+      <tbody>
+        @for (row of estadoRows(); track row[0]) {
+          <tr><td>{{ row[0] }}</td><td>{{ row[1] }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <p class="kpi-footnote">
+      Notificaciones enviadas: {{ k.notificacionesEnviadas }} · Sin respuesta: {{ k.notificacionesSinRespuesta }}
+    </p>
+  }
+</section>

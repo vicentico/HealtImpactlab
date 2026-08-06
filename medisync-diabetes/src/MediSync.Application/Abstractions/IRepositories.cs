@@ -50,6 +50,7 @@ public interface IAgendaSlotRepository
 public interface ICasoEventoRepository
 {
     Task<IReadOnlyList<CasoEvento>> GetByListaEsperaItemIdAsync(string listaEsperaItemId, CancellationToken ct = default);
+    Task<IReadOnlyList<CasoEvento>> GetAllAsync(CancellationToken ct = default);
     Task AddAsync(CasoEvento evento, CancellationToken ct = default);
 }
 

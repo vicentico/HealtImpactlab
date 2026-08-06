@@ -8,33 +8,35 @@ orquestador (ver [02-arquitectura.md](02-arquitectura.md), seccion "puerto/adapt
 
 Actualizado a partir del dossier de postulacion Impact Lab 2026 (`Proyecto_Priorizacion_Inteligente_ECICEP_ImpactLab.pdf`,
 ver [docs/](.)); el detalle de implementacion de cada item con clases y archivos concretos esta en
-[08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md).
+[08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md). Los primeros 5 items ya estan implementados y
+verificados end-to-end contra la API de Anthropic real (backend); falta unicamente la pantalla Angular de KPIs.
 
-- **Score de Criticidad Real ECICEP ponderado (W1-W4)**: hoy el Risk/Priority Agent razona libre con Claude;
-  el dossier define una formula oficial (`Severidad 40% + Urgencia_Reciente 25% + Latencia_Ponderada 20% +
-  Vulnerabilidad 15%`). Se ajusta el `system_prompt` de `risk-agent.json` para que el desglose por factor sea
-  explicito y auditable — no requiere cambiar `AgentLoop` ni el contrato del agente.
-- **Campos clinicos y sociodemograficos nuevos**: `AntecedenteClinico` necesita VFG, microalbuminuria/RAC y
-  neuropatia previa (Severidad) y conteo de urgencias SAPU/SAR/UEH en 90 dias (Urgencia_Reciente); `Paciente`
-  necesita dependencia severa, ruralidad y determinantes sociales (Vulnerabilidad). Son campos nuevos sobre
-  entidades existentes, sin cambiar el modelo de agregados.
-- **Derivacion urgente automatica** (sospecha IAM/ACV, crisis hiperglicemica con compromiso de conciencia, pie
-  diabetico infectado activo, caida de VFG >30%): nuevo tool (`CheckEmergencyEscalationTool`) que el Risk Agent
-  invoca antes del scoring normal; reusa el patron de tools + `CasoEvento` ya existente.
+- ✅ **Score de Criticidad Real ECICEP ponderado (W1-W4) — implementado**: `risk-agent.json` calcula
+  `Severidad (0.40) + Urgencia_Reciente (0.25) + Vulnerabilidad (0.15)` con desglose explicito por factor en la
+  justificacion; `Latencia_Ponderada (0.20)` la sigue aplicando el Priority Agent con el tiempo de espera.
+- ✅ **Campos clinicos y sociodemograficos nuevos — implementado**: `AntecedenteClinico` tiene `Vfg`,
+  `MicroalbuminuriaRac`, `NeuropatiaPrevia`, `UrgenciasUltimos90Dias`, `AlertasClinicas`; `Paciente` tiene
+  `DependenciaSevera`, `Ruralidad`, `DeterminantesSociales`. Propagados por `RegistrarInterconsultaCommand`/
+  `RegistrarPacienteCommand`, Mongo (`PacienteDocument`) y `GetPatientClinicalDataTool`.
+- ✅ **Derivacion urgente automatica — implementado**: `CheckEmergencyEscalationTool` (deterministico, no
+  delega en Claude) detecta `AlertasClinicas` explicitas o caida de VFG >30% entre las 2 ultimas mediciones;
+  el Risk Agent lo invoca primero y, si hay alarma, el caso queda en `Clasificado` con un `CasoEvento`
+  `DerivacionUrgente` en vez de seguir al Priority Agent. Visible tambien en `GET /api/lista-espera`
+  (`requiereDerivacionUrgente`, ordenado primero).
 - **Reingreso de paciente y contrarreferencia formal**: se agregan como nuevos `Command`s en
   `MediSync.Application` sobre las entidades existentes (`Interconsulta`, `ListaEsperaItem`); no requieren
   nuevo modelo.
 - **Mas agentes especializados** (Referral Agent, Notification Agent, Audit Agent con razonamiento propio,
   Supervisor Agent): se agregan como nuevas clases en `MediSync.AI/Agents/` + manifiesto JSON, reusando
   `AgentLoop` tal cual. El punto de extension ya existe.
-- **Canal omnicanal y NSP (inasistencia)**: extender `NotifyDummyChannelTool` para registrar canal
-  (WhatsApp/SMS/Telefono) y respuesta simulada (Confirmado/Rechazado/SinRespuesta) en `CasoEvento`, como proxy
-  del 15,6% de inasistencia que cita el dossier. Sigue siendo simulado (sin integracion real de WhatsApp
-  Business API).
-- **KPIs y dashboards** alineados a las metas del dossier (latencia de casos de alto riesgo, casos derivados de
-  urgencia, distribucion de `PriorityTier`, tiempo hasta clasificacion/derivacion, tiempo ahorrado): son queries
-  de agregacion sobre las colecciones ya existentes (`lista_espera_items`, `caso_eventos`) — no requieren nuevas
-  fuentes de datos, solo nuevos `Query` + endpoints + una pantalla Angular adicional.
+- ✅ **Canal omnicanal y NSP (inasistencia) — implementado**: `NotifyDummyChannelTool` registra el canal
+  (WhatsApp por defecto/SMS/Telefono) y simula la respuesta del paciente (`Confirmado`/`Rechazado`/
+  `SinRespuesta`, con 15,6% de probabilidad de `SinRespuesta` como proxy del NSP del dossier) en un
+  `CasoEvento` `Notificacion`. Sigue siendo simulado (sin integracion real de WhatsApp Business API).
+- ✅ **KPIs (backend) — implementado, falta el frontend**: `GET /api/kpis` agrega sobre `lista_espera_items` y
+  `caso_eventos` (casos activos/cerrados, casos con derivacion urgente, dias de espera promedio/maximo,
+  distribucion por estado y por `PriorityTier`, notificaciones enviadas/sin respuesta, tasa de NSP). Falta la
+  pantalla Angular que consuma este endpoint.
 - **Angular Material completo / mas pantallas**: el frontend actual ya usa Standalone Components + Signals;
   agregar Material o mas vistas es incremental sobre `frontend/medisync-web`.
 - **500 pacientes / 2000 interconsultas de dummy data**: el seeder (`DummyDataSeeder`) ya lee de

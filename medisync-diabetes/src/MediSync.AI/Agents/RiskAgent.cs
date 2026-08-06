@@ -24,7 +24,9 @@ public class RiskAgent(AgentLoop loop, IPacienteRepository pacientes) : IRiskAge
         var riskScore = json["riskScore"]!.GetValue<int>();
         var riskLevel = Enum.Parse<RiskLevel>(json["riskLevel"]!.GetValue<string>(), ignoreCase: true);
         var justificacion = json["justificacion"]!.GetValue<string>();
+        var derivacionUrgente = json["derivacionUrgente"]?.GetValue<bool>() ?? false;
+        var motivoDerivacionUrgente = json["motivoDerivacionUrgente"]?.GetValue<string>();
 
-        return new RiskAssessment(riskScore, riskLevel, justificacion, run);
+        return new RiskAssessment(riskScore, riskLevel, justificacion, run, derivacionUrgente, motivoDerivacionUrgente);
     }
 }

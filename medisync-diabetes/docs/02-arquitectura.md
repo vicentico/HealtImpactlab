@@ -38,7 +38,7 @@ graph TB
 ```mermaid
 graph TB
     subgraph Cliente
-        Angular[Angular 20 SPA<br/>lista-espera / ingreso / detalle-caso]
+        Angular[Angular 20 SPA<br/>lista-espera / ingreso / detalle-caso / kpis]
     end
 
     subgraph "MediSync.Api (ASP.NET Core Minimal API)"
@@ -78,7 +78,7 @@ src/
   MediSync.AI/               AnthropicClient, AgentLoop, AgentManifest, Tools/, Agents/, Manifests/*.json
   MediSync.Infrastructure/  MongoContext, Documents/ (DTOs de persistencia), Repositories/, Seed/
   MediSync.Api/              Program.cs, Endpoints/
-frontend/medisync-web/       Angular 20 standalone (lista-espera, ingreso-paciente, detalle-caso)
+frontend/medisync-web/       Angular 20 standalone (lista-espera, ingreso-paciente, detalle-caso, kpis)
 ```
 
 ## Decision clave: documentos de persistencia separados del dominio

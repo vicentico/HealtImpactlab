@@ -1,7 +1,7 @@
 [
   { "run": "11111111-1", "nombre": "Juan Perez Soto", "fechaNacimiento": "1958-03-12", "cesfamOrigenId": "cesfam-001" },
   { "run": "11111112-2", "nombre": "Maria Gonzalez Diaz", "fechaNacimiento": "1962-07-25", "cesfamOrigenId": "cesfam-001" },
-  { "run": "11111113-3", "nombre": "Pedro Sanchez Rojas", "fechaNacimiento": "1950-01-30", "cesfamOrigenId": "cesfam-001" },
+  { "run": "11111113-3", "nombre": "Pedro Sanchez Rojas", "fechaNacimiento": "1950-01-30", "cesfamOrigenId": "cesfam-001", "dependenciaSevera": true, "determinantesSociales": ["Vive solo", "Bajo ingreso"] },
   { "run": "11111114-4", "nombre": "Ana Torres Vega", "fechaNacimiento": "1970-11-05", "cesfamOrigenId": "cesfam-001" },
   { "run": "11111115-5", "nombre": "Luis Fernandez Castro", "fechaNacimiento": "1965-09-18", "cesfamOrigenId": "cesfam-001" },
   { "run": "11111116-6", "nombre": "Rosa Munoz Silva", "fechaNacimiento": "1955-04-22", "cesfamOrigenId": "cesfam-001" },
@@ -11,7 +11,7 @@
   { "run": "22222222-2", "nombre": "Patricia Nunez Bravo", "fechaNacimiento": "1968-10-11", "cesfamOrigenId": "cesfam-002" },
   { "run": "22222223-3", "nombre": "Ricardo Herrera Paz", "fechaNacimiento": "1953-08-03", "cesfamOrigenId": "cesfam-002" },
   { "run": "22222224-4", "nombre": "Gloria Espinoza Cortes", "fechaNacimiento": "1975-05-17", "cesfamOrigenId": "cesfam-002" },
-  { "run": "22222225-5", "nombre": "Manuel Contreras Diaz", "fechaNacimiento": "1947-01-09", "cesfamOrigenId": "cesfam-002" },
+  { "run": "22222225-5", "nombre": "Manuel Contreras Diaz", "fechaNacimiento": "1947-01-09", "cesfamOrigenId": "cesfam-002", "ruralidad": true, "determinantesSociales": ["Ruralidad extrema", "Sin acceso a transporte publico"] },
   { "run": "22222226-6", "nombre": "Veronica Salazar Reyes", "fechaNacimiento": "1963-03-27", "cesfamOrigenId": "cesfam-002" },
   { "run": "22222227-7", "nombre": "Hector Godoy Miranda", "fechaNacimiento": "1957-07-02", "cesfamOrigenId": "cesfam-002" },
   { "run": "22222228-8", "nombre": "Ximena Araya Fuentes", "fechaNacimiento": "1969-09-30", "cesfamOrigenId": "cesfam-002" },

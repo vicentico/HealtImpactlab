@@ -5,7 +5,9 @@ using MediSync.Domain.Pacientes;
 
 namespace MediSync.Application.Pacientes.Commands;
 
-public record RegistrarPacienteCommand(string Run, string Nombre, DateTime FechaNacimiento, string CesfamOrigenId)
+public record RegistrarPacienteCommand(
+    string Run, string Nombre, DateTime FechaNacimiento, string CesfamOrigenId,
+    bool DependenciaSevera = false, bool Ruralidad = false, List<string>? DeterminantesSociales = null)
     : IRequest<string>;
 
 public class RegistrarPacienteCommandValidator : AbstractValidator<RegistrarPacienteCommand>
@@ -23,7 +25,9 @@ public class RegistrarPacienteCommandHandler(IPacienteRepository repository) : I
 {
     public async Task<string> Handle(RegistrarPacienteCommand request, CancellationToken cancellationToken)
     {
-        var paciente = new Paciente(request.Run, request.Nombre, request.FechaNacimiento, request.CesfamOrigenId);
+        var paciente = new Paciente(
+            request.Run, request.Nombre, request.FechaNacimiento, request.CesfamOrigenId,
+            request.DependenciaSevera, request.Ruralidad, request.DeterminantesSociales);
         await repository.AddAsync(paciente, cancellationToken);
         return paciente.Id;
     }

@@ -33,6 +33,17 @@ public class CalcularPriorizacionCommandHandler(
         await priorizacionRepo.UpdateAsync(priorizacion, cancellationToken);
         await agentLogRepo.AddAsync(BuildLog(item.Id, "RiskAgent", risk.Run), cancellationToken);
 
+        if (risk.DerivacionUrgente)
+        {
+            // El caso no sigue el flujo automatico de priorizacion: requiere que un profesional tome la posta
+            // de inmediato (ver docs/08-analisis-ecicep-prompt.md, 3.4). Queda en Clasificado, marcado con este evento.
+            await eventoRepo.AddAsync(new CasoEvento(
+                item.Id,
+                "DerivacionUrgente",
+                risk.MotivoDerivacionUrgente ?? "Alerta clinica detectada: requiere derivacion inmediata a un profesional."), cancellationToken);
+            return;
+        }
+
         var priority = await priorityAgent.CalcularAsync(item.Id, cancellationToken);
         priorizacion.RegistrarPrioridad(priority.PriorityScore, priority.PriorityTier, priority.Justificacion, "PriorityAgent");
         await priorizacionRepo.UpdateAsync(priorizacion, cancellationToken);

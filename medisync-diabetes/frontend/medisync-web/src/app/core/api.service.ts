@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { CasoDetalleDto, ListaEsperaItemDto } from './models';
+import { CasoDetalleDto, KpisDto, ListaEsperaItemDto } from './models';
 
 const API_BASE_URL = 'http://localhost:5182/api';
 
@@ -11,6 +11,10 @@ export class ApiService {
 
   listarListaEspera(): Promise<ListaEsperaItemDto[]> {
     return firstValueFrom(this.http.get<ListaEsperaItemDto[]>(`${API_BASE_URL}/lista-espera`));
+  }
+
+  obtenerKpis(): Promise<KpisDto> {
+    return firstValueFrom(this.http.get<KpisDto>(`${API_BASE_URL}/kpis`));
   }
 
   obtenerCaso(id: string): Promise<CasoDetalleDto> {

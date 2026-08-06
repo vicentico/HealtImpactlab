@@ -11,7 +11,9 @@ public record AgentRunResult(
     int TokensEntrada,
     int TokensSalida);
 
-public record RiskAssessment(int RiskScore, RiskLevel RiskLevel, string Justificacion, AgentRunResult Run);
+public record RiskAssessment(
+    int RiskScore, RiskLevel RiskLevel, string Justificacion, AgentRunResult Run,
+    bool DerivacionUrgente = false, string? MotivoDerivacionUrgente = null);
 
 public record PriorityAssessment(int PriorityScore, PriorityTier PriorityTier, string Justificacion, AgentRunResult Run);
 

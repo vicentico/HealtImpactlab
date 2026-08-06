@@ -113,6 +113,65 @@ button.secondary:hover { background: #556270; }
 .tier-p3 { background: #e6f4ea; color: #1c6b3a; }
 .tier-pendiente { background: #e6e9ed; color: #5a6572; }
 
+.badge-urgente {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #a4243b;
+  color: white;
+}
+
+/* KPIs: reusa los mismos 3 colores de estado que .tier-p1/p2/p3 (rojo/ambar/verde),
+   ya validados para esta paleta, en vez de introducir una escala nueva. */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-tile {
+  background: white;
+  border-radius: 6px;
+  padding: 0.9rem 1.1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-left: 4px solid #c7cfd6;
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  color: #5a6572;
+  margin-top: 0.3rem;
+}
+
+.kpi-tile.status-critical { border-left-color: #a4243b; }
+.kpi-tile.status-critical .kpi-value { color: #a4243b; }
+.kpi-tile.status-warning { border-left-color: #8a5a00; }
+.kpi-tile.status-warning .kpi-value { color: #8a5a00; }
+.kpi-tile.status-good { border-left-color: #1c6b3a; }
+.kpi-tile.status-good .kpi-value { color: #1c6b3a; }
+.kpi-tile.status-neutral { border-left-color: #1a5fb4; }
+
+.bar-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
+.bar-row { display: grid; grid-template-columns: 36px 1fr 40px; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
+.bar-track { background: #e6e9ed; border-radius: 4px; height: 18px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 0 4px 4px 0; }
+.bar-fill.fill-p1 { background: #a4243b; }
+.bar-fill.fill-p2 { background: #8a5a00; }
+.bar-fill.fill-p3 { background: #1c6b3a; }
+.bar-row .bar-value { text-align: right; font-variant-numeric: tabular-nums; }
+
+.kpi-footnote { color: #5a6572; font-size: 0.85rem; margin-top: 1rem; }
+
 .card {
   background: white;
   border-radius: 6px;

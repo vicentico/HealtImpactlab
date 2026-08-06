@@ -13,6 +13,12 @@ public class CasoEventoRepository(MongoContext context) : ICasoEventoRepository
         return docs.Select(d => d.ToDomain()).ToList();
     }
 
+    public async Task<IReadOnlyList<CasoEvento>> GetAllAsync(CancellationToken ct = default)
+    {
+        var docs = await context.CasoEventos.Find(FilterDefinition<CasoEventoDocument>.Empty).ToListAsync(ct);
+        return docs.Select(d => d.ToDomain()).ToList();
+    }
+
     public Task AddAsync(CasoEvento evento, CancellationToken ct = default) =>
         context.CasoEventos.InsertOneAsync(evento.ToDocument(), cancellationToken: ct);
 }

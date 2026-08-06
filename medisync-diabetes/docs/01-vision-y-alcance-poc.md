@@ -23,14 +23,17 @@ el frontend (ver [05-flujo-secuencia.md](05-flujo-secuencia.md)).
 
 ### Casos de uso dentro del alcance
 
-- Registrar Paciente
-- Registrar Interconsulta (incluye ingresar antecedentes/examenes: HbA1c, glicemia, comorbilidades)
-- Calcular riesgo (Risk Agent, IA real)
+- Registrar Paciente (incluye factores de vulnerabilidad: dependencia severa, ruralidad, determinantes sociales)
+- Registrar Interconsulta (incluye antecedentes/examenes ECICEP: HbA1c, glicemia, VFG, microalbuminuria/RAC,
+  neuropatia previa, urgencias en 90 dias, comorbilidades, alertas clinicas)
+- Calcular riesgo con el Score de Criticidad Real ECICEP ponderado (Risk Agent, IA real)
+- Detectar derivacion urgente automatica (chequeo deterministico, fuera del flujo normal de priorizacion)
 - Actualizar prioridad (Priority Agent, IA real)
 - Revision medica (aprobar o ajustar la prioridad sugerida por la IA)
-- Asignar agenda (Scheduler Agent, IA real)
+- Asignar agenda y notificar por canal omnicanal simulado, con respuesta simulada (Scheduler Agent, IA real)
 - Confirmar agenda / Registrar atencion / Cerrar caso
 - Consultar estado / trazabilidad completa de un caso
+- Consultar KPIs agregados (casos activos/cerrados, derivaciones urgentes, distribucion por prioridad, tasa de NSP)
 - Auditar proceso (eventos, decisiones y ejecuciones de agentes quedan todos registrados)
 
 ### Explicitamente fuera de alcance (ver roadmap)
@@ -47,8 +50,10 @@ el frontend (ver [05-flujo-secuencia.md](05-flujo-secuencia.md)).
   sobreingenieria para una PoC.
 - 500 pacientes / 2000 interconsultas de dummy data: esta PoC siembra 24 pacientes, 5 profesionales, 3 CESFAM
   y 2 hospitales (`dummy-data/*.json`), suficiente para poblar la lista de espera y demostrar el flujo.
-- Angular Material completo y dashboards de KPIs multi-grafico: el frontend tiene 3 pantallas funcionales
-  (lista de espera, ingreso, detalle/trazabilidad) sin libreria de componentes visuales.
+- Angular Material completo y dashboards de KPIs multi-grafico: el frontend tiene 4 pantallas funcionales
+  (lista de espera, ingreso, detalle/trazabilidad, KPIs) sin libreria de componentes visuales. Hay un
+  dashboard de KPIs (`GET /api/kpis` + pantalla `/kpis`) con tarjetas de estado y barras simples en CSS, pero
+  no graficos interactivos ni Angular Material.
 - Diagramas C4 de 4 niveles, backlog con historias de usuario, roadmap de sprints detallado: pertenecen al
   prompt maestro completo: se resumen como pendientes en [07-roadmap-futuro.md](07-roadmap-futuro.md).
 

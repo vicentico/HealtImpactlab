@@ -15,7 +15,12 @@ public record RegistrarInterconsultaCommand(
     string Motivo,
     double HbA1c,
     double GlicemiaAyunas,
-    List<string>? Comorbilidades) : IRequest<string>;
+    List<string>? Comorbilidades,
+    double? Vfg = null,
+    double? MicroalbuminuriaRac = null,
+    bool NeuropatiaPrevia = false,
+    int UrgenciasUltimos90Dias = 0,
+    List<string>? AlertasClinicas = null) : IRequest<string>;
 
 public class RegistrarInterconsultaCommandValidator : AbstractValidator<RegistrarInterconsultaCommand>
 {
@@ -45,7 +50,12 @@ public class RegistrarInterconsultaCommandHandler(
             request.HbA1c,
             request.GlicemiaAyunas,
             request.Comorbilidades ?? [],
-            DateTime.UtcNow));
+            DateTime.UtcNow,
+            request.Vfg,
+            request.MicroalbuminuriaRac,
+            request.NeuropatiaPrevia,
+            request.UrgenciasUltimos90Dias,
+            request.AlertasClinicas));
         await pacientes.UpdateAsync(paciente, cancellationToken);
 
         var interconsulta = new Interconsulta(request.PacienteId, request.EspecialidadId, paciente.CesfamOrigenId, request.Motivo);

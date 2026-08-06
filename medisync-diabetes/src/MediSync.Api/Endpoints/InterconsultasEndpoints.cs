@@ -13,12 +13,16 @@ public static class InterconsultasEndpoints
         {
             var id = await sender.Send(new RegistrarInterconsultaCommand(
                 request.PacienteId, request.EspecialidadId, request.Motivo,
-                request.HbA1c, request.GlicemiaAyunas, request.Comorbilidades), ct);
+                request.HbA1c, request.GlicemiaAyunas, request.Comorbilidades,
+                request.Vfg, request.MicroalbuminuriaRac, request.NeuropatiaPrevia,
+                request.UrgenciasUltimos90Dias, request.AlertasClinicas), ct);
             return Results.Created($"/api/casos/{id}", new { listaEsperaItemId = id });
         });
     }
 
     public record RegistrarInterconsultaRequest(
         string PacienteId, string EspecialidadId, string Motivo,
-        double HbA1c, double GlicemiaAyunas, List<string>? Comorbilidades);
+        double HbA1c, double GlicemiaAyunas, List<string>? Comorbilidades,
+        double? Vfg = null, double? MicroalbuminuriaRac = null, bool NeuropatiaPrevia = false,
+        int UrgenciasUltimos90Dias = 0, List<string>? AlertasClinicas = null);
 }
