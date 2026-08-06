@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: healthos-platform
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.web
+    healthCheckPath: /health
+    envVars:
+      - key: HEALTHOS_ENV
+        value: demo
+      - key: HEALTHOS_JWT_SECRET
+        generateValue: true
+      - key: HEALTHOS_ALLOWED_ORIGINS
+        value: https://healthos-platform.onrender.com
