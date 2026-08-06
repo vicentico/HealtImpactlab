@@ -31,28 +31,28 @@ export const Header: React.FC<HeaderProps> = ({
         
         {/* Title & Brand */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-md shadow-cyan-500/20">
-            <Activity className="h-6 w-6 text-white animate-pulse" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0071e3] shadow-sm text-white">
+            <Activity className="h-6 w-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold tracking-tight apple-title">Torre de Control APS</h1>
-              <span className="rounded-full bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 text-xs font-bold text-cyan-600 dark:text-cyan-400">
-                NT 118 DM2
+              <h1 className="text-xl font-extrabold tracking-tight apple-title">Health OS</h1>
+              <span className="rounded-full bg-[#0071e3]/10 border border-[#0071e3]/30 px-2.5 py-0.5 text-xs font-bold text-[#0071e3] dark:text-cyan-400">
+                NT 118 MINSAL
               </span>
             </div>
-            <p className="text-xs apple-subtitle">Repriorización Algorítmica y Contraloría Médica - MINSAL Chile</p>
+            <p className="text-xs font-medium apple-subtitle">Repriorización Algorítmica y Contraloría Médica APS</p>
           </div>
         </div>
 
         {/* Center: CESFAM & Role Selectors */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 apple-control px-3 py-1.5 text-xs font-medium">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 apple-control px-3.5 py-2 text-xs font-semibold">
             <span className="apple-muted">Establecimiento:</span>
             <select
               value={cesfamName}
               onChange={(e) => onCesfamChange(e.target.value)}
-              className="bg-transparent font-semibold text-cyan-600 dark:text-cyan-400 focus:outline-none cursor-pointer"
+              className="bg-transparent font-bold apple-title focus:outline-none cursor-pointer"
             >
               <option value="CESFAM Carol Urzúa">CESFAM Carol Urzúa</option>
               <option value="CESFAM Dr. Aníbal Ariztía">CESFAM Dr. Aníbal Ariztía</option>
@@ -60,13 +60,13 @@ export const Header: React.FC<HeaderProps> = ({
             </select>
           </div>
 
-          <div className="flex items-center gap-2 apple-control px-3 py-1.5 text-xs font-medium">
-            <Shield className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+          <div className="flex items-center gap-2 apple-control px-3.5 py-2 text-xs font-semibold">
+            <Shield className="h-3.5 w-3.5 text-[#0071e3]" />
             <span className="apple-muted">Rol:</span>
             <select
               value={activeRole}
               onChange={(e) => onRoleChange(e.target.value as UserRole)}
-              className="bg-transparent font-semibold text-purple-600 dark:text-purple-400 focus:outline-none cursor-pointer"
+              className="bg-transparent font-bold apple-title focus:outline-none cursor-pointer"
             >
               <option value="MEDICO_CONTRALOR">Médico Contralor APS</option>
               <option value="ENFERMERA_GESTORA">Enfermera Gestora Caso</option>
@@ -79,15 +79,15 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right: Badges & Profile */}
         <div className="flex items-center gap-3">
           {criticalCount > 0 && (
-            <div className="flex items-center gap-1.5 rounded-full bg-red-500/10 border border-red-500/30 px-3 py-1 text-xs font-bold text-red-600 dark:text-red-400 shadow-sm">
-              <Bell className="h-3.5 w-3.5 text-red-500 animate-bounce" />
+            <div className="flex items-center gap-1.5 rounded-full bg-red-500/15 border border-red-500/40 px-3.5 py-1.5 text-xs font-extrabold text-red-700 dark:text-red-300 shadow-sm">
+              <Bell className="h-3.5 w-3.5 text-red-600 animate-bounce" />
               <span>{criticalCount} Críticos</span>
             </div>
           )}
 
           {pendingCount > 0 && (
-            <div className="flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
-              <RefreshCw className="h-3.5 w-3.5 text-amber-500" />
+            <div className="flex items-center gap-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 px-3.5 py-1.5 text-xs font-extrabold text-amber-800 dark:text-amber-300">
+              <RefreshCw className="h-3.5 w-3.5 text-amber-600" />
               <span>{pendingCount} Pendientes</span>
             </div>
           )}
@@ -132,14 +132,14 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="h-6 w-px bg-slate-300 dark:bg-slate-800"></div>
 
           <div className="flex items-center gap-2 pl-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-300 font-bold text-xs">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0071e3]/10 border border-[#0071e3]/30 text-[#0071e3] font-bold text-xs">
               {activeRole === 'MEDICO_CONTRALOR' ? 'AS' : activeRole === 'ENFERMERA_GESTORA' ? 'MV' : 'ADM'}
             </div>
             <div className="hidden sm:block text-left">
               <p className="text-xs font-bold apple-title">
                 {activeRole === 'MEDICO_CONTRALOR' ? 'Dr. Alejandro Silva' : activeRole === 'ENFERMERA_GESTORA' ? 'Enf. Maria Valenzuela' : 'Usuario SOMO'}
               </p>
-              <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">
+              <p className="text-[10px] font-semibold text-[#0071e3]">
                 {activeRole.replace('_', ' ')}
               </p>
             </div>

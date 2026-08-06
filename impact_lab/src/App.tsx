@@ -180,28 +180,28 @@ export function App() {
           {activeTab === 'dashboard' && (
             <>
               {/* Top Banner Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 glass-panel p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 glass-panel p-5">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-bold apple-title">Torre de Control de Listas de Espera APS</h2>
-                    <span className="flex items-center gap-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 text-[10px] font-bold text-cyan-600 dark:text-cyan-400">
-                      <Shield className="h-3 w-3 text-cyan-600 dark:text-cyan-400" /> Privacy by Design
+                    <h2 className="text-base font-extrabold apple-title">Health OS — Control de Listas de Espera APS</h2>
+                    <span className="flex items-center gap-1 rounded-full bg-[#0071e3]/10 border border-[#0071e3]/30 px-3 py-0.5 text-xs font-bold text-[#0071e3] dark:text-cyan-400">
+                      <Shield className="h-3.5 w-3.5 text-[#0071e3]" /> Privacy by Design
                     </span>
                   </div>
-                  <p className="text-xs apple-subtitle mt-0.5">
+                  <p className="text-xs font-medium apple-subtitle mt-1">
                     Priorización algorítmica por riesgo de descompensación (Norma Técnica 118 MINSAL)
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => setIsExplicationOpen(true)}
-                    className="flex items-center gap-1.5 apple-control px-3.5 py-2 text-xs font-semibold hover:opacity-90 transition-all"
+                    className="flex items-center gap-1.5 apple-control px-4 py-2 text-xs font-bold hover:opacity-90 transition-all"
                   >
                     <span>Criterios Algoritmo</span>
                   </button>
                   <button 
                     onClick={() => alert('Exportando reporte oficial SIGTE en formato Excel/CSV...')}
-                    className="flex items-center gap-1.5 rounded-full bg-cyan-600 hover:bg-cyan-500 px-4 py-2 text-xs font-bold text-white shadow-md shadow-cyan-600/20 transition-all active:scale-95"
+                    className="flex items-center gap-1.5 rounded-full bg-[#0071e3] hover:bg-[#0066cc] px-4.5 py-2 text-xs font-bold text-white shadow-sm transition-all active:scale-95"
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Exportar Lista Aprobada</span>

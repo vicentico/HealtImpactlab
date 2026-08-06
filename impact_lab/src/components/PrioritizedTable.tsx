@@ -218,7 +218,7 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                   {/* Position & Trend */}
                   <td className="py-3.5 px-4 font-mono-tabular">
                     <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded bg-slate-200 dark:bg-slate-800 font-bold apple-title group-hover:bg-cyan-600 group-hover:text-white transition-colors">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0071e3]/10 border border-[#0071e3]/30 font-extrabold text-[#0071e3] group-hover:bg-[#0071e3] group-hover:text-white transition-colors">
                         #{patient.priorityPosition}
                       </span>
                       {renderTrend(patient.priorityPosition, patient.previousPriorityPosition)}
@@ -228,8 +228,8 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                   {/* Patient Info with Privacy Masking */}
                   <td className="py-3.5 px-4">
                     <div>
-                      <p className="font-bold apple-title group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">{patient.fullName}</p>
-                      <p className="text-[10px] font-mono-tabular apple-subtitle">
+                      <p className="font-extrabold apple-title group-hover:text-[#0071e3] transition-colors">{patient.fullName}</p>
+                      <p className="text-xs font-mono-tabular font-medium apple-subtitle">
                         {isPrivacyMaskEnabled ? maskRut(patient.rut) : patient.rut} • {patient.age} años ({patient.gender})
                       </p>
                     </div>
@@ -244,39 +244,39 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                   <td className="py-3.5 px-4 font-mono-tabular">
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className={`font-bold ${patient.hba1c >= 10.0 ? 'text-red-600 dark:text-red-400' : patient.hba1c >= 9.0 ? 'text-amber-600 dark:text-amber-400' : 'apple-title'}`}>
+                        <span className={`font-extrabold ${patient.hba1c >= 10.0 ? 'text-red-600 dark:text-red-400' : patient.hba1c >= 9.0 ? 'text-amber-600 dark:text-amber-400' : 'apple-title'}`}>
                           HbA1c {patient.hba1c}%
                         </span>
                         {patient.hasFootUlcer && (
-                          <span className="rounded bg-red-500/10 text-red-600 dark:text-red-300 text-[9px] px-1 font-sans border border-red-500/30" title="Pie Diabético Activo">Pie!</span>
+                          <span className="rounded-full bg-red-500/15 text-red-700 dark:text-red-300 text-[10px] px-2 py-0.5 font-bold border border-red-500/40" title="Pie Diabético Activo">Pie!</span>
                         )}
                       </div>
-                      <p className="text-[10px] apple-subtitle">PA: {patient.systolicBP}/{patient.diastolicBP} mmHg</p>
+                      <p className="text-[11px] font-medium apple-subtitle">PA: {patient.systolicBP}/{patient.diastolicBP} mmHg</p>
                     </div>
                   </td>
 
                   {/* VFG Renal */}
                   <td className="py-3.5 px-4 font-mono-tabular">
-                    <span className={`font-semibold ${patient.vfg < 45 ? 'text-red-600 dark:text-red-400 font-bold' : patient.vfg < 60 ? 'text-amber-600 dark:text-amber-300' : 'apple-subtitle'}`}>
-                      {patient.vfg} <span className="text-[9px] font-normal apple-muted">mL/min</span>
+                    <span className={`font-extrabold ${patient.vfg < 45 ? 'text-red-600 dark:text-red-400' : patient.vfg < 60 ? 'text-amber-600 dark:text-amber-300' : 'apple-subtitle'}`}>
+                      {patient.vfg} <span className="text-[10px] font-normal apple-muted">mL/min</span>
                     </span>
                   </td>
 
                   {/* Risk Score */}
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono-tabular font-bold text-slate-100">{patient.nt118Risk.totalScore} pts</span>
+                      <span className="font-mono-tabular font-extrabold apple-title">{patient.nt118Risk.totalScore} pts</span>
                       {getRiskBadge(patient.nt118Risk.riskLevel)}
                     </div>
                   </td>
 
                   {/* Days in List */}
-                  <td className="py-3.5 px-4 font-mono-tabular text-slate-300">
+                  <td className="py-3.5 px-4 font-mono-tabular font-bold apple-title">
                     <div className="flex items-center gap-1">
                       <span>{patient.daysInWaitingList} d</span>
                       {patient.daysInWaitingList > 120 && (
                         <span title="Garantía GES / Plazo Excedido">
-                          <AlertCircle className="h-3 w-3 text-amber-400" />
+                          <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
                         </span>
                       )}
                     </div>
@@ -294,7 +294,7 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
                         e.stopPropagation();
                         onSelectPatient(patient);
                       }}
-                      className="inline-flex items-center gap-1 rounded-lg bg-slate-800 hover:bg-cyan-600 hover:text-white px-2.5 py-1 text-[11px] font-semibold text-cyan-400 transition-colors"
+                      className="inline-flex items-center gap-1 rounded-full bg-[#0071e3] hover:bg-[#0066cc] active:scale-95 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition-all"
                     >
                       <span>Abrir Ficha</span>
                       <ChevronRight className="h-3.5 w-3.5" />
@@ -309,12 +309,12 @@ export const PrioritizedTable: React.FC<PrioritizedTableProps> = ({
       </div>
 
       {/* Privacy Microcopy Banner */}
-      <div className="flex items-center justify-between rounded-lg bg-slate-900/60 border border-slate-800/80 px-3 py-2 text-[10px] text-slate-400">
+      <div className="flex items-center justify-between rounded-xl apple-control px-4 py-2.5 text-xs font-medium apple-subtitle">
         <div className="flex items-center gap-2">
-          <Lock className="h-3.5 w-3.5 text-cyan-400" />
+          <Lock className="h-3.5 w-3.5 text-[#0071e3]" />
           <span>Información de salud tratada con confidencialidad para uso exclusivo de equipos autorizados. Acceso registrado e inmutable.</span>
         </div>
-        <span className="hidden sm:inline text-slate-500 font-mono-tabular">Ley 20.584 Compliant</span>
+        <span className="hidden sm:inline apple-title font-mono-tabular font-bold">Ley 20.584 Compliant</span>
       </div>
 
     </div>

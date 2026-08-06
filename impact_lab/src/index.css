@@ -1,46 +1,54 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   HEALTH OS — OFFICIAL APPLE HUMAN INTERFACE DESIGN SYSTEM (HIG)
+   HEALTH OS — PURE APPLE HUMAN INTERFACE DESIGN SYSTEM (HIG)
    ============================================================================ */
 
 /* LIGHT THEME (DEFAULT) */
 html, html.light {
   --bg-app: #f5f5f7;
   --bg-header: #ffffff;
-  --apple-sidebar-bg: #f5f5f7;
+  --apple-sidebar-bg: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #fafafa;
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-strong: #e5e5e7;
+  --bg-card-hover: #f0f0f2;
+  --border-color: rgba(0, 0, 0, 0.12);
+  --border-strong: #d2d2d7;
   
   --text-title: #1d1d1f;
   --text-body: #333336;
   --text-secondary: #515154;
   --text-muted: #6e6e73;
 
+  --apple-blue: #0071e3;
+  --apple-blue-hover: #0066cc;
+  --apple-blue-light: rgba(0, 113, 227, 0.08);
+
   --control-bg: #e8e8ed;
   --control-border: #d2d2d7;
   --control-text: #1d1d1f;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* DARK THEME */
 html.dark {
   --bg-app: #000000;
   --bg-header: #1c1c1e;
-  --apple-sidebar-bg: #121214;
+  --apple-sidebar-bg: #1c1c1e;
   --bg-card: #1c1c1e;
   --bg-card-hover: #2c2c2e;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-strong: #2c2c2e;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-strong: #3a3a3c;
 
   --text-title: #f5f5f7;
   --text-body: #e5e5e7;
   --text-secondary: #a1a1a6;
   --text-muted: #86868b;
+
+  --apple-blue: #0a84ff;
+  --apple-blue-hover: #0071e3;
+  --apple-blue-light: rgba(10, 132, 255, 0.15);
 
   --control-bg: #2c2c2e;
   --control-border: #3a3a3c;
@@ -52,10 +60,11 @@ html.dark {
 
 @layer base {
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
     background-color: var(--bg-app);
     color: var(--text-title);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -64,7 +73,7 @@ html.dark {
   font-variant-numeric: tabular-nums;
 }
 
-/* Apple Store Card Surface */
+/* Apple Store Glass & Card Panels */
 .glass-panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -72,7 +81,7 @@ html.dark {
   border-radius: 1.25rem;
 }
 
-/* Header & Sidebar */
+/* Apple Header & Sidebar */
 .apple-header {
   background-color: var(--bg-header);
   border-bottom: 1px solid var(--border-color);
@@ -84,20 +93,28 @@ html.dark {
   border-right: 1px solid var(--border-color);
 }
 
-/* Controls & Selects */
+/* Apple Buttons & Selects */
 .apple-control {
   background-color: var(--control-bg);
   border: 1px solid var(--control-border);
   color: var(--control-text);
-  border-radius: 0.625rem;
+  border-radius: 0.75rem;
 }
 
-.apple-control option {
-  background-color: var(--bg-card);
-  color: var(--text-title);
+.apple-btn-primary {
+  background-color: var(--apple-blue);
+  color: #ffffff;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
 }
 
-/* Semantic Text Overrides */
+.apple-btn-primary:hover {
+  background-color: var(--apple-blue-hover);
+  transform: translateY(-0.5px);
+}
+
+/* High Contrast Semantic Utilities */
 .apple-title {
   color: var(--text-title) !important;
 }
@@ -121,6 +138,6 @@ html.dark {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(134, 134, 139, 0.4);
+  background: rgba(142, 142, 147, 0.5);
   border-radius: 9999px;
 }
