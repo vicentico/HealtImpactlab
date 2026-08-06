@@ -1,0 +1,12 @@
+{
+  "name": "HealthOS DM2 Prioriza",
+  "short_name": "HealthOS",
+  "description": "Orquestación inteligente de listas de espera DM2",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#03111f",
+  "theme_color": "#061626",
+  "icons": [
+    { "src": "/healthos-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
