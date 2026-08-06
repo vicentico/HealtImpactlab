@@ -6,16 +6,35 @@ orquestador (ver [02-arquitectura.md](02-arquitectura.md), seccion "puerto/adapt
 
 ## Cerca de la base actual (extender, no reescribir)
 
+Actualizado a partir del dossier de postulacion Impact Lab 2026 (`Proyecto_Priorizacion_Inteligente_ECICEP_ImpactLab.pdf`,
+ver [docs/](.)); el detalle de implementacion de cada item con clases y archivos concretos esta en
+[08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md).
+
+- **Score de Criticidad Real ECICEP ponderado (W1-W4)**: hoy el Risk/Priority Agent razona libre con Claude;
+  el dossier define una formula oficial (`Severidad 40% + Urgencia_Reciente 25% + Latencia_Ponderada 20% +
+  Vulnerabilidad 15%`). Se ajusta el `system_prompt` de `risk-agent.json` para que el desglose por factor sea
+  explicito y auditable — no requiere cambiar `AgentLoop` ni el contrato del agente.
+- **Campos clinicos y sociodemograficos nuevos**: `AntecedenteClinico` necesita VFG, microalbuminuria/RAC y
+  neuropatia previa (Severidad) y conteo de urgencias SAPU/SAR/UEH en 90 dias (Urgencia_Reciente); `Paciente`
+  necesita dependencia severa, ruralidad y determinantes sociales (Vulnerabilidad). Son campos nuevos sobre
+  entidades existentes, sin cambiar el modelo de agregados.
+- **Derivacion urgente automatica** (sospecha IAM/ACV, crisis hiperglicemica con compromiso de conciencia, pie
+  diabetico infectado activo, caida de VFG >30%): nuevo tool (`CheckEmergencyEscalationTool`) que el Risk Agent
+  invoca antes del scoring normal; reusa el patron de tools + `CasoEvento` ya existente.
 - **Reingreso de paciente y contrarreferencia formal**: se agregan como nuevos `Command`s en
   `MediSync.Application` sobre las entidades existentes (`Interconsulta`, `ListaEsperaItem`); no requieren
   nuevo modelo.
 - **Mas agentes especializados** (Referral Agent, Notification Agent, Audit Agent con razonamiento propio,
   Supervisor Agent): se agregan como nuevas clases en `MediSync.AI/Agents/` + manifiesto JSON, reusando
   `AgentLoop` tal cual. El punto de extension ya existe.
-- **KPIs y dashboards** (tiempo promedio de espera, tiempo hasta clasificacion/derivacion, pacientes
-  priorizados automaticamente, casos resueltos, tiempo ahorrado): son queries de agregacion sobre las
-  colecciones ya existentes (`lista_espera_items`, `caso_eventos`) — no requieren nuevas fuentes de datos,
-  solo nuevos `Query` + endpoints + una pantalla Angular adicional.
+- **Canal omnicanal y NSP (inasistencia)**: extender `NotifyDummyChannelTool` para registrar canal
+  (WhatsApp/SMS/Telefono) y respuesta simulada (Confirmado/Rechazado/SinRespuesta) en `CasoEvento`, como proxy
+  del 15,6% de inasistencia que cita el dossier. Sigue siendo simulado (sin integracion real de WhatsApp
+  Business API).
+- **KPIs y dashboards** alineados a las metas del dossier (latencia de casos de alto riesgo, casos derivados de
+  urgencia, distribucion de `PriorityTier`, tiempo hasta clasificacion/derivacion, tiempo ahorrado): son queries
+  de agregacion sobre las colecciones ya existentes (`lista_espera_items`, `caso_eventos`) — no requieren nuevas
+  fuentes de datos, solo nuevos `Query` + endpoints + una pantalla Angular adicional.
 - **Angular Material completo / mas pantallas**: el frontend actual ya usa Standalone Components + Signals;
   agregar Material o mas vistas es incremental sobre `frontend/medisync-web`.
 - **500 pacientes / 2000 interconsultas de dummy data**: el seeder (`DummyDataSeeder`) ya lee de
@@ -23,6 +42,15 @@ orquestador (ver [02-arquitectura.md](02-arquitectura.md), seccion "puerto/adapt
 
 ## Requieren diseño nuevo (no triviales)
 
+- **MCP real (seudonimizacion local antes de razonar con Claude)**: el dossier ECICEP exige que ningun dato
+  identificable (RUT, nombre) salga de la red segura del servicio de salud. Hoy `MediSync.AI` llama directo a
+  la Anthropic Messages API con un `HttpClient` propio (ver [rustyhand-analisis.md](rustyhand-analisis.md)),
+  sin capa de seudonimizacion. Requiere un componente nuevo entre `AgentLoop` y el cliente HTTP que sustituya
+  identificadores por tokens antes de enviar el prompt, y los revierta en la respuesta.
+- **Simulacion Monte Carlo / DES sobre cohorte sintetica (50.000-150.000 pacientes)**: el dossier propone 5
+  escenarios de validacion (FIFO control, ECICEP puro, Integrado, Estres de red, Ruido de datos) antes de un
+  despliegue real. La PoC actual usa 24 pacientes dummy fijos, no un motor de simulacion de eventos discretos;
+  esto es un modulo nuevo, independiente del dominio actual (ver [08-analisis-ecicep-prompt.md](08-analisis-ecicep-prompt.md)).
 - **Event Bus real (Kafka / Azure Service Bus / RabbitMQ)**: hoy `CasoClasificadoNotification` (MediatR
   `INotification`) simula el bus dentro del mismo proceso. Migrar a un bus real implica: (a) publicar el
   evento serializado en vez de invocar un handler in-process, (b) un consumer/worker separado que ejecute

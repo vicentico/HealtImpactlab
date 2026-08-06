@@ -4,6 +4,16 @@ Los 4 diagramas de esta seccion reflejan el codigo tal como quedo implementado (
 tools y colecciones reales), no un diseño aspiracional. Fueron validados corriendo el flujo completo contra
 una API de Anthropic real (ver la traza de ejemplo al final de cada seccion relevante).
 
+## Indice
+
+- [1. Flujo end-to-end completo](#1-flujo-end-to-end-completo)
+- [2. Tool-use loop de un agente (Priority Agent como referencia)](#2-tool-use-loop-de-un-agente-priority-agent-como-referencia)
+- [3. Agenda y confirmacion (Scheduler Agent)](#3-agenda-y-confirmacion-scheduler-agent)
+- [4. Revision medica (aprobacion humana sobre sugerencia IA)](#4-revision-medica-aprobacion-humana-sobre-sugerencia-ia)
+- [Como se verifico este flujo](#como-se-verifico-este-flujo-no-solo-se-diseño)
+
+---
+
 ## 1. Flujo end-to-end completo
 
 Cubre las 10 etapas: Paciente -> Derivacion -> Lista de espera -> Clasificacion -> Priorizacion IA ->
@@ -188,6 +198,12 @@ sequenceDiagram
     App->>Mongo: insert CasoEvento("Agendado", ...)
 ```
 
+### Traza real (mismo caso)
+
+Este paso corresponde al punto 3 de la traza real documentada en la
+[seccion 1](#1-flujo-end-to-end-completo): el Scheduler Agent asigno el cupo mas proximo disponible
+(al dia siguiente, 09:00), justificando la eleccion por el tier `P1` confirmado en la revision medica.
+
 ---
 
 ## 4. Revision medica (aprobacion humana sobre sugerencia IA)
@@ -213,11 +229,18 @@ sequenceDiagram
     App->>Mongo: update Priorizacion (TierConfirmado, ConfirmadaPor, OrigenConfirmacion)
     App->>DLog: new DecisionLog(origen, autor=aprobadoPor)
     App->>Mongo: insert DecisionLog
-    Note over DLog: origen=IA si el medico confirmo sin cambios;<br/>origen=Humano si ajusto el tier sugerido
+    Note over DLog: origen=IA si el medico confirmo sin cambios, origen=Humano si ajusto el tier sugerido
     App->>Mongo: ListaEsperaItem.TransicionarA(EnRevision)
-    App-->App: dispara SchedulerAgent (ver diagrama 3)
+    App->>App: dispara SchedulerAgent (ver seccion 3)
     Api-->>Medico: 204 No Content
 ```
+
+### Traza real (mismo caso)
+
+En el caso de referencia, el medico (`Dr. Gonzalez`) confirmo el tier `P1` sugerido por el Priority Agent sin
+ajustarlo, por lo que el `DecisionLog` quedo con `origen=IA` (ver el punto 3 de la traza en la
+[seccion 1](#1-flujo-end-to-end-completo)). Un ajuste manual del tier habria quedado registrado como
+`origen=Humano`.
 
 ---
 
