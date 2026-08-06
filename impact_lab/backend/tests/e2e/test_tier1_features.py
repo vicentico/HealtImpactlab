@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.core.privacy import mask_rut
+from app.core.privacy import mask_rut, hash_rut
 from app.engine.nt118 import calculate_nt118_score
 
 
@@ -148,18 +148,40 @@ def test_nt118_subscore_sum_and_bounds():
     assert result["totalScore"] == min(100, computed_sum)
 
 
+@pytest.mark.tier1
+def test_calculate_nt118_hba1c_11_5_critico_score():
+    """2.6 Verification that hba1c=11.5, vfg=28, has_foot_ulcer=true returns totalScore >= 90 and riskLevel == CRITICO."""
+    payload = {
+        "hba1c": 11.5,
+        "systolicBp": 130,
+        "diastolicBp": 80,
+        "vfg": 28.0,
+        "hasFootUlcer": True,
+        "hasRetinopathy": False,
+        "daysInWaitingList": 0,
+        "age": 50,
+        "gender": "M"
+    }
+    result = calculate_nt118_score(payload)
+    assert result["totalScore"] >= 90
+    assert result["riskLevel"] == "CRITICO"
+
+
+
 # ============================================================================
 # FEATURE 3: PATIENT LIST FILTERING (5 tests)
 # ============================================================================
 
 @pytest.mark.tier1
 def test_get_pacientes_unfiltered_200(client: TestClient):
-    """3.1 GET /api/pacientes returns 200 OK and list of 5 mock patients."""
+    """3.1 GET /api/pacientes returns 200 OK and list of >= 10 mock patients sorted by priorityPosition ascending."""
     response = client.get("/api/pacientes")
     assert response.status_code == 200
     data = response.json()
     assert isinstance(data, list)
-    assert len(data) == 5
+    assert len(data) >= 10
+    positions = [p.get("priorityPosition") or p.get("priority_position") for p in data]
+    assert positions == sorted(positions)
 
 
 @pytest.mark.tier1
@@ -168,7 +190,7 @@ def test_get_pacientes_filter_by_sector(client: TestClient):
     response = client.get("/api/pacientes?sector=SECTOR_ROJO")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 2
+    assert len(data) >= 2
     for p in data:
         assert p["sector"] == "SECTOR_ROJO"
 
@@ -179,7 +201,7 @@ def test_get_pacientes_filter_by_status(client: TestClient):
     response = client.get("/api/pacientes?status=PENDIENTE")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 2
+    assert len(data) >= 2
     for p in data:
         assert p.get("contraloriaStatus") == "PENDIENTE" or p.get("contraloria_status") == "PENDIENTE"
 
@@ -190,8 +212,10 @@ def test_get_pacientes_filter_by_risk_level(client: TestClient):
     response = client.get("/api/pacientes?risk_level=CRITICO")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 1
-    assert data[0]["id"] == "PAT-001"
+    assert len(data) >= 1
+    for p in data:
+        risk = p.get("nt118Risk") or p.get("nt118_risk")
+        assert risk.get("riskLevel") == "CRITICO" or risk.get("risk_level") == "CRITICO"
 
 
 @pytest.mark.tier1
@@ -329,3 +353,30 @@ def test_api_patient_payloads_rut_always_masked(client: TestClient):
     for patient in data:
         assert "***" in patient["rut"]
         assert not patient["rut"].replace(".", "").replace("-", "").isdigit()
+
+
+@pytest.mark.tier1
+@pytest.mark.parametrize("status_val", ["APROBADO", "RECHAZADO", "DERIVADO", "PENDIENTE"])
+def test_patch_contraloria_new_valid_statuses(client: TestClient, status_val: str):
+    """4.6 PATCH /api/pacientes/PAT-001/contraloria supports statuses APROBADO, RECHAZADO, DERIVADO, PENDIENTE."""
+    payload = {
+        "newStatus": status_val,
+        "clinicalNote": f"Prueba de estado {status_val}",
+        "physicianName": "Dr. Silva",
+        "physicianRole": "Médico Contralor"
+    }
+    response = client.patch("/api/pacientes/PAT-001/contraloria", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data.get("contraloriaStatus") == status_val or data.get("contraloria_status") == status_val
+
+
+@pytest.mark.tier1
+def test_hash_rut_sha256_salted():
+    """5.6 SHA-256 salted hash of RUT produces 64-char hex string and handles empty/None."""
+    h1 = hash_rut("12.458.930-K")
+    assert len(h1) == 64
+    assert h1 == hash_rut("12458930K")
+    assert hash_rut("") == ""
+    assert hash_rut(None) == ""
+

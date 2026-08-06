@@ -1,4 +1,23 @@
+import hashlib
+import os
 import re
+
+SALT = os.environ.get("RUT_SALT", "healt_impact_lab_aps_salt_2026")
+
+def hash_rut(rut: str | None) -> str:
+    """
+    Hashes Chilean RUT string using SHA-256 with a salt string.
+    Normalizes RUT string before hashing.
+    Returns empty string if rut is empty or None.
+    """
+    if not rut:
+        return ""
+    clean = re.sub(r'[\.\-\s]', '', str(rut)).upper()
+    if not clean:
+        return ""
+    salted = f"{clean}:{SALT}"
+    return hashlib.sha256(salted.encode('utf-8')).hexdigest()
+
 
 def mask_rut(rut: str | None) -> str:
     """

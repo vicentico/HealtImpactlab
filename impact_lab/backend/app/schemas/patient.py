@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional
+from typing import List, Optional, Literal
 from app.schemas.priorizacion import PriorizacionResponse, CamelModel
 
 class AuditLogEntry(CamelModel):
@@ -13,7 +13,7 @@ class AuditLogEntry(CamelModel):
     clinical_note: str
 
 class ContraloriaUpdatePayload(CamelModel):
-    new_status: str  # "PENDIENTE" | "APROBADO" | "REQUIERE_REVISION" | "OBSERVADO"
+    new_status: str  # "PENDIENTE" | "APROBADO" | "RECHAZADO" | "DERIVADO" | "REQUIERE_REVISION" | "OBSERVADO"
     clinical_note: str
     physician_name: str
     physician_role: str
@@ -21,6 +21,7 @@ class ContraloriaUpdatePayload(CamelModel):
 class Patient(CamelModel):
     id: str
     rut: str
+    rut_hash: Optional[str] = None
     full_name: str
     age: int
     gender: str

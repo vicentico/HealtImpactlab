@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { KPICards } from './components/KPICards';
@@ -6,55 +6,104 @@ import { PressureMap } from './components/PressureMap';
 import { PrioritizedTable } from './components/PrioritizedTable';
 import { PatientDetailPanel } from './components/PatientDetailPanel';
 import { OperationalExplicationPanel } from './components/OperationalExplicationPanel';
-import { INITIAL_MOCK_PATIENTS } from './data/mockPatients';
-import { Patient, ContraloriaStatus, AuditLogEntry } from './types/patient';
-import { Layers, ClipboardCheck, FileSpreadsheet, Download, Shield } from 'lucide-react';
+import { Patient, ContraloriaStatus } from './types/patient';
+import { fetchPacientes, updateContraloriaStatus, calcularNT118 } from './services/api';
+import { Layers, ClipboardCheck, FileSpreadsheet, Download, Shield, Loader2 } from 'lucide-react';
 
 export function App() {
-  const [patients, setPatients] = useState<Patient[]>(INITIAL_MOCK_PATIENTS);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [cesfamName, setCesfamName] = useState<string>('CESFAM Carol Urzúa');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isExplicationOpen, setIsExplicationOpen] = useState<boolean>(false);
 
-  // Handle Contraloría Action Update
-  const handleUpdateStatus = (patientId: string, newStatus: ContraloriaStatus, clinicalNote: string) => {
-    const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 16);
-    
-    setPatients((prev) =>
-      prev.map((p) => {
-        if (p.id === patientId) {
-          const newAuditEntry: AuditLogEntry = {
-            id: `LOG-${Date.now()}`,
-            timestamp: nowStr,
-            userName: 'Dr. Alejandro Silva',
-            userRole: 'Médico Contralor APS',
-            action: `Cambio Estado Contraloría a ${newStatus}`,
-            previousStatus: p.contraloriaStatus,
-            newStatus: newStatus,
-            clinicalNote: clinicalNote
-          };
-
-          const updatedPatient: Patient = {
-            ...p,
-            contraloriaStatus: newStatus,
-            lastReviewDate: nowStr,
-            auditHistory: [newAuditEntry, ...p.auditHistory]
-          };
-
-          if (selectedPatient && selectedPatient.id === patientId) {
-            setSelectedPatient(updatedPatient);
-          }
-
-          return updatedPatient;
+  // Fetch Patients Asynchronously on mount and when CESFAM selection changes
+  useEffect(() => {
+    let isMounted = true;
+    const loadPatients = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchPacientes(
+          undefined,
+          undefined,
+          undefined,
+          cesfamName !== 'ALL' ? cesfamName : undefined
+        );
+        if (isMounted) {
+          setPatients(data);
+          setError(null);
         }
-        return p;
-      })
-    );
+      } catch (err: any) {
+        if (isMounted) {
+          console.error('Error fetching patients:', err);
+          setError('Error al cargar la lista de pacientes.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadPatients();
+    return () => {
+      isMounted = false;
+    };
+  }, [cesfamName]);
+
+  // Handle Contraloría Action Update via API service
+  const handleUpdateStatus = async (patientId: string, newStatus: ContraloriaStatus, clinicalNote: string) => {
+    try {
+      const updatedPatient = await updateContraloriaStatus(patientId, {
+        new_status: newStatus,
+        clinical_note: clinicalNote,
+        physician_name: 'Dr. Alejandro Silva',
+        physician_role: 'Médico Contralor APS'
+      });
+
+      setPatients((prev) =>
+        prev.map((p) => (p.id === patientId ? updatedPatient : p))
+      );
+
+      if (selectedPatient && selectedPatient.id === patientId) {
+        setSelectedPatient(updatedPatient);
+      }
+    } catch (err) {
+      console.error('Error al registrar acción de contraloría:', err);
+    }
   };
 
   const pendingCount = patients.filter((p) => p.contraloriaStatus === 'PENDIENTE').length;
-  const criticalCount = patients.filter((p) => p.nt118Risk.riskLevel === 'CRITICO').length;
+  const criticalCount = patients.filter((p) => p.nt118Risk?.riskLevel === 'CRITICO').length;
+  const avgNt118Score = patients.length > 0
+    ? Math.round(patients.reduce((sum, p) => sum + (p.nt118Risk?.totalScore ?? 0), 0) / patients.length)
+    : 0;
+
+  // E2E Hook: recalculate live NT118 score when patient is selected from table
+  const handleSelectPatient = async (p: Patient) => {
+    setSelectedPatient(p);
+    try {
+      const liveScore = await calcularNT118({
+        patientId: p.id,
+        hba1c: p.hba1c,
+        systolicBP: p.systolicBP,
+        diastolicBP: p.diastolicBP,
+        vfg: p.vfg,
+        hasFootUlcer: p.hasFootUlcer,
+        hasRetinopathy: p.hasRetinopathy,
+        daysInWaitingList: p.daysInWaitingList,
+        age: p.age,
+        gender: p.gender,
+        sector: p.sector,
+        cesfamName: p.cesfamName,
+      });
+      setSelectedPatient({ ...p, nt118Risk: liveScore });
+    } catch {
+      // Fallback: keep cached score — already set above
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -111,17 +160,30 @@ export function App() {
                 </div>
               </div>
 
-              {/* KPI Summary Grid */}
-              <KPICards patients={patients} />
+              {loading ? (
+                <div className="glass-panel rounded-xl p-12 text-center space-y-3">
+                  <Loader2 className="h-8 w-8 text-cyan-400 animate-spin mx-auto" />
+                  <p className="text-sm font-semibold text-slate-300">Cargando lista de espera priorizada...</p>
+                </div>
+              ) : error ? (
+                <div className="glass-panel rounded-xl p-6 text-center border-red-500/30 text-red-400">
+                  <p className="text-sm font-semibold">{error}</p>
+                </div>
+              ) : (
+                <>
+                  {/* KPI Summary Grid */}
+                  <KPICards patients={patients} avgNt118Score={avgNt118Score} />
 
-              {/* Pressure Map APS */}
-              <PressureMap />
+                  {/* Pressure Map APS */}
+                  <PressureMap patients={patients} />
 
-              {/* Main Prioritized Table */}
-              <PrioritizedTable
-                patients={patients}
-                onSelectPatient={(p) => setSelectedPatient(p)}
-              />
+                  {/* Main Prioritized Table */}
+                  <PrioritizedTable
+                    patients={patients}
+                    onSelectPatient={handleSelectPatient}
+                  />
+                </>
+              )}
             </>
           )}
 

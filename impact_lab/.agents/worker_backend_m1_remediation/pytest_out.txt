@@ -1,0 +1,1 @@
+/Users/familia_bustos_estrada/Developer/HealtImpactlab/impact_lab/backend/.venv/bin/python3: No module named pytest

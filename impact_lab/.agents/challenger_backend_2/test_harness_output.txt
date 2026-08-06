@@ -1,0 +1,54 @@
+==================================================================
+  EMPIRICAL CHALLENGER 2 - BACKEND M1 VERIFICATION SUITE
+==================================================================
+
+[TEST GROUP 1] PII Hashing & RUT Masking Verification
+  1.1 SHA-256 hash output: 'c0e5a820aea83ebc3b9eb44f226a029fdbd4dd59731bf55d98e60ed58187c0f8'
+      - Length 64 chars: True
+      - Valid hex format: True
+  1.2 Normalization check (formatted vs raw vs lowercase vs spaces): True
+  1.3 Configured Salt: 'healt_impact_lab_aps_salt_2026'
+      - Salt applied consistently: True
+  1.4 Plain RUT string absent from hash digest: True
+  1.5 Empty / None RUT hash handling: True
+  1.6 Masking RUT format & idempotency checks: True
+
+[TEST GROUP 2] Patient Dataset & Sorting Verification
+  2.1 Total mock patients count: 10 (>= 10: True)
+  2.2 Patient list priorityPositions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      - Strictly sorted ascending by priorityPosition: True
+  2.3 Dataset PII Security (0 plain RUT leaks): True
+
+[TEST GROUP 3] Contraloría Status & Audit Log Appending Verification
+  3.1 PAT-001 initial status: 'PENDIENTE', initial audit history count: 1
+  3.2 Update 1 (APROBADO): Log count 1 -> 2 (Appended: True)
+      - Audit Entry fields valid: True
+  3.3 Update 2 (DERIVADO): Log count -> 3 (Appended & Order Preserved: True)
+
+[TEST GROUP 4] NT 118 Scoring Engine Verification
+  4.1 Critical patient payload (hba1c=11.5, vfg=28, foot_ulcer=true):
+      - Total score: 90 (>= 90)
+      - Risk level: 'CRITICO' (Expected: 'CRITICO')
+      - Subscores: {'c1_hba1c_score': 40, 'c1Hba1cScore': 40, 'c2_renals_score': 30, 'c2RenalsScore': 30, 'c3_cv_score': 20, 'c3CvScore': 20, 'c4_social_score': 0, 'c4SocialScore': 0, 'c5_days_score': 0, 'c5DaysScore': 0}
+      - Decompensations: [{'code': 'HBA1C_CRITICA', 'label': 'HbA1c > 11.0% Severa', 'severity': 'ALTA', 'value': '11.5%'}, {'code': 'VFG_CRITICA', 'label': 'Insuficiencia Renal Severa (VFG < 30)', 'severity': 'ALTA', 'value': '28.0 mL/min'}, {'code': 'PIE_DIABETICO', 'label': 'Sospecha Ulcera Activa', 'severity': 'ALTA', 'value': 'Grado 2'}]
+      - Criteria Result: True
+  4.2 Low patient payload: totalScore=20, riskLevel='BAJO' (OK: True)
+
+==================================================================
+  VERIFICATION SUMMARY
+==================================================================
+  [PASS] 1.1_sha256_64_hex
+  [PASS] 1.2_hash_rut_normalization
+  [PASS] 1.3_salt_verification
+  [PASS] 1.4_no_plain_rut_leak
+  [PASS] 1.5_empty_none_hash
+  [PASS] 1.6_mask_rut_verification
+  [PASS] 2.1_patient_count_gte_10
+  [PASS] 2.2_priority_position_sorted
+  [PASS] 2.3_dataset_pii_security
+  [PASS] 3.3_audit_log_appending_integrity
+  [PASS] 4.1_nt118_critico_score
+  [PASS] 4.2_nt118_bajo_score
+
+  EXPLICIT VERDICT: APPROVE
+==================================================================

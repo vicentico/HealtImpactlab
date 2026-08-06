@@ -7,7 +7,7 @@ from app.data.mock_db import get_all_patients, get_patient_by_id, format_patient
 
 router = APIRouter(prefix="/api/pacientes", tags=["pacientes"])
 
-VALID_STATUSES = {"PENDIENTE", "APROBADO", "REQUIERE_REVISION", "OBSERVADO"}
+VALID_STATUSES = {"PENDIENTE", "APROBADO", "RECHAZADO", "DERIVADO", "REQUIERE_REVISION", "OBSERVADO"}
 
 @router.get("", response_model=List[dict])
 def list_pacientes(

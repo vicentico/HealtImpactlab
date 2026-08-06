@@ -1,6 +1,6 @@
 import copy
 from typing import List, Dict, Any, Optional
-from app.core.privacy import mask_rut
+from app.core.privacy import mask_rut, hash_rut
 from app.engine.nt118 import calculate_nt118_score
 
 def get_initial_mock_patients() -> List[Dict[str, Any]]:
@@ -39,39 +39,6 @@ def get_initial_mock_patients() -> List[Dict[str, Any]]:
             ]
         },
         {
-            "id": "PAT-002",
-            "rut": "14.821.405-3",
-            "fullName": "José Manuel Araya Gomez",
-            "age": 62,
-            "gender": "M",
-            "sector": "SECTOR_AZUL",
-            "cesfamName": "CESFAM Carol Urzúa",
-            "hba1c": 9.8,
-            "systolicBp": 152,
-            "diastolicBp": 92,
-            "vfg": 58.0,
-            "hasFootUlcer": False,
-            "hasRetinopathy": True,
-            "daysInWaitingList": 98,
-            "priorityPosition": 2,
-            "previousPriorityPosition": 3,
-            "contraloriaStatus": "OBSERVADO",
-            "assignedPhysician": "Dra. Maria Zuñiga",
-            "lastReviewDate": "2026-08-02",
-            "auditHistory": [
-                {
-                    "id": "AUD-002",
-                    "timestamp": "2026-08-02T11:30:00Z",
-                    "userName": "Dra. Maria Zuñiga",
-                    "userRole": "Médico Contralor",
-                    "action": "STATUS_OVERRIDE",
-                    "previousStatus": "PENDIENTE",
-                    "newStatus": "OBSERVADO",
-                    "clinicalNote": "Se solicitan exámenes complementarios de proteinuria"
-                }
-            ]
-        },
-        {
             "id": "PAT-003",
             "rut": "9.310.224-8",
             "fullName": "Elena Maria Valenzuela Lopez",
@@ -101,6 +68,39 @@ def get_initial_mock_patients() -> List[Dict[str, Any]]:
                     "previousStatus": "PENDIENTE",
                     "newStatus": "APROBADO",
                     "clinicalNote": "Aprobada derivación prioritaria a especialista"
+                }
+            ]
+        },
+        {
+            "id": "PAT-002",
+            "rut": "14.821.405-3",
+            "fullName": "José Manuel Araya Gomez",
+            "age": 62,
+            "gender": "M",
+            "sector": "SECTOR_AZUL",
+            "cesfamName": "CESFAM Carol Urzúa",
+            "hba1c": 9.8,
+            "systolicBp": 152,
+            "diastolicBp": 92,
+            "vfg": 58.0,
+            "hasFootUlcer": False,
+            "hasRetinopathy": True,
+            "daysInWaitingList": 98,
+            "priorityPosition": 2,
+            "previousPriorityPosition": 3,
+            "contraloriaStatus": "OBSERVADO",
+            "assignedPhysician": "Dra. Maria Zuñiga",
+            "lastReviewDate": "2026-08-02",
+            "auditHistory": [
+                {
+                    "id": "AUD-002",
+                    "timestamp": "2026-08-02T11:30:00Z",
+                    "userName": "Dra. Maria Zuñiga",
+                    "userRole": "Médico Contralor",
+                    "action": "STATUS_OVERRIDE",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "OBSERVADO",
+                    "clinicalNote": "Se solicitan exámenes complementarios de proteinuria"
                 }
             ]
         },
@@ -169,6 +169,171 @@ def get_initial_mock_patients() -> List[Dict[str, Any]]:
                     "clinicalNote": "Se requiere ajustar dosis de insulinoterapia antes de derivar"
                 }
             ]
+        },
+        {
+            "id": "PAT-006",
+            "rut": "15.922.314-7",
+            "fullName": "Gonzalo Esteban Navarrete Vera",
+            "age": 58,
+            "gender": "M",
+            "sector": "SECTOR_ROJO",
+            "cesfamName": "CESFAM Carol Urzúa",
+            "hba1c": 11.8,
+            "systolicBp": 170,
+            "diastolicBp": 102,
+            "vfg": 27.0,
+            "hasFootUlcer": True,
+            "hasRetinopathy": True,
+            "daysInWaitingList": 195,
+            "priorityPosition": 6,
+            "previousPriorityPosition": 6,
+            "contraloriaStatus": "DERIVADO",
+            "assignedPhysician": "Dr. Alejandro Silva",
+            "lastReviewDate": "2026-08-04",
+            "auditHistory": [
+                {
+                    "id": "AUD-006",
+                    "timestamp": "2026-08-04T18:00:00Z",
+                    "userName": "Dr. Alejandro Silva",
+                    "userRole": "Médico Contralor",
+                    "action": "STATUS_OVERRIDE",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "DERIVADO",
+                    "clinicalNote": "Paciente derivado de urgencia por descompensación renal y vascular"
+                }
+            ]
+        },
+        {
+            "id": "PAT-007",
+            "rut": "11.650.482-9",
+            "fullName": "Marta Isabel Sepulveda Bravo",
+            "age": 71,
+            "gender": "F",
+            "sector": "SECTOR_AZUL",
+            "cesfamName": "CESFAM Dr. Aníbal Ariztía",
+            "hba1c": 9.1,
+            "systolicBp": 148,
+            "diastolicBp": 88,
+            "vfg": 52.0,
+            "hasFootUlcer": False,
+            "hasRetinopathy": True,
+            "daysInWaitingList": 130,
+            "priorityPosition": 7,
+            "previousPriorityPosition": 7,
+            "contraloriaStatus": "RECHAZADO",
+            "assignedPhysician": "Dra. Maria Zuñiga",
+            "lastReviewDate": "2026-08-04",
+            "auditHistory": [
+                {
+                    "id": "AUD-007",
+                    "timestamp": "2026-08-04T19:30:00Z",
+                    "userName": "Dra. Maria Zuñiga",
+                    "userRole": "Médico Contralor",
+                    "action": "STATUS_OVERRIDE",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "RECHAZADO",
+                    "clinicalNote": "Rechazada solicitud por falta de criterios de ingreso a nivel secundario"
+                }
+            ]
+        },
+        {
+            "id": "PAT-008",
+            "rut": "13.109.845-2",
+            "fullName": "Pedro Antonio Castillo Munoz",
+            "age": 66,
+            "gender": "M",
+            "sector": "SECTOR_VERDE",
+            "cesfamName": "CESFAM Carol Urzúa",
+            "hba1c": 6.8,
+            "systolicBp": 125,
+            "diastolicBp": 78,
+            "vfg": 92.0,
+            "hasFootUlcer": False,
+            "hasRetinopathy": False,
+            "daysInWaitingList": 85,
+            "priorityPosition": 8,
+            "previousPriorityPosition": 8,
+            "contraloriaStatus": "PENDIENTE",
+            "assignedPhysician": "Dr. Alejandro Silva",
+            "lastReviewDate": "2026-08-05",
+            "auditHistory": [
+                {
+                    "id": "AUD-008",
+                    "timestamp": "2026-08-05T08:30:00Z",
+                    "userName": "Sistema APS Integration",
+                    "userRole": "Sistema Auto",
+                    "action": "CREATION",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "PENDIENTE",
+                    "clinicalNote": "Ingreso regular a seguimiento APS"
+                }
+            ]
+        },
+        {
+            "id": "PAT-009",
+            "rut": "17.430.551-K",
+            "fullName": "Sofia Francisca Morales Pinto",
+            "age": 50,
+            "gender": "F",
+            "sector": "SECTOR_AMARILLO",
+            "cesfamName": "CESFAM Dr. Aníbal Ariztía",
+            "hba1c": 8.0,
+            "systolicBp": 130,
+            "diastolicBp": 80,
+            "vfg": 65.0,
+            "hasFootUlcer": False,
+            "hasRetinopathy": False,
+            "daysInWaitingList": 40,
+            "priorityPosition": 9,
+            "previousPriorityPosition": 9,
+            "contraloriaStatus": "APROBADO",
+            "assignedPhysician": "Dra. Maria Zuñiga",
+            "lastReviewDate": "2026-08-05",
+            "auditHistory": [
+                {
+                    "id": "AUD-009",
+                    "timestamp": "2026-08-05T10:15:00Z",
+                    "userName": "Dra. Maria Zuñiga",
+                    "userRole": "Médico Contralor",
+                    "action": "STATUS_OVERRIDE",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "APROBADO",
+                    "clinicalNote": "Evaluación aprobada en comité de contraloría"
+                }
+            ]
+        },
+        {
+            "id": "PAT-010",
+            "rut": "10.887.213-4",
+            "fullName": "Fernando Javier Paredes Soto",
+            "age": 76,
+            "gender": "M",
+            "sector": "SECTOR_ROJO",
+            "cesfamName": "CESFAM Carol Urzúa",
+            "hba1c": 10.5,
+            "systolicBp": 162,
+            "diastolicBp": 96,
+            "vfg": 38.0,
+            "hasFootUlcer": True,
+            "hasRetinopathy": False,
+            "daysInWaitingList": 160,
+            "priorityPosition": 10,
+            "previousPriorityPosition": 10,
+            "contraloriaStatus": "DERIVADO",
+            "assignedPhysician": "Dr. Alejandro Silva",
+            "lastReviewDate": "2026-08-05",
+            "auditHistory": [
+                {
+                    "id": "AUD-010",
+                    "timestamp": "2026-08-05T11:45:00Z",
+                    "userName": "Dr. Alejandro Silva",
+                    "userRole": "Médico Contralor",
+                    "action": "STATUS_OVERRIDE",
+                    "previousStatus": "PENDIENTE",
+                    "newStatus": "DERIVADO",
+                    "clinicalNote": "Derivación aceptada a podología y nefrología"
+                }
+            ]
         }
     ]
 
@@ -179,8 +344,11 @@ def load_mock_db() -> List[Dict[str, Any]]:
 
 def format_patient_response(p: Dict[str, Any]) -> Dict[str, Any]:
     p_copy = copy.deepcopy(p)
-    # Mask RUT
-    p_copy["rut"] = mask_rut(p_copy.get("rut"))
+    raw_rut = p_copy.get("rut")
+    # Mask & Hash RUT
+    p_copy["rut"] = mask_rut(raw_rut)
+    p_copy["rut_hash"] = hash_rut(raw_rut)
+    p_copy["rutHash"] = hash_rut(raw_rut)
     # Compute NT 118 Risk Score
     nt118_risk = calculate_nt118_score(p_copy)
     p_copy["nt118Risk"] = nt118_risk
@@ -234,6 +402,13 @@ def get_all_patients(
         if cesfam_name and formatted["cesfamName"] != cesfam_name:
             continue
         results.append(formatted)
+
+    # Sort by priorityPosition / priority_position ascending
+    results.sort(
+        key=lambda x: x.get("priorityPosition")
+        if x.get("priorityPosition") is not None
+        else (x.get("priority_position") if x.get("priority_position") is not None else 999)
+    )
     return results
 
 def get_patient_by_id(patient_id: str) -> Optional[Dict[str, Any]]:

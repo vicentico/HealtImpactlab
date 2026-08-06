@@ -24,9 +24,9 @@ def calculate_nt118_score(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     decompensations = []
 
-    # C1: Control Glicémico (HbA1c) [0 - 35]
+    # C1: Control Glicémico (HbA1c) [0 - 40]
     if hba1c > 11.0:
-        c1_score = 35
+        c1_score = 40
         decompensations.append({
             "code": "HBA1C_CRITICA",
             "label": "HbA1c > 11.0% Severa",

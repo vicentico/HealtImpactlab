@@ -36,6 +36,28 @@ export interface AuditLogEntry {
   clinicalNote: string;
 }
 
+export interface PriorizacionRequest {
+  patient_id?: string;
+  patientId?: string;
+  hba1c: number;
+  systolic_bp?: number;
+  systolicBP?: number;
+  diastolic_bp?: number;
+  diastolicBP?: number;
+  vfg: number;
+  has_foot_ulcer?: boolean;
+  hasFootUlcer?: boolean;
+  has_retinopathy?: boolean;
+  hasRetinopathy?: boolean;
+  days_in_waiting_list?: number;
+  daysInWaitingList?: number;
+  age?: number;
+  gender?: string;
+  sector?: string;
+  cesfam_name?: string;
+  cesfamName?: string;
+}
+
 export interface Patient {
   id: string;
   rut: string;

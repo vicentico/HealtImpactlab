@@ -1,5 +1,6 @@
-import React from 'react';
-import { Gauge, Calendar, AlertOctagon, TrendingUp, CheckCircle2 } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Gauge } from 'lucide-react';
+import { Patient } from '../types/patient';
 
 interface ProgramCapacity {
   id: string;
@@ -11,15 +12,36 @@ interface ProgramCapacity {
 
 interface PressureMapProps {
   programs?: ProgramCapacity[];
+  patients?: Patient[];
 }
 
-export const PressureMap: React.FC<PressureMapProps> = ({ programs }) => {
-  const defaultPrograms: ProgramCapacity[] = programs || [
-    { id: '1', name: 'DM2 / Diabetología APS', demandCount: 24, weeklyCapacity: 8, unit: 'cupos/sem' },
-    { id: '2', name: 'Nefroprotección (VFG < 45)', demandCount: 12, weeklyCapacity: 4, unit: 'cupos/sem' },
-    { id: '3', name: 'Pie Diabético / Curación Avanzada', demandCount: 8, weeklyCapacity: 6, unit: 'cupos/sem' },
-    { id: '4', name: 'Control Enfermera CV / ECICEP', demandCount: 35, weeklyCapacity: 20, unit: 'cupos/sem' },
-  ];
+export const PressureMap: React.FC<PressureMapProps> = ({ programs, patients }) => {
+  const displayPrograms: ProgramCapacity[] = useMemo(() => {
+    if (programs && programs.length > 0) return programs;
+    
+    if (patients && patients.length > 0) {
+      const dm2Count = patients.filter(
+        (p) => p.hba1c >= 8.5 || p.nt118Risk.riskLevel === 'CRITICO' || p.nt118Risk.riskLevel === 'ALTO'
+      ).length;
+      const nefroCount = patients.filter((p) => p.vfg < 60 || p.nt118Risk.renalsScore > 10).length;
+      const footCount = patients.filter((p) => p.hasFootUlcer).length;
+      const cvCount = patients.length;
+
+      return [
+        { id: '1', name: 'DM2 / Diabetología APS', demandCount: dm2Count, weeklyCapacity: 8, unit: 'cupos/sem' },
+        { id: '2', name: 'Nefroprotección (VFG < 45)', demandCount: nefroCount, weeklyCapacity: 4, unit: 'cupos/sem' },
+        { id: '3', name: 'Pie Diabético / Curación Avanzada', demandCount: footCount, weeklyCapacity: 6, unit: 'cupos/sem' },
+        { id: '4', name: 'Control Enfermera CV / ECICEP', demandCount: cvCount, weeklyCapacity: 20, unit: 'cupos/sem' },
+      ];
+    }
+
+    return [
+      { id: '1', name: 'DM2 / Diabetología APS', demandCount: 24, weeklyCapacity: 8, unit: 'cupos/sem' },
+      { id: '2', name: 'Nefroprotección (VFG < 45)', demandCount: 12, weeklyCapacity: 4, unit: 'cupos/sem' },
+      { id: '3', name: 'Pie Diabético / Curación Avanzada', demandCount: 8, weeklyCapacity: 6, unit: 'cupos/sem' },
+      { id: '4', name: 'Control Enfermera CV / ECICEP', demandCount: 35, weeklyCapacity: 20, unit: 'cupos/sem' },
+    ];
+  }, [programs, patients]);
 
   const getPressureStatus = (demand: number, capacity: number) => {
     const ratio = demand / (capacity * 2); // ratio de presión a 2 semanas
@@ -51,7 +73,7 @@ export const PressureMap: React.FC<PressureMapProps> = ({ programs }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        {defaultPrograms.map((prog) => {
+        {displayPrograms.map((prog) => {
           const status = getPressureStatus(prog.demandCount, prog.weeklyCapacity);
           const gap = prog.demandCount - prog.weeklyCapacity;
 

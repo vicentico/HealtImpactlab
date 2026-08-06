@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/familia_bustos_estrada/Developer/HealtImpactlab/impact_lab/.agents/challenger_backend_2/verify_all.py", line 4, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'

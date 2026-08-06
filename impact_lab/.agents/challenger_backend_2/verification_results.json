@@ -1,0 +1,20 @@
+{
+  "verdict": "APPROVE",
+  "all_passed": true,
+  "test_results": {
+    "1.1_sha256_64_hex": true,
+    "1.2_hash_rut_normalization": true,
+    "1.3_salt_verification": true,
+    "1.4_no_plain_rut_leak": true,
+    "1.5_empty_none_hash": true,
+    "1.6_mask_rut_verification": true,
+    "2.1_patient_count_gte_10": true,
+    "2.2_priority_position_sorted": true,
+    "2.3_dataset_pii_security": true,
+    "3.3_audit_log_appending_integrity": true,
+    "4.1_nt118_critico_score": true,
+    "4.2_nt118_bajo_score": true
+  },
+  "failures": [],
+  "timestamp": "2026-08-06T03:44:17.349652+00:00"
+}

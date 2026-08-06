@@ -1,0 +1,4 @@
+Looking in links: /var/folders/w2/4y_fvz695k5d_g0wxd4c82vh0000gn/T/tmpz92zvc1r
+Processing /var/folders/w2/4y_fvz695k5d_g0wxd4c82vh0000gn/T/tmpz92zvc1r/pip-26.1-py3-none-any.whl
+Installing collected packages: pip
+Successfully installed pip-26.1

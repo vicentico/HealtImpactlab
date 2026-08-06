@@ -4,14 +4,20 @@ import { AlertTriangle, Users, Clock, ShieldAlert, CheckCircle2 } from 'lucide-r
 
 interface KPICardsProps {
   patients: Patient[];
+  avgNt118Score?: number;
 }
 
-export const KPICards: React.FC<KPICardsProps> = ({ patients }) => {
+export const KPICards: React.FC<KPICardsProps> = ({ patients, avgNt118Score = 0 }) => {
   const totalCount = patients.length;
-  const criticalCount = patients.filter(p => p.nt118Risk.riskLevel === 'CRITICO').length;
+  const criticalCount = patients.filter(p => p.nt118Risk?.riskLevel === 'CRITICO').length;
   const highDecompensatedCount = patients.filter(p => p.hba1c >= 10.0 || p.hasFootUlcer).length;
   const pendingContraloriaCount = patients.filter(p => p.contraloriaStatus === 'PENDIENTE').length;
   const approvedCount = patients.filter(p => p.contraloriaStatus === 'APROBADO').length;
+  const displayAvg = avgNt118Score > 0 ? avgNt118Score : (
+    patients.length > 0
+      ? Math.round(patients.reduce((s, p) => s + (p.nt118Risk?.totalScore ?? 0), 0) / patients.length)
+      : 0
+  );
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
