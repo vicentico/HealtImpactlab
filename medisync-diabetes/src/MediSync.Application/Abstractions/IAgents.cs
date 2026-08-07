@@ -19,6 +19,11 @@ public record PriorityAssessment(int PriorityScore, PriorityTier PriorityTier, s
 
 public record SchedulerAssignment(string AgendaSlotId, DateTime FechaHora, string ProfesionalId, string CentroSaludId, string Justificacion, AgentRunResult Run);
 
+/// <summary>Resultado del Protocolo Algoritmico MINSAL (C1-C5) — segundo calculo de prioridad, paralelo
+/// al ECICEP. Ver docs/11-protocolo-minsal-prompt.md.</summary>
+public record MinsalAssessment(
+    int PuntajeTotal, PrioridadMinsal PrioridadMinsal, EstratoRiesgo EstratoRiesgo, string Justificacion, AgentRunResult Run);
+
 public interface IRiskAgent
 {
     Task<RiskAssessment> EvaluarAsync(string pacienteId, string listaEsperaItemId, CancellationToken ct = default);
@@ -32,4 +37,9 @@ public interface IPriorityAgent
 public interface ISchedulerAgent
 {
     Task<SchedulerAssignment> AsignarAsync(string listaEsperaItemId, CancellationToken ct = default);
+}
+
+public interface IMinsalPriorityAgent
+{
+    Task<MinsalAssessment> CalcularAsync(string pacienteId, string listaEsperaItemId, CancellationToken ct = default);
 }

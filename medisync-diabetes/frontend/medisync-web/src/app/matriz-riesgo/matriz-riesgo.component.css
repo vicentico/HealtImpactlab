@@ -1,0 +1,57 @@
+.matrix {
+  display: grid;
+  grid-template-columns: 72px repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.matrix-corner {}
+
+.matrix-col-header,
+.matrix-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface-variant);
+  padding: var(--space-2);
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88px;
+  border-radius: var(--radius-sm);
+}
+
+.cell-value {
+  font: var(--mat-sys-headline-small);
+  font-weight: 600;
+}
+
+.cell--critical { background: var(--status-critical-container); color: var(--status-critical); }
+.cell--warning { background: var(--status-warning-container); color: var(--status-warning); }
+.cell--good { background: var(--status-good-container); color: var(--status-good); }
+
+.cell-flag {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.75;
+}
+
+.matrix-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+}
+.legend-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}

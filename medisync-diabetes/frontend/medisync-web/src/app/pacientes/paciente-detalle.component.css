@@ -1,0 +1,3 @@
+.card-emphasis mat-card-content {
+  padding-top: var(--space-2);
+}

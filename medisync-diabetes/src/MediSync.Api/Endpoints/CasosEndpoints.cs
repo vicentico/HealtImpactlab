@@ -2,6 +2,7 @@ using MediatR;
 using MediSync.Application.Agenda.Commands;
 using MediSync.Application.ListaEspera.Commands;
 using MediSync.Application.ListaEspera.Queries;
+using MediSync.Application.Priorizacion.Commands;
 using MediSync.Domain.Priorizacion;
 
 namespace MediSync.Api.Endpoints;
@@ -14,9 +15,17 @@ public static class CasosEndpoints
             Results.Ok(await sender.Send(new ListarListaEsperaQuery(), ct)))
             .WithTags("ListaEspera");
 
+        app.MapPost("/api/lista-espera/reprocesar", async (ISender sender, CancellationToken ct) =>
+            Results.Ok(await sender.Send(new ReprocesarPendientesCommand(), ct)))
+            .WithTags("ListaEspera");
+
         app.MapGet("/api/kpis", async (ISender sender, CancellationToken ct) =>
             Results.Ok(await sender.Send(new ObtenerKpisQuery(), ct)))
             .WithTags("Kpis");
+
+        app.MapGet("/api/matriz-riesgo", async (ISender sender, CancellationToken ct) =>
+            Results.Ok(await sender.Send(new ObtenerMatrizRiesgoQuery(), ct)))
+            .WithTags("MatrizRiesgo");
 
         var group = app.MapGroup("/api/casos").WithTags("Casos");
 

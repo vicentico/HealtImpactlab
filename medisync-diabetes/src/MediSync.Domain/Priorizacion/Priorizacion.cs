@@ -20,6 +20,13 @@ public class Priorizacion : Entity
     public OrigenDecision? OrigenConfirmacion { get; private set; }
     public DateTime? FechaConfirmacion { get; private set; }
 
+    /// <summary>Segundo calculo de prioridad, paralelo al ECICEP: Protocolo Algoritmico MINSAL
+    /// (ver docs/11-protocolo-minsal-prompt.md). No se mezcla con RiskScore/PriorityTier.</summary>
+    public int? PuntajeMinsal { get; private set; }
+    public PrioridadMinsal? PrioridadMinsal { get; private set; }
+    public EstratoRiesgo? EstratoRiesgo { get; private set; }
+    public string? MinsalJustificacion { get; private set; }
+
     private Priorizacion() { }
 
     public Priorizacion(string listaEsperaItemId)
@@ -33,7 +40,8 @@ public class Priorizacion : Entity
         int riskScore, RiskLevel riskLevel, string riskJustificacion,
         int priorityScore, PriorityTier priorityTier, string priorityJustificacion,
         string agenteQueEjecuto, DateTime fechaCalculo,
-        PriorityTier? tierConfirmado, string? confirmadaPor, OrigenDecision? origenConfirmacion, DateTime? fechaConfirmacion)
+        PriorityTier? tierConfirmado, string? confirmadaPor, OrigenDecision? origenConfirmacion, DateTime? fechaConfirmacion,
+        int? puntajeMinsal, PrioridadMinsal? prioridadMinsal, EstratoRiesgo? estratoRiesgo, string? minsalJustificacion)
     {
         Id = id;
         ListaEsperaItemId = listaEsperaItemId;
@@ -49,6 +57,10 @@ public class Priorizacion : Entity
         ConfirmadaPor = confirmadaPor;
         OrigenConfirmacion = origenConfirmacion;
         FechaConfirmacion = fechaConfirmacion;
+        PuntajeMinsal = puntajeMinsal;
+        PrioridadMinsal = prioridadMinsal;
+        EstratoRiesgo = estratoRiesgo;
+        MinsalJustificacion = minsalJustificacion;
     }
 
     public void RegistrarRiesgo(int riskScore, RiskLevel riskLevel, string justificacion, string agente)
@@ -67,6 +79,14 @@ public class Priorizacion : Entity
         PriorityJustificacion = justificacion;
         AgenteQueEjecuto = agente;
         FechaCalculo = DateTime.UtcNow;
+    }
+
+    public void RegistrarMinsal(int puntajeMinsal, PrioridadMinsal prioridadMinsal, EstratoRiesgo estratoRiesgo, string justificacion)
+    {
+        PuntajeMinsal = puntajeMinsal;
+        PrioridadMinsal = prioridadMinsal;
+        EstratoRiesgo = estratoRiesgo;
+        MinsalJustificacion = justificacion;
     }
 
     public void ConfirmarRevisionMedica(PriorityTier tierConfirmado, string aprobadoPor)

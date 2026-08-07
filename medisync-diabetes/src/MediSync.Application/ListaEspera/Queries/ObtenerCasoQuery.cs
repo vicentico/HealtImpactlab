@@ -34,7 +34,8 @@ public record VulnerabilidadDto(bool DependenciaSevera, bool Ruralidad, IReadOnl
 public record PriorizacionDto(
     int? RiskScore, string? RiskLevel, string? RiskJustificacion,
     int? PriorityScore, string? PriorityTier, string? PriorityJustificacion,
-    string? TierConfirmado, string? ConfirmadaPor, string? OrigenConfirmacion);
+    string? TierConfirmado, string? ConfirmadaPor, string? OrigenConfirmacion,
+    int? PuntajeMinsal, string? PrioridadMinsal, string? EstratoRiesgo, string? MinsalJustificacion);
 
 public record AgendaDto(string AgendaSlotId, DateTime FechaHora, string ProfesionalId, string CentroSaludId);
 
@@ -81,7 +82,9 @@ public class ObtenerCasoQueryHandler(
             priorizacionCompleta ? priorizacion.PriorityScore : null,
             priorizacionCompleta ? priorizacion.PriorityTier.ToString() : null,
             priorizacionCompleta ? priorizacion.PriorityJustificacion : null,
-            priorizacion.TierConfirmado?.ToString(), priorizacion.ConfirmadaPor, priorizacion.OrigenConfirmacion?.ToString());
+            priorizacion.TierConfirmado?.ToString(), priorizacion.ConfirmadaPor, priorizacion.OrigenConfirmacion?.ToString(),
+            priorizacion.PuntajeMinsal, priorizacion.PrioridadMinsal?.ToString(), priorizacion.EstratoRiesgo?.ToString(),
+            priorizacion.MinsalJustificacion);
 
         var agendaDto = agenda is null ? null : new AgendaDto(agenda.Id, agenda.FechaHora, agenda.ProfesionalId, agenda.CentroSaludId);
 

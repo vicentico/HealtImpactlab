@@ -7,7 +7,8 @@ namespace MediSync.Application.Pacientes.Commands;
 
 public record RegistrarPacienteCommand(
     string Run, string Nombre, DateTime FechaNacimiento, string CesfamOrigenId,
-    bool DependenciaSevera = false, bool Ruralidad = false, List<string>? DeterminantesSociales = null)
+    bool DependenciaSevera = false, bool Ruralidad = false, List<string>? DeterminantesSociales = null,
+    NivelRedApoyo? NivelRedApoyo = null)
     : IRequest<string>;
 
 public class RegistrarPacienteCommandValidator : AbstractValidator<RegistrarPacienteCommand>
@@ -27,7 +28,7 @@ public class RegistrarPacienteCommandHandler(IPacienteRepository repository) : I
     {
         var paciente = new Paciente(
             request.Run, request.Nombre, request.FechaNacimiento, request.CesfamOrigenId,
-            request.DependenciaSevera, request.Ruralidad, request.DeterminantesSociales);
+            request.DependenciaSevera, request.Ruralidad, request.DeterminantesSociales, request.NivelRedApoyo);
         await repository.AddAsync(paciente, cancellationToken);
         return paciente.Id;
     }

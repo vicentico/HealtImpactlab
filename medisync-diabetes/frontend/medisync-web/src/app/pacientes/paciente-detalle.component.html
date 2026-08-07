@@ -1,0 +1,156 @@
+<a mat-button routerLink="/pacientes" class="back-link">
+  <mat-icon>arrow_back</mat-icon>
+  Pacientes
+</a>
+
+@if (loading()) {
+  <div class="state-panel">
+    <mat-spinner diameter="32" />
+    <p>Cargando ficha...</p>
+  </div>
+} @else if (paciente(); as p) {
+  <header class="page-header">
+    <div>
+      <h1>{{ p.nombre }}</h1>
+      <p class="page-subtitle">RUN {{ p.run }} &middot; {{ p.edad }} anos &middot; {{ p.cesfamOrigenId }}</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="toggleDerivar()">
+      <mat-icon>send</mat-icon>
+      Derivar a interconsulta
+    </button>
+  </header>
+
+  @if (mostrarDerivar()) {
+    <mat-card class="card-emphasis">
+      <mat-card-header>
+        <mat-card-title>Nueva interconsulta</mat-card-title>
+        <mat-card-subtitle>Se dispara el mismo pipeline de agentes (ECICEP + MINSAL) que en /ingreso</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field>
+            <mat-label>Especialidad</mat-label>
+            <mat-select name="especialidadId" [(ngModel)]="especialidadId">
+              <mat-option value="diabetologia">Diabetologia</mat-option>
+              <mat-option value="endocrinologia">Endocrinologia</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Motivo</mat-label>
+            <input matInput name="motivo" [(ngModel)]="motivo" required />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>HbA1c (%)</mat-label>
+            <input matInput type="number" step="0.1" name="hbA1c" [(ngModel)]="hbA1c" required />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Glicemia en ayunas (mg/dL)</mat-label>
+            <input matInput type="number" name="glicemiaAyunas" [(ngModel)]="glicemiaAyunas" required />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>VFG (ml/min)</mat-label>
+            <input matInput type="number" step="0.1" name="vfg" [(ngModel)]="vfg" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Microalbuminuria / RAC</mat-label>
+            <input matInput type="number" step="0.1" name="microalbuminuriaRac" [(ngModel)]="microalbuminuriaRac" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Urgencias (90 dias)</mat-label>
+            <input matInput type="number" min="0" name="urgenciasUltimos90Dias" [(ngModel)]="urgenciasUltimos90Dias" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Farmacos activos</mat-label>
+            <input matInput type="number" min="0" name="numeroFarmacosActivos" [(ngModel)]="numeroFarmacosActivos" />
+            <mat-hint>Criterio C5 del Protocolo MINSAL</mat-hint>
+          </mat-form-field>
+          <div class="full-span">
+            <mat-checkbox name="neuropatiaPrevia" [(ngModel)]="neuropatiaPrevia">Neuropatia previa</mat-checkbox>
+          </div>
+        </div>
+
+        <app-chip-list-input label="Comorbilidades" [(value)]="comorbilidades" />
+        <app-chip-list-input
+          label="Alertas clinicas"
+          placeholder="ej. Pie diabetico infectado activo (Enter)"
+          hint="Dispara derivacion urgente automatica — dejar vacio si no aplica"
+          [(value)]="alertasClinicas" />
+
+        <div class="step-actions">
+          <button mat-stroked-button type="button" (click)="toggleDerivar()">Cancelar</button>
+          <button mat-flat-button color="primary" (click)="derivar()" [disabled]="enviando()">
+            {{ enviando() ? 'Procesando...' : 'Registrar interconsulta' }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Vulnerabilidad</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="kv-list">
+      <p><span class="kv-label">Dependencia severa</span> {{ p.dependenciaSevera ? 'Si' : 'No' }}</p>
+      <p><span class="kv-label">Ruralidad</span> {{ p.ruralidad ? 'Si' : 'No' }}</p>
+      <p><span class="kv-label">Nivel de red de apoyo (C4 MINSAL)</span> {{ p.nivelRedApoyo ?? 'No registrado' }}</p>
+      @if (p.determinantesSociales.length > 0) {
+        <div class="chip-row">
+          <span class="kv-label">Determinantes sociales</span>
+          <mat-chip-set>
+            @for (d of p.determinantesSociales; track d) { <mat-chip>{{ d }}</mat-chip> }
+          </mat-chip-set>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Historial clinico</mat-card-title>
+      <mat-card-subtitle>{{ p.antecedentes.length }} controles registrados</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      @if (p.antecedentes.length === 0) {
+        <p class="hint">Sin antecedentes clinicos todavia — se cargan al registrar una interconsulta.</p>
+      } @else {
+        <ul class="timeline">
+          @for (a of p.antecedentes; track a.fechaRegistro) {
+            <li>
+              <span class="ts">{{ a.fechaRegistro | date:'d MMM yyyy' }}</span>
+              HbA1c {{ a.hbA1c }}% &middot; Glicemia {{ a.glicemiaAyunas }} mg/dL
+              @if (a.vfg) { &middot; VFG {{ a.vfg }} }
+              @if (a.microalbuminuriaRac) { &middot; RAC {{ a.microalbuminuriaRac }} }
+              &middot; {{ a.numeroFarmacosActivos }} farmacos
+            </li>
+          }
+        </ul>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Urgencias y hospitalizaciones</mat-card-title>
+      <mat-card-subtitle>Alimenta el criterio C3 del Protocolo MINSAL</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      @if (p.atencionesUrgencia.length === 0 && p.hospitalizaciones.length === 0) {
+        <p class="hint">Sin eventos registrados.</p>
+      } @else {
+        <ul class="timeline">
+          @for (a of p.atencionesUrgencia; track a.fecha) {
+            <li><span class="ts">{{ a.fecha | date:'d MMM yyyy' }}</span> Atencion de urgencia &mdash; {{ a.motivo }}</li>
+          }
+          @for (h of p.hospitalizaciones; track h.fechaIngreso) {
+            <li>
+              <span class="ts">{{ h.fechaIngreso | date:'d MMM yyyy' }}</span>
+              Hospitalizacion &mdash; {{ h.motivo }}
+              @if (h.fechaAlta) { (alta {{ h.fechaAlta | date:'d MMM yyyy' }}) }
+            </li>
+          }
+        </ul>
+      }
+    </mat-card-content>
+  </mat-card>
+}

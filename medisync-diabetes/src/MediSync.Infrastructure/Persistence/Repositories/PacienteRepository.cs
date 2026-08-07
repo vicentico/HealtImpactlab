@@ -13,6 +13,18 @@ public class PacienteRepository(MongoContext context) : IPacienteRepository
         return doc?.ToDomain();
     }
 
+    public async Task<IReadOnlyList<Paciente>> BuscarAsync(string? texto, CancellationToken ct = default)
+    {
+        var filtro = string.IsNullOrWhiteSpace(texto)
+            ? FilterDefinition<PacienteDocument>.Empty
+            : Builders<PacienteDocument>.Filter.Or(
+                Builders<PacienteDocument>.Filter.Regex(p => p.Nombre, new MongoDB.Bson.BsonRegularExpression(texto, "i")),
+                Builders<PacienteDocument>.Filter.Regex(p => p.Run, new MongoDB.Bson.BsonRegularExpression(texto, "i")));
+
+        var docs = await context.Pacientes.Find(filtro).SortBy(p => p.Nombre).ToListAsync(ct);
+        return docs.Select(d => d.ToDomain()).ToList();
+    }
+
     public Task AddAsync(Paciente paciente, CancellationToken ct = default) =>
         context.Pacientes.InsertOneAsync(paciente.ToDocument(), cancellationToken: ct);
 

@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IAgentTool, GetAvailableSlotsTool>();
         services.AddScoped<IAgentTool, ReserveSlotTool>();
         services.AddScoped<IAgentTool, NotifyDummyChannelTool>();
+        services.AddScoped<IAgentTool, CalcularPuntajeMinsalTool>();
 
         services.AddScoped<IReadOnlyDictionary<string, IAgentTool>>(sp =>
             sp.GetServices<IAgentTool>().ToDictionary(t => t.Name));
@@ -30,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IRiskAgent, RiskAgent>();
         services.AddScoped<IPriorityAgent, PriorityAgent>();
         services.AddScoped<ISchedulerAgent, SchedulerAgent>();
+        services.AddScoped<IMinsalPriorityAgent, MinsalPriorityAgent>();
 
         return services;
     }

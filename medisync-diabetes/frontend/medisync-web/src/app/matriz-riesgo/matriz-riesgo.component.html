@@ -1,0 +1,57 @@
+<div class="page-header">
+  <div>
+    <h1>Matriz de riesgo</h1>
+    <p class="page-subtitle">Estrato de riesgo MINSAL (G1-G3) cruzado con la prioridad de agenda ECICEP (P1-P3)</p>
+  </div>
+  <button mat-stroked-button (click)="cargar()" [disabled]="loading()">
+    <mat-icon>refresh</mat-icon>
+    Actualizar
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="state-panel">
+    <mat-spinner diameter="32" />
+    <p>Cargando matriz...</p>
+  </div>
+} @else if (error()) {
+  <div class="state-panel state-panel--error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+  </div>
+} @else if (total() === 0) {
+  <div class="state-panel">
+    <mat-icon>grid_view</mat-icon>
+    <p>Todavia no hay casos priorizados por ambos modelos. Registra una interconsulta para comenzar.</p>
+  </div>
+} @else {
+  <mat-card>
+    <mat-card-content>
+      <div class="matrix">
+        <div class="matrix-corner"></div>
+        @for (tier of tiers; track tier) {
+          <div class="matrix-col-header">{{ tier }}</div>
+        }
+
+        @for (estrato of estratos; track estrato) {
+          <div class="matrix-row-header">{{ estrato }}</div>
+          @for (tier of tiers; track tier) {
+            <div [class]="cellClass(estrato)"
+                 [matTooltip]="esDivergente(estrato, tier) ? 'Divergencia entre modelos: revisar caso a caso' : ''">
+              <span class="cell-value">{{ count(estrato, tier) }}</span>
+              @if (esDivergente(estrato, tier) && count(estrato, tier) > 0) {
+                <mat-icon class="cell-flag">flag</mat-icon>
+              }
+            </div>
+          }
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p class="hint matrix-legend">
+    <mat-icon class="legend-icon">flag</mat-icon>
+    marca combinaciones donde vale la pena revisar el caso manualmente (riesgo clinico alto sin prioridad
+    maxima de agenda, o riesgo bajo con prioridad maxima).
+  </p>
+}

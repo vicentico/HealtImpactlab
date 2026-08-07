@@ -11,6 +11,7 @@ namespace MediSync.Application.Abstractions;
 public interface IPacienteRepository
 {
     Task<Paciente?> GetByIdAsync(string id, CancellationToken ct = default);
+    Task<IReadOnlyList<Paciente>> BuscarAsync(string? texto, CancellationToken ct = default);
     Task AddAsync(Paciente paciente, CancellationToken ct = default);
     Task UpdateAsync(Paciente paciente, CancellationToken ct = default);
 }

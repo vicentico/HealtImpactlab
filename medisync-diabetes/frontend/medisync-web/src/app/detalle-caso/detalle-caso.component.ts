@@ -98,9 +98,9 @@ export class DetalleCasoComponent {
 
   pillClass(nivel: string | null): string {
     switch (nivel) {
-      case 'P1': case 'Critico': return 'status-pill status-pill--critical';
-      case 'P2': case 'Alto': return 'status-pill status-pill--warning';
-      case 'P3': case 'Bajo': case 'Medio': return 'status-pill status-pill--good';
+      case 'P1': case 'Critico': case 'Alta': case 'G3': return 'status-pill status-pill--critical';
+      case 'P2': case 'Alto': case 'Media': case 'G2': return 'status-pill status-pill--warning';
+      case 'P3': case 'Bajo': case 'Medio': case 'Baja': case 'G1': return 'status-pill status-pill--good';
       default: return 'status-pill status-pill--neutral';
     }
   }

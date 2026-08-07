@@ -22,6 +22,11 @@ public class PriorizacionDocument
     public string? ConfirmadaPor { get; set; }
     public OrigenDecision? OrigenConfirmacion { get; set; }
     public DateTime? FechaConfirmacion { get; set; }
+
+    public int? PuntajeMinsal { get; set; }
+    public PrioridadMinsal? PrioridadMinsal { get; set; }
+    public EstratoRiesgo? EstratoRiesgo { get; set; }
+    public string? MinsalJustificacion { get; set; }
 }
 
 public static class PriorizacionMapping
@@ -41,7 +46,11 @@ public static class PriorizacionMapping
         TierConfirmado = p.TierConfirmado,
         ConfirmadaPor = p.ConfirmadaPor,
         OrigenConfirmacion = p.OrigenConfirmacion,
-        FechaConfirmacion = p.FechaConfirmacion
+        FechaConfirmacion = p.FechaConfirmacion,
+        PuntajeMinsal = p.PuntajeMinsal,
+        PrioridadMinsal = p.PrioridadMinsal,
+        EstratoRiesgo = p.EstratoRiesgo,
+        MinsalJustificacion = p.MinsalJustificacion
     };
 
     public static PriorizacionEntity ToDomain(this PriorizacionDocument d) => new(
@@ -49,5 +58,6 @@ public static class PriorizacionMapping
         d.RiskScore, d.RiskLevel, d.RiskJustificacion,
         d.PriorityScore, d.PriorityTier, d.PriorityJustificacion,
         d.AgenteQueEjecuto, d.FechaCalculo,
-        d.TierConfirmado, d.ConfirmadaPor, d.OrigenConfirmacion, d.FechaConfirmacion);
+        d.TierConfirmado, d.ConfirmadaPor, d.OrigenConfirmacion, d.FechaConfirmacion,
+        d.PuntajeMinsal, d.PrioridadMinsal, d.EstratoRiesgo, d.MinsalJustificacion);
 }

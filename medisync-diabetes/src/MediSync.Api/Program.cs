@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MediSync.AI;
 using MediSync.Api.Endpoints;
 using MediSync.Application;
@@ -5,6 +6,11 @@ using MediSync.Infrastructure;
 using MediSync.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 const string FrontendCorsPolicy = "FrontendDev";
 builder.Services.AddCors(options =>

@@ -15,7 +15,8 @@ public static class InterconsultasEndpoints
                 request.PacienteId, request.EspecialidadId, request.Motivo,
                 request.HbA1c, request.GlicemiaAyunas, request.Comorbilidades,
                 request.Vfg, request.MicroalbuminuriaRac, request.NeuropatiaPrevia,
-                request.UrgenciasUltimos90Dias, request.AlertasClinicas), ct);
+                request.UrgenciasUltimos90Dias, request.AlertasClinicas,
+                request.NumeroFarmacosActivos, request.NuevasAtencionesUrgencia, request.NuevasHospitalizaciones), ct);
             return Results.Created($"/api/casos/{id}", new { listaEsperaItemId = id });
         });
     }
@@ -24,5 +25,7 @@ public static class InterconsultasEndpoints
         string PacienteId, string EspecialidadId, string Motivo,
         double HbA1c, double GlicemiaAyunas, List<string>? Comorbilidades,
         double? Vfg = null, double? MicroalbuminuriaRac = null, bool NeuropatiaPrevia = false,
-        int UrgenciasUltimos90Dias = 0, List<string>? AlertasClinicas = null);
+        int UrgenciasUltimos90Dias = 0, List<string>? AlertasClinicas = null,
+        int NumeroFarmacosActivos = 0, List<DateTime>? NuevasAtencionesUrgencia = null,
+        List<HospitalizacionInput>? NuevasHospitalizaciones = null);
 }

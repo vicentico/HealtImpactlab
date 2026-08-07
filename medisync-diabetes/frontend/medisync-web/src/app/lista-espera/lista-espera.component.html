@@ -6,6 +6,18 @@
   </button>
 </div>
 
+@if (!loading() && pendientes() > 0) {
+  <p class="alert-banner pendientes-banner">
+    <mat-icon>sync_problem</mat-icon>
+    <span>
+      {{ pendientes() }} paciente(s) sin priorizar (el calculo no llego a completarse). &nbsp;
+      <button mat-button (click)="reprocesarPendientes()" [disabled]="reprocesando()">
+        {{ reprocesando() ? 'Procesando...' : 'Correr lista de espera' }}
+      </button>
+    </span>
+  </p>
+}
+
 @if (loading()) {
   <div class="state-panel">
     <mat-spinner diameter="36" />

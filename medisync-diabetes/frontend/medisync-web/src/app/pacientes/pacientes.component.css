@@ -1,0 +1,20 @@
+.search-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.search-row mat-form-field {
+  flex: 1 1 auto;
+}
+
+table {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+tr.mat-mdc-row:hover {
+  background: var(--mat-sys-surface-container-low);
+}

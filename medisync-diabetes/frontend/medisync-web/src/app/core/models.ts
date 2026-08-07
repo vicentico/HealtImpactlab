@@ -20,6 +20,10 @@ export interface PriorizacionDto {
   tierConfirmado: string | null;
   confirmadaPor: string | null;
   origenConfirmacion: string | null;
+  puntajeMinsal: number | null;
+  prioridadMinsal: string | null;
+  estratoRiesgo: string | null;
+  minsalJustificacion: string | null;
 }
 
 export interface AgendaDto {
@@ -94,6 +98,65 @@ export interface VulnerabilidadDto {
   dependenciaSevera: boolean;
   ruralidad: boolean;
   determinantesSociales: string[];
+}
+
+export interface PacienteResumenDto {
+  pacienteId: string;
+  nombre: string;
+  run: string;
+  edad: number;
+  cesfamOrigenId: string;
+}
+
+export interface AntecedenteHistorialDto {
+  hbA1c: number;
+  glicemiaAyunas: number;
+  comorbilidades: string[];
+  fechaRegistro: string;
+  vfg: number | null;
+  microalbuminuriaRac: number | null;
+  neuropatiaPrevia: boolean;
+  urgenciasUltimos90Dias: number;
+  alertasClinicas: string[];
+  numeroFarmacosActivos: number;
+}
+
+export interface AtencionUrgenciaDto {
+  fecha: string;
+  motivo: string;
+}
+
+export interface HospitalizacionDto {
+  fechaIngreso: string;
+  fechaAlta: string | null;
+  motivo: string;
+}
+
+export interface PacienteDetalleDto {
+  pacienteId: string;
+  nombre: string;
+  run: string;
+  fechaNacimiento: string;
+  edad: number;
+  cesfamOrigenId: string;
+  dependenciaSevera: boolean;
+  ruralidad: boolean;
+  determinantesSociales: string[];
+  nivelRedApoyo: string | null;
+  antecedentes: AntecedenteHistorialDto[];
+  atencionesUrgencia: AtencionUrgenciaDto[];
+  hospitalizaciones: HospitalizacionDto[];
+}
+
+export interface MatrizRiesgoDto {
+  celdas: Record<string, Record<string, number>>;
+}
+
+export interface ReprocesarPendientesDto {
+  pendientesEncontrados: number;
+  procesadosOk: number;
+  derivadosUrgente: number;
+  fallidos: number;
 }
 
 export interface CasoDetalleDto {

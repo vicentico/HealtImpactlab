@@ -99,6 +99,72 @@ html, body { height: 100%; }
   margin: var(--space-2) 0;
 }
 
+.step-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.back-link {
+  margin-left: calc(-1 * var(--space-3));
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* =========================================================================
+   Listas clave/valor y chips — patron compartido entre detalle-caso y
+   paciente-detalle para mostrar datos clinicos/vulnerabilidad de forma
+   consistente en toda la app.
+   ========================================================================= */
+.kv-list p {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-2) 0;
+  font: var(--mat-sys-body-medium);
+}
+
+.kv-label {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.chip-row {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chip-critical {
+  --mat-chip-elevated-container-color: var(--status-critical-container);
+  --mat-chip-label-text-color: var(--status-critical);
+}
+
+/* Card que necesita destacar sobre las demas (la evaluacion IA principal de la vista). */
+.card-emphasis {
+  border: 1px solid var(--mat-sys-primary);
+}
+
+/* Banner de alerta persistente (no transitorio — para eso esta MatSnackBar). Un solo estilo para
+   toda la app: derivacion urgente en detalle-caso, aviso de alerta clinica en los formularios. */
+.alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  border-left: 3px solid var(--status-critical);
+  background: var(--status-critical-container);
+  color: var(--status-critical);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin: var(--space-4) 0;
+  font: var(--mat-sys-body-medium);
+}
+.alert-banner mat-icon { flex: none; }
+
 /* =========================================================================
    Timeline de eventos — Material no trae un componente equivalente.
    ========================================================================= */
@@ -192,6 +258,7 @@ mat-card {
   --mdc-elevated-card-container-elevation: var(--elevation-1);
   --mdc-elevated-card-container-shape: var(--radius-md);
   --mdc-outlined-card-container-shape: var(--radius-md);
+  margin-bottom: var(--space-5);
 }
 
 .mat-mdc-table {

@@ -9,6 +9,11 @@ using MediSync.Domain.Pacientes;
 
 namespace MediSync.Application.Interconsultas.Commands;
 
+/// <summary>Nueva atencion de urgencia u hospitalizacion a registrar en el historial del paciente al
+/// mismo tiempo que la interconsulta — alimentan el criterio C3 del Protocolo MINSAL (ver
+/// docs/11-protocolo-minsal-prompt.md).</summary>
+public record HospitalizacionInput(DateTime FechaIngreso, DateTime? FechaAlta, string Motivo);
+
 public record RegistrarInterconsultaCommand(
     string PacienteId,
     string EspecialidadId,
@@ -20,7 +25,10 @@ public record RegistrarInterconsultaCommand(
     double? MicroalbuminuriaRac = null,
     bool NeuropatiaPrevia = false,
     int UrgenciasUltimos90Dias = 0,
-    List<string>? AlertasClinicas = null) : IRequest<string>;
+    List<string>? AlertasClinicas = null,
+    int NumeroFarmacosActivos = 0,
+    List<DateTime>? NuevasAtencionesUrgencia = null,
+    List<HospitalizacionInput>? NuevasHospitalizaciones = null) : IRequest<string>;
 
 public class RegistrarInterconsultaCommandValidator : AbstractValidator<RegistrarInterconsultaCommand>
 {
@@ -55,7 +63,19 @@ public class RegistrarInterconsultaCommandHandler(
             request.MicroalbuminuriaRac,
             request.NeuropatiaPrevia,
             request.UrgenciasUltimos90Dias,
-            request.AlertasClinicas));
+            request.AlertasClinicas,
+            request.NumeroFarmacosActivos));
+
+        foreach (var fecha in request.NuevasAtencionesUrgencia ?? [])
+        {
+            paciente.RegistrarAtencionUrgencia(new AtencionUrgencia(fecha, request.Motivo));
+        }
+        foreach (var hospitalizacion in request.NuevasHospitalizaciones ?? [])
+        {
+            paciente.RegistrarHospitalizacion(new Hospitalizacion(
+                hospitalizacion.FechaIngreso, hospitalizacion.FechaAlta, hospitalizacion.Motivo));
+        }
+
         await pacientes.UpdateAsync(paciente, cancellationToken);
 
         var interconsulta = new Interconsulta(request.PacienteId, request.EspecialidadId, paciente.CesfamOrigenId, request.Motivo);

@@ -30,7 +30,7 @@
   </header>
 
   @if (derivacionUrgente()) {
-    <p class="urgent-banner">
+    <p class="alert-banner">
       <mat-icon>emergency</mat-icon>
       <span><strong>Derivacion urgente.</strong> Este caso no sigue el flujo automatico de priorizacion —
         requiere atencion inmediata de un profesional. Motivo en el historial, mas abajo.</span>
@@ -68,6 +68,26 @@
         }
       </mat-card-content>
     </mat-card>
+
+    @if (p.prioridadMinsal) {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Prioridad MINSAL (Protocolo APS)</mat-card-title>
+          <mat-card-subtitle>Segundo calculo de prioridad, independiente del modelo ECICEP</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="priorizacion-row">
+            <span class="kv-label">Prioridad</span>
+            <span [class]="pillClass(p.prioridadMinsal)">{{ p.prioridadMinsal }} &middot; puntaje {{ p.puntajeMinsal }}/16</span>
+          </p>
+          <p class="priorizacion-row">
+            <span class="kv-label">Estrato de riesgo</span>
+            <span [class]="pillClass(p.estratoRiesgo)">{{ p.estratoRiesgo }}</span>
+          </p>
+          <p class="justificacion">{{ p.minsalJustificacion }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
   }
 
   <mat-card>
